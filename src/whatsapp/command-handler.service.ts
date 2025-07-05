@@ -22,38 +22,42 @@ export class CommandHandlerService {
 
   async handle(message: Message, client: Client) {
     const body = message.body.trim();
-    if (
-      !body.startsWith('/') &&
-      message.type !== MessageTypes.IMAGE &&
-      message.type !== MessageTypes.VIDEO
-    )
-      return;
-
     const isGroup = message.from.endsWith('@g.us');
+    const text = message.body.toLocaleLowerCase();
+    const words = ['sticker', 'imagen'];
+    const hasSome = words.some((word) => text.includes(word));
+    let command: Command | undefined;
     this.logger.log(`isGroup: ${isGroup}`);
-    const [commandName] = body.slice(1);
-    this.logger.log(`commandName: ${commandName}`);
-    let command = this.commands.get(commandName.toLowerCase());
-    if (!isGroup && commandName == '') {
-      command = this.commands.get('stickerdirectmessage');
-    } else if ((isGroup && commandName == 'ticker') || commandName == 'magen') {
-      command = this.commands.get('stickergroupmessage');
-    }
-    if (!command) {
-      await client.sendMessage(
-        message.from,
-        `Comando desconocido: ${commandName}`,
-      );
-      return;
+    if (body.startsWith('/')) {
+      const [commandName] = body.slice(1).split(' ');
+      this.logger.log(`commandName: ${commandName}`);
+      command = this.commands.get(commandName.toLowerCase());
+      if (!command) {
+        await client.sendMessage(
+          message.from,
+          `Comando desconocido: ${commandName}`,
+        );
+        return;
+      }
+    } else if (
+      message.type === MessageTypes.IMAGE ||
+      message.type === MessageTypes.VIDEO ||
+      (hasSome && message.hasQuotedMsg)
+    ) {
+      if (!isGroup) {
+        command = this.commands.get('stickerdirectmessage');
+      } else {
+        command = this.commands.get('stickergroupmessage');
+      }
     }
 
     try {
-      await command.execute(message, client);
+      if (command !== undefined) {
+        await command.execute(message, client);
+      }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        this.logger.error(
-          `Error ejecutando comando ${commandName}: ${error.message}`,
-        );
+        this.logger.error(`Error ejecutando comando: ${error.message}`);
       }
       await client.sendMessage(message.from, 'Error ejecutando el comando.');
     }
