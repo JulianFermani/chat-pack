@@ -1,11 +1,16 @@
 import { Message, Client, MessageTypes } from 'whatsapp-web.js';
 import { Command } from './command.interface';
+import { UserSession } from './usersession.interface';
 
 export class StickerDirectMessage implements Command {
   name = 'stickerDirectMessage';
   description = 'Convierte una foto o un video a sticker y viceversa';
 
-  async execute(message: Message, client: Client) {
+  async execute(
+    message: Message,
+    client: Client,
+    session: UserSession,
+  ): Promise<UserSession | null> {
     if (
       message.type == MessageTypes.IMAGE ||
       message.type == MessageTypes.VIDEO
@@ -44,5 +49,6 @@ export class StickerDirectMessage implements Command {
         void client.sendMessage(message.from, '*[❎]* Uuuu algo falló');
       }
     }
+    return null;
   }
 }

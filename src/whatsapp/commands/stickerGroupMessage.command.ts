@@ -1,12 +1,17 @@
 import { Message, Client } from 'whatsapp-web.js';
 import { Command } from './command.interface';
+import { UserSession } from './usersession.interface';
 
 export class StickerGroupMessage implements Command {
   name = 'stickerGroupMessage';
   description =
     'Convierte una foto o un video a sticker y viceversa de un grupo';
 
-  async execute(message: Message, client: Client) {
+  async execute(
+    message: Message,
+    client: Client,
+    session: UserSession,
+  ): Promise<UserSession | null> {
     if (
       message.body.toLocaleLowerCase().includes('sticker') &&
       message.hasMedia
@@ -82,5 +87,6 @@ export class StickerGroupMessage implements Command {
         void message.reply('*[❎]* Responde un sticker primero');
       }
     }
+    return null;
   }
 }
