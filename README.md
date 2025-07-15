@@ -1,7 +1,7 @@
 Para runnear en prod:
 
 ```bash
-docker build -t chat-pack
+docker build -t chat-pack .
 ```
 
 ```bash
