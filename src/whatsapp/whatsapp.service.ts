@@ -16,7 +16,7 @@ export class WhatsappService implements OnModuleInit {
     this.client = new Client({
       authStrategy: new LocalAuth({ clientId: 'cliente' }),
       puppeteer: {
-        executablePath: '/snap/bin/chromium',
+        executablePath: process.env.chromium_dir,
         headless: true,
         ignoreHTTPSErrors: true,
         args: [
