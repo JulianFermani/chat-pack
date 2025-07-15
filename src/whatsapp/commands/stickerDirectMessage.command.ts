@@ -33,7 +33,7 @@ export class StickerDirectMessage implements Command {
         );
         void client.sendMessage(message.from, '*[❎]* Uuuu algo falló');
       }
-    } else if (message.type === MessageTypes.STICKER) {
+    } else if (message.type == MessageTypes.STICKER) {
       void client.sendMessage(message.from, '*[⏳]* Cargando..');
       try {
         const media = await message.downloadMedia();

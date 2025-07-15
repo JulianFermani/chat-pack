@@ -71,6 +71,7 @@ export class CommandHandlerService {
     } else if (
       message.type === MessageTypes.IMAGE ||
       message.type === MessageTypes.VIDEO ||
+      message.type === MessageTypes.STICKER ||
       (hasSome && message.hasQuotedMsg)
     ) {
       if (!isGroup) {
