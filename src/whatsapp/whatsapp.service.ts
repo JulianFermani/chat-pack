@@ -2,6 +2,7 @@ import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import { Client, LocalAuth, Message } from 'whatsapp-web.js';
 import * as qrcode from 'qrcode-terminal';
 import { CommandHandlerService } from './command-handler.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class WhatsappService implements OnModuleInit {
@@ -10,13 +11,16 @@ export class WhatsappService implements OnModuleInit {
   });
   private client: Client;
 
-  constructor(private readonly commandHandler: CommandHandlerService) {}
+  constructor(
+    private readonly commandHandler: CommandHandlerService,
+    private configService: ConfigService,
+  ) {}
 
   onModuleInit() {
     this.client = new Client({
       authStrategy: new LocalAuth({ clientId: 'cliente' }),
       puppeteer: {
-        executablePath: process.env.chromium_dir,
+        executablePath: this.configService.get<string>('chromium_dir'),
         headless: true,
         ignoreHTTPSErrors: true,
         args: [
