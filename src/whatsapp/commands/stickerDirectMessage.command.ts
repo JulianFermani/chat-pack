@@ -1,6 +1,6 @@
 import { Message, Client, MessageTypes } from 'whatsapp-web.js';
-import { Command } from './command.interface';
-import { UserSession } from './usersession.interface';
+import { Command } from './interfaces/command.interface';
+import { UserSession } from './interfaces/usersession.interface';
 
 export class StickerDirectMessage implements Command {
   name = 'stickerDirectMessage';

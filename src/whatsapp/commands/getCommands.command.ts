@@ -1,6 +1,6 @@
 import { Message, Client } from 'whatsapp-web.js';
-import { Command } from './command.interface';
-import { UserSession } from './usersession.interface';
+import { Command } from './interfaces/command.interface';
+import { UserSession } from './interfaces/usersession.interface';
 import * as Commands from './';
 
 export class GetCommands implements Command {

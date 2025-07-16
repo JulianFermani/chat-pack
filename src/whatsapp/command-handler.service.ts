@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Message, Client, MessageTypes } from 'whatsapp-web.js';
 import * as Commands from './commands';
-import { Command } from './commands/command.interface';
-import { UserSession } from './commands/usersession.interface';
+import { Command } from './commands/interfaces/command.interface';
+import { UserSession } from './commands/interfaces/usersession.interface';
 
 @Injectable()
 export class CommandHandlerService {
