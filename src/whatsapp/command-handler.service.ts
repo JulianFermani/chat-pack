@@ -42,7 +42,10 @@ export class CommandHandlerService {
       // Elimina el usuario de la sesión y envia un mensaje
       if (!command) {
         this.sessions.delete(userId);
-        await client.sendMessage(userId, 'Error: comando no encontrado');
+        await client.sendMessage(
+          userId,
+          'Error: comando no encontrado, para ver la lista de comandos envie */comandos*',
+        );
         await client.sendSeen(message.from);
         return;
       }
@@ -65,7 +68,7 @@ export class CommandHandlerService {
       if (!command) {
         await client.sendMessage(
           message.from,
-          `Comando desconocido: ${commandName}`,
+          `Comando desconocido: ${commandName}, para ver la lista de comandos envie */comandos*`,
         );
         await client.sendSeen(message.from);
         return;

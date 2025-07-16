@@ -30,7 +30,8 @@ type ResponsePeliculas = {
 
 export class LookForMovies implements Command {
   name = 'verPeliculas';
-  description = 'Devuelve todas las peliculas en cartelera que hay en el cine';
+  description =
+    'Devuelve todas las peliculas en cartelera que hay en el cine de sudcinemas villa maria';
 
   async execute(
     message: Message,
