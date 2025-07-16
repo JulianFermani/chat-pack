@@ -1,8 +1,11 @@
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
-import { Client, LocalAuth, Message } from 'whatsapp-web.js';
+import { Client, Message, RemoteAuth } from 'whatsapp-web.js';
 import * as qrcode from 'qrcode-terminal';
 import { CommandHandlerService } from './command-handler.service';
 import { ConfigService } from '@nestjs/config';
+import { MongoStore } from 'wwebjs-mongo';
+import mongoose from 'mongoose';
+import type { Store } from 'whatsapp-web.js';
 
 @Injectable()
 export class WhatsappService implements OnModuleInit {
@@ -16,9 +19,18 @@ export class WhatsappService implements OnModuleInit {
     private configService: ConfigService,
   ) {}
 
-  onModuleInit() {
+  async onModuleInit() {
+    const mongoUri = this.configService.get<string>('MONGODB_URI')!;
+    await mongoose.connect(mongoUri);
+
+    const store = new MongoStore({ mongoose }) as unknown as Store;
+
     this.client = new Client({
-      authStrategy: new LocalAuth({ clientId: 'cliente' }),
+      authStrategy: new RemoteAuth({
+        store: store,
+        clientId: 'cliente',
+        backupSyncIntervalMs: 60000,
+      }),
       puppeteer: {
         executablePath: this.configService.get<string>('chromium_dir'),
         headless: true,
@@ -46,6 +58,10 @@ export class WhatsappService implements OnModuleInit {
 
     this.client.on('ready', () => {
       this.logger.log('El cliente está listo para recibir mensajes!!');
+    });
+
+    this.client.on('remote_session_saved', () => {
+      this.logger.log('Sesión remota guardada en MongoDB.');
     });
 
     this.client.on('message', (message: Message) => {
