@@ -43,6 +43,7 @@ export class CommandHandlerService {
       if (!command) {
         this.sessions.delete(userId);
         await client.sendMessage(userId, 'Error: comando no encontrado');
+        await client.sendSeen(message.from);
         return;
       }
 
@@ -66,6 +67,7 @@ export class CommandHandlerService {
           message.from,
           `Comando desconocido: ${commandName}`,
         );
+        await client.sendSeen(message.from);
         return;
       }
     } else if (
@@ -79,6 +81,8 @@ export class CommandHandlerService {
       } else {
         command = this.commands.get('stickergroupmessage');
       }
+    } else {
+      await client.sendSeen(message.from);
     }
 
     const newSession: UserSession = {
@@ -86,10 +90,10 @@ export class CommandHandlerService {
       step: 1,
       data: {},
     };
-    this.sessions.set(userId, newSession);
 
     try {
       if (command !== undefined) {
+        this.sessions.set(userId, newSession);
         const updatedSession = await command.execute(
           message,
           client,
@@ -106,6 +110,7 @@ export class CommandHandlerService {
         this.logger.error(`Error ejecutando comando: ${error.message}`);
       }
       await client.sendMessage(message.from, 'Error ejecutando el comando.');
+      await client.sendSeen(message.from);
     }
   }
 }
