@@ -1,0 +1,15 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongo
+      - MONGO_INITDB_ROOT_PASSWORD=mongo
+      - MONGO_INITDB_DATABASE=whatsapp_users
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - '27017:27017'
+
+volumes:
+  mongo-data:
