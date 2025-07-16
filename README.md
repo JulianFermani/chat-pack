@@ -1,18 +1,30 @@
 # 🤖 WhatsApp Bot - Chat Pack
 
-Este proyecto es un bot de WhatsApp personal, pensado para correr fácilmente en producción usando Docker y MongoDB.
+Este proyecto es un bot de WhatsApp personal, pensado para correr fácilmente en producción usando Docker y MongoDB de forma separada.
 
-## 🚀 Comandos útiles
+---
 
-### 1. Levantar la base de datos MongoDB
+## 🧱 Requisitos previos
+
+Antes de correr los servicios, asegurate de tener creada una red de Docker compartida:
+
+```bash
+docker network create chat-pack-net
+```
+
+Esto permite que el contenedor de la app se comunique con el de MongoDB usando su nombre de servicio como hostname (`mongo`).
+
+---
+
+## 🗃 Levantar la base de datos MongoDB
 
 ```bash
 docker compose up -d
 ```
 
-Esto levanta la base de datos MongoDB definida en tu `docker-compose.yml`.
+---
 
-### 2. Build del proyecto para producción
+## 🚀 Build del proyecto para producción
 
 ```bash
 docker build -t chat-pack .
@@ -20,10 +32,12 @@ docker build -t chat-pack .
 
 Esto crea una imagen Docker llamada `chat-pack` a partir del `Dockerfile` del proyecto.
 
-### 3. Correr el proyecto en producción
+---
+
+## ▶️ Correr el proyecto en producción
 
 ```bash
-docker run chat-pack:latest
+docker run --network=chat-pack-net chat-pack:latest
 ```
 
-Esto lanza el contenedor con la imagen `chat-pack:latest`.
+- `--network=chat-pack-net`: conecta tu app a la misma red que MongoDB.

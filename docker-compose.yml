@@ -1,6 +1,8 @@
 services:
   mongo:
     image: mongo:latest
+    networks:
+      - chat-pack-net
     container_name: mongo
     environment:
       - MONGO_INITDB_ROOT_USERNAME=mongo
@@ -10,6 +12,10 @@ services:
       - mongo-data:/data/db
     ports:
       - '27017:27017'
+
+networks:
+  chat-pack-net:
+    external: true
 
 volumes:
   mongo-data:
