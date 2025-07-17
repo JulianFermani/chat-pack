@@ -1,6 +1,6 @@
 import { Message, Client } from 'whatsapp-web.js';
-import { UserSession } from './interfaces/usersession.interface';
 import { Command } from './interfaces/command.interface';
+import { SumarDosNumerosSession } from './session/user-session.types';
 
 export class SumarNumerosCommand implements Command {
   name = 'sumarNumeros';
@@ -9,8 +9,8 @@ export class SumarNumerosCommand implements Command {
   async execute(
     message: Message,
     client: Client,
-    session: UserSession,
-  ): Promise<UserSession | null> {
+    session: SumarDosNumerosSession,
+  ): Promise<SumarDosNumerosSession | null> {
     const userId = message.from;
     const text = message.body.trim();
 
@@ -18,7 +18,7 @@ export class SumarNumerosCommand implements Command {
       case 1:
         // Pedir primer número
         await client.sendMessage(userId, 'Por favor, envía el primer número:');
-        session.step = 2;
+        session.step += 1;
         return session;
 
       case 2: {
@@ -31,7 +31,7 @@ export class SumarNumerosCommand implements Command {
           );
           return session; // repetir paso 2
         }
-        session.data.num1 = num1;
+        session.data.a = num1;
         await client.sendMessage(userId, 'Ahora envía el segundo número:');
         session.step = 3;
         return session;
@@ -46,8 +46,8 @@ export class SumarNumerosCommand implements Command {
           );
           return session; // repetir paso 3
         }
-        session.data.num2 = num2;
-        const suma = session.data.num1 + session.data.num2;
+        session.data.b = num2;
+        const suma = session.data.a + session.data.b;
         await client.sendMessage(userId, `El resultado de la suma es: ${suma}`);
         return null; // comando finalizado
       }

@@ -2,13 +2,13 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Message, Client, MessageTypes } from 'whatsapp-web.js';
 import * as Commands from './commands';
 import { Command } from './commands/interfaces/command.interface';
-import { UserSession } from './commands/interfaces/usersession.interface';
+import { UserSessionBase } from './commands/session/user-session.base';
 
 @Injectable()
 export class CommandHandlerService {
   private readonly logger = new Logger(CommandHandlerService.name);
   private commands: Map<string, Command> = new Map();
-  private sessions: Map<string, UserSession> = new Map();
+  private sessions: Map<string, UserSessionBase> = new Map();
 
   constructor() {
     Object.values(Commands).forEach((CommandClass) => {
@@ -88,10 +88,9 @@ export class CommandHandlerService {
       await client.sendSeen(message.from);
     }
 
-    const newSession: UserSession = {
+    const newSession: UserSessionBase = {
       commandName: command?.name ?? '',
       step: 1,
-      data: {},
     };
 
     try {
