@@ -1,6 +1,7 @@
 services:
   mongo:
     image: mongo:latest
+    restart: always
     networks:
       - chat-pack-net
     container_name: mongo
