@@ -1,6 +1,5 @@
 import { Message, Client } from 'whatsapp-web.js';
-import { UserSession } from '../../../sessions/userSession.interface';
-
+import { UserSession } from 'src/whatsapp/session/user-session.interface';
 export interface Command<T = any> {
   name: string;
   description: string;

@@ -42,14 +42,14 @@ export class SeeMoviesCommand implements Command {
       console.log(response);
       if (!response.ok) {
         await message.reply('Error al obtener las películas.');
-        return null;
+        return;
       }
 
       const data: ResponsePeliculas = await response.json();
 
       if (data.status !== 'ok' || !Array.isArray(data.data)) {
         await message.reply('No se encontraron películas disponibles.');
-        return null;
+        return;
       }
 
       // Extraemos y formateamos las películas
@@ -57,7 +57,7 @@ export class SeeMoviesCommand implements Command {
 
       if (movies.length === 0) {
         await message.reply('No hay películas en cartelera en este momento.');
-        return null;
+        return;
       }
 
       const messageText = movies
@@ -77,6 +77,6 @@ export class SeeMoviesCommand implements Command {
       await message.reply('Ocurrió un error al buscar las películas.');
     }
 
-    return null;
+    return;
   }
 }

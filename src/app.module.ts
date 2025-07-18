@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { WhatsappService } from './whatsapp/whatsapp.service';
-import { CommandHandlerService } from './whatsapp/command-handler.service';
+import { WhatsappService } from './whatsapp/application/whatsapp.service';
+import { CommandHandlerService } from './whatsapp/application/command-handler.service';
 import { ConfigModule } from '@nestjs/config';
 import { configuration } from 'config/configuration';
 
