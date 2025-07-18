@@ -32,12 +32,9 @@ export class LookForMovies implements Command {
   name = 'verPeliculas';
   description =
     'Devuelve todas las peliculas en cartelera que hay en el cine de sudcinemas villa maria';
+  usesSession: false;
 
-  async execute(
-    message: Message,
-    client: Client,
-    session: UserSession,
-  ): Promise<UserSession | null> {
+  async execute(message: Message, client: Client): Promise<UserSession | void> {
     const url = 'https://apiv2.gaf.adro.studio/nowPlaying/29';
     // TODO: reescribir data para no tener: Unsafe assignment of an `any` value.
     try {

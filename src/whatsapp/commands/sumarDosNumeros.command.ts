@@ -6,6 +6,7 @@ import { SumarSessionData } from './interfaces/sumarSessionData.interface';
 export class SumarNumerosCommand implements Command<SumarSessionData> {
   name = 'sumarNumeros';
   description = 'Suma dos números en dos pasos';
+  usesSession: true;
 
   async execute(
     message: Message,

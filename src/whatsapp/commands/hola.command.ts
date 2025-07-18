@@ -1,17 +1,14 @@
 import { Message, Client } from 'whatsapp-web.js';
-import { Command } from './command.interface';
-import { UserSession } from './usersession.interface';
+import { Command } from './interfaces/command.interface';
+import { UserSession } from './sessions/userSession.interface';
 
 export class HolaCommand implements Command {
   name = 'hola';
   description = 'Responde con un saludo';
+  usesSession: false;
 
-  async execute(
-    message: Message,
-    client: Client,
-    session: UserSession,
-  ): Promise<UserSession | null> {
+  async execute(message: Message, client: Client): Promise<UserSession | void> {
     await client.sendMessage(message.from, '¡Hola! Soy tu bot.');
-    return null;
+    return;
   }
 }

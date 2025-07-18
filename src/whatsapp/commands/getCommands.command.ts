@@ -1,17 +1,14 @@
 import { Message, Client } from 'whatsapp-web.js';
-import { Command } from './command.interface';
-import { UserSession } from './usersession.interface';
+import { Command } from './interfaces/command.interface';
+import { UserSession } from './sessions/userSession.interface';
 import * as Commands from './';
 
 export class GetCommands implements Command {
   name = 'comandos';
   description = 'Responde con todos los comandos disponibles del bot';
+  usesSession: false;
 
-  async execute(
-    message: Message,
-    client: Client,
-    session: UserSession,
-  ): Promise<UserSession | null> {
+  async execute(message: Message, client: Client): Promise<UserSession | void> {
     let text = '';
     const commandsArray = Object.values(Commands);
 
@@ -25,6 +22,6 @@ export class GetCommands implements Command {
     });
 
     await client.sendMessage(message.from, `*Comandos disponibles:* \n${text}`);
-    return null;
+    return;
   }
 }

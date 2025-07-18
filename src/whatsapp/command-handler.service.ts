@@ -79,24 +79,25 @@ export class CommandHandlerService {
       message.type === MessageTypes.STICKER ||
       (hasSome && message.hasQuotedMsg)
     ) {
-      if (!isGroup) {
-        command = this.commands.get('stickerdirectmessage');
-      } else {
-        command = this.commands.get('stickergroupmessage');
-      }
+      command = this.commands.get(
+        isGroup ? 'stickergroupmessage' : 'stickerdirectmessage',
+      );
     } else {
       await client.sendSeen(message.from);
+      return;
     }
 
-    const newSession: UserSession = {
-      commandName: command?.name ?? '',
-      step: 1,
-      data: {},
-    };
-
     try {
-      if (command !== undefined) {
+      if (!command) return;
+
+      if (command.usesSession) {
+        const newSession: UserSession = {
+          commandName: command.name,
+          step: 1,
+          data: {},
+        };
         this.sessions.set(userId, newSession);
+
         const updatedSession = await command.execute(
           message,
           client,
@@ -107,6 +108,8 @@ export class CommandHandlerService {
         } else {
           this.sessions.delete(userId);
         }
+      } else {
+        await command.execute(message, client);
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
