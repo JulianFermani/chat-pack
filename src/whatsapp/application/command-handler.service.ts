@@ -1,26 +1,17 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Message, Client, MessageTypes } from 'whatsapp-web.js';
-import * as Commands from './commands';
-import { Command } from './commands/interfaces/command.interface';
-import { UserSession } from './commands/sessions/userSession.interface';
+import { Command } from '../domain/commands/interfaces/command.interface';
+import { UserSession } from '../session/user-session.interface';
+import { CommandRegistry } from '../command-registry';
+import { SessionManager } from '../session/session-manager';
 
 @Injectable()
 export class CommandHandlerService {
   private readonly logger = new Logger(CommandHandlerService.name);
-  private commands: Map<string, Command> = new Map();
-  private sessions: Map<string, UserSession<any>> = new Map();
-
-  constructor() {
-    Object.values(Commands).forEach((CommandClass) => {
-      const commandInstance = new CommandClass();
-      this.registerCommand(commandInstance);
-    });
-  }
-
-  registerCommand(command: Command) {
-    this.commands.set(command.name.toLowerCase(), command);
-    this.logger.log(`Comando registrado: ${command.name}`);
-  }
+  constructor(
+    private readonly commandRegistry: CommandRegistry,
+    private readonly sessionManager: SessionManager,
+  ) {}
 
   async handle(message: Message, client: Client) {
     let command: Command | undefined;
@@ -30,18 +21,26 @@ export class CommandHandlerService {
     const words = ['sticker', 'imagen'];
     const hasSome = words.some((word) => text.includes(word));
     const userId = message.from;
-    const session = this.sessions.get(userId);
+
+    const session = this.sessionManager.get(userId);
     this.logger.log(`Session commandName: ${session?.commandName}`);
     this.logger.log(`Session step: ${session?.step}`);
 
     // Si la sesión existe
     if (session) {
       // Busca el comando
-      command = this.commands.get(session.commandName.toLowerCase());
+      const commandName = this.sessionManager.get(
+        session.commandName,
+      )?.commandName;
+      if (!commandName) {
+        this.logger.log('Vaya vaya..');
+        return;
+      }
+      command = this.commandRegistry.get(commandName);
       // Si no existe el comando
       // Elimina el usuario de la sesión y envia un mensaje
       if (!command) {
-        this.sessions.delete(userId);
+        this.sessionManager.delete(userId);
         await client.sendMessage(
           userId,
           'Error: comando no encontrado, para ver la lista de comandos envie */comandos*',
@@ -53,9 +52,9 @@ export class CommandHandlerService {
       // Ejecuta el comando y recibe la sesión updateada del usuario
       const updatedSession = await command.execute(message, client, session);
       if (updatedSession) {
-        this.sessions.set(userId, updatedSession);
+        this.sessionManager.set(userId, updatedSession);
       } else {
-        this.sessions.delete(userId);
+        this.sessionManager.delete(userId);
       }
       return;
     }
@@ -64,7 +63,7 @@ export class CommandHandlerService {
     if (body.startsWith('/')) {
       const [commandName] = body.slice(1).split(' ');
       this.logger.log(`commandName: ${commandName}`);
-      command = this.commands.get(commandName.toLowerCase());
+      command = this.commandRegistry.get(commandName);
       if (!command) {
         await client.sendMessage(
           message.from,
@@ -79,7 +78,7 @@ export class CommandHandlerService {
       message.type === MessageTypes.STICKER ||
       (hasSome && message.hasQuotedMsg)
     ) {
-      command = this.commands.get(
+      command = this.commandRegistry.get(
         isGroup ? 'stickergroupmessage' : 'stickerdirectmessage',
       );
     } else {
@@ -96,7 +95,7 @@ export class CommandHandlerService {
           step: 1,
           data: {},
         };
-        this.sessions.set(userId, newSession);
+        this.sessionManager.set(userId, newSession);
 
         const updatedSession = await command.execute(
           message,
@@ -104,9 +103,9 @@ export class CommandHandlerService {
           newSession,
         );
         if (updatedSession) {
-          this.sessions.set(userId, updatedSession);
+          this.sessionManager.set(userId, updatedSession);
         } else {
-          this.sessions.delete(userId);
+          this.sessionManager.delete(userId);
         }
       } else {
         await command.execute(message, client);

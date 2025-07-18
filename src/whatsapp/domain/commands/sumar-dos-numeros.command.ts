@@ -1,6 +1,6 @@
 import { Message, Client } from 'whatsapp-web.js';
 import { Command } from './interfaces/command.interface';
-import { UserSession } from './sessions/userSession.interface';
+import { UserSession } from '../../sessions/user-session.interface';
 import { SumarSessionData } from './interfaces/sumarSessionData.interface';
 
 export class SumarNumerosCommand implements Command<SumarSessionData> {
