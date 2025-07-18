@@ -1,5 +1,5 @@
 import { Command } from './domain/commands/interfaces/command.interface';
-import * as Commands from './domain/commands';
+import { commandList } from './domain/commands';
 import { Logger } from '@nestjs/common';
 
 export class CommandRegistry {
@@ -7,8 +7,7 @@ export class CommandRegistry {
   private readonly logger = new Logger(CommandRegistry.name);
 
   constructor() {
-    Object.values(Commands).forEach((Command) => {
-      const commandInstance = new Command();
+    commandList.forEach((commandInstance) => {
       this.commands.set(commandInstance.name.toLowerCase(), commandInstance);
       this.logger.log(`Comando registrado: ${commandInstance.name}`);
     });
@@ -16,5 +15,9 @@ export class CommandRegistry {
 
   get(commandName: string): Command | undefined {
     return this.commands.get(commandName.toLowerCase());
+  }
+
+  getAll(): Command[] {
+    return Array.from(this.commands.values());
   }
 }

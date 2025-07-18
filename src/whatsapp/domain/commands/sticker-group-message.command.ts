@@ -1,8 +1,8 @@
 import { Message, Client } from 'whatsapp-web.js';
 import { Command } from './interfaces/command.interface';
-import { UserSession } from '../../sessions/user-session.interface';
+import { UserSession } from '../../session/user-session.interface';
 
-export class StickerGroupMessage implements Command {
+export class StickerGroupMessageCommand implements Command {
   name = 'stickerGroupMessage';
   description =
     'Convierte una foto o un video a sticker y viceversa de un grupo';

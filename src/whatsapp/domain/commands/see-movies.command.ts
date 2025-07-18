@@ -1,6 +1,6 @@
 import { Message, Client } from 'whatsapp-web.js';
 import { Command } from './interfaces/command.interface';
-import { UserSession } from '../../sessions/user-session.interface';
+import { UserSession } from '../../session/user-session.interface';
 import { Movie } from './interfaces/movie.interface';
 
 // Tipo para el póster de la película
@@ -28,7 +28,7 @@ type ResponsePeliculas = {
   data: Pelicula[];
 };
 
-export class LookForMovies implements Command {
+export class SeeMoviesCommand implements Command {
   name = 'verPeliculas';
   description =
     'Devuelve todas las peliculas en cartelera que hay en el cine de sudcinemas villa maria';

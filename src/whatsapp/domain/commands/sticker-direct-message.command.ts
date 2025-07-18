@@ -1,8 +1,8 @@
 import { Message, Client, MessageTypes } from 'whatsapp-web.js';
 import { Command } from './interfaces/command.interface';
-import { UserSession } from '../../sessions/user-session.interface';
+import { UserSession } from '../../session/user-session.interface';
 
-export class StickerDirectMessage implements Command {
+export class StickerDirectMessageCommand implements Command {
   name = 'stickerDirectMessage';
   description = 'Convierte una foto o un video a sticker y viceversa';
   usesSession: false;
