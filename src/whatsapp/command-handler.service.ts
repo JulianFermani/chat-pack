@@ -1,14 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Message, Client, MessageTypes } from 'whatsapp-web.js';
 import * as Commands from './commands';
-import { Command } from './commands/command.interface';
-import { UserSession } from './commands/usersession.interface';
+import { Command } from './commands/interfaces/command.interface';
+import { UserSession } from './commands/sessions/userSession.interface';
 
 @Injectable()
 export class CommandHandlerService {
   private readonly logger = new Logger(CommandHandlerService.name);
   private commands: Map<string, Command> = new Map();
-  private sessions: Map<string, UserSession> = new Map();
+  private sessions: Map<string, UserSession<any>> = new Map();
 
   constructor() {
     Object.values(Commands).forEach((CommandClass) => {

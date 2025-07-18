@@ -1,7 +1,7 @@
 import { Message, Client } from 'whatsapp-web.js';
-import { Command } from './command.interface';
-import { UserSession } from './usersession.interface';
-import { Movie } from './movie.interface';
+import { Command } from './interfaces/command.interface';
+import { UserSession } from './sessions/userSession.interface';
+import { Movie } from './interfaces/movie.interface';
 
 // Tipo para el póster de la película
 type Poster = {
