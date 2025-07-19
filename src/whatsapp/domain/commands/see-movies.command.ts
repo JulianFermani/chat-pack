@@ -32,7 +32,7 @@ export class SeeMoviesCommand implements Command {
   name = 'verPeliculas';
   description =
     'Devuelve todas las peliculas en cartelera que hay en el cine de sudcinemas villa maria';
-  usesSession: false;
+  usesSession = false;
 
   async execute(message: Message, client: Client): Promise<UserSession | void> {
     const url = 'https://apiv2.gaf.adro.studio/nowPlaying/29';

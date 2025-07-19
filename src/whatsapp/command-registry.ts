@@ -15,7 +15,7 @@ export class CommandRegistry {
     this.logger.log(`Comando registrado: ${command.name}`);
   }
 
-  get(commandName: string): Command | undefined {
+  get(commandName: string): Command<any> | undefined {
     return this.commands.get(commandName.toLowerCase());
   }
 

@@ -7,7 +7,7 @@ export class GetCommandsCommand implements Command {
   constructor(private readonly commandRegistry: CommandRegistry) {}
   name = 'comandos';
   description = 'Responde con todos los comandos disponibles del bot';
-  usesSession: false;
+  usesSession = false;
 
   async execute(message: Message, client: Client): Promise<UserSession | void> {
     let text = '';

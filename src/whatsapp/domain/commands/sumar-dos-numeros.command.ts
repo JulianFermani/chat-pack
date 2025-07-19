@@ -4,9 +4,9 @@ import { UserSession } from '../../session/user-session.interface';
 import { SumarSessionData } from './interfaces/sumar-session-data.interface';
 
 export class SumarDosNumerosCommand implements Command<SumarSessionData> {
-  name = 'sumarNumeros';
+  name = 'sumarDosNumeros';
   description = 'Suma dos números en dos pasos';
-  usesSession: true;
+  usesSession = true;
 
   async execute(
     message: Message,
@@ -15,6 +15,7 @@ export class SumarDosNumerosCommand implements Command<SumarSessionData> {
   ): Promise<UserSession<SumarSessionData> | void> {
     const userId = message.from;
     const text = message.body.trim();
+    console.log(`Session step en SumarDosNumerosCommand: ${session.step}`);
 
     switch (session.step) {
       case 1:

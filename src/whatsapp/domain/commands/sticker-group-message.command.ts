@@ -6,7 +6,7 @@ export class StickerGroupMessageCommand implements Command {
   name = 'stickerGroupMessage';
   description =
     'Convierte una foto o un video a sticker y viceversa de un grupo';
-  usesSession: false;
+  usesSession = false;
 
   async execute(message: Message, client: Client): Promise<UserSession | void> {
     if (

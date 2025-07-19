@@ -16,7 +16,6 @@ export class CommandHandlerService {
   async handle(message: Message, client: Client) {
     let command: Command | undefined;
     const body = message.body.trim();
-    const isGroup = message.from.endsWith('@g.us');
     const text = message.body.toLocaleLowerCase();
     const words = ['sticker', 'imagen'];
     const hasSome = words.some((word) => text.includes(word));
@@ -25,13 +24,13 @@ export class CommandHandlerService {
     const session = this.sessionManager.get(userId);
     this.logger.log(`Session commandName: ${session?.commandName}`);
     this.logger.log(`Session step: ${session?.step}`);
+    this.logger.log(`${session ? 'true' : 'false'}`);
 
     // Si la sesión existe
     if (session) {
+      this.logger.log(`Entro acá al principio?`);
       // Busca el comando
-      const commandName = this.sessionManager.get(
-        session.commandName,
-      )?.commandName;
+      const commandName = session.commandName;
       if (!commandName) {
         this.logger.log('Vaya vaya..');
         return;
@@ -45,7 +44,7 @@ export class CommandHandlerService {
           userId,
           'Error: comando no encontrado, para ver la lista de comandos envie */comandos*',
         );
-        await client.sendSeen(message.from);
+        await client.sendSeen(userId);
         return;
       }
 
@@ -62,14 +61,18 @@ export class CommandHandlerService {
     // No existe una sesión activa, arranca una nueva
     if (body.startsWith('/')) {
       const [commandName] = body.slice(1).split(' ');
-      this.logger.log(`commandName: ${commandName}`);
+      this.logger.log(`commandName encontrado: ${commandName}`);
       command = this.commandRegistry.get(commandName);
+
+      this.logger.log(
+        `Command encontrado usesSession : ${command?.usesSession}`,
+      );
       if (!command) {
         await client.sendMessage(
-          message.from,
+          userId,
           `Comando desconocido: ${commandName}, para ver la lista de comandos envie */comandos*`,
         );
-        await client.sendSeen(message.from);
+        await client.sendSeen(userId);
         return;
       }
     } else if (
@@ -78,25 +81,28 @@ export class CommandHandlerService {
       message.type === MessageTypes.STICKER ||
       (hasSome && message.hasQuotedMsg)
     ) {
+      const isGroup = message.from.endsWith('@g.us');
       command = this.commandRegistry.get(
         isGroup ? 'stickergroupmessage' : 'stickerdirectmessage',
       );
     } else {
-      await client.sendSeen(message.from);
+      await client.sendSeen(userId);
       return;
     }
 
     try {
       if (!command) return;
-
+      this.logger.log(`Comando en el try: ${command.name}`);
+      this.logger.log(`UsesSession en el try: ${command.usesSession}`);
       if (command.usesSession) {
-        const newSession: UserSession = {
+        const newSession: UserSession<any> = {
           commandName: command.name,
           step: 1,
           data: {},
         };
         this.sessionManager.set(userId, newSession);
 
+        this.logger.log(`Step en el try: ${newSession.step}`);
         const updatedSession = await command.execute(
           message,
           client,
@@ -114,8 +120,8 @@ export class CommandHandlerService {
       if (error instanceof Error) {
         this.logger.error(`Error ejecutando comando: ${error.message}`);
       }
-      await client.sendMessage(message.from, 'Error ejecutando el comando.');
-      await client.sendSeen(message.from);
+      await client.sendMessage(userId, 'Error ejecutando el comando.');
+      await client.sendSeen(userId);
     }
   }
 }

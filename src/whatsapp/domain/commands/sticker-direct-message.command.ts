@@ -5,7 +5,7 @@ import { UserSession } from '../../session/user-session.interface';
 export class StickerDirectMessageCommand implements Command {
   name = 'stickerDirectMessage';
   description = 'Convierte una foto o un video a sticker y viceversa';
-  usesSession: false;
+  usesSession = false;
 
   async execute(message: Message, client: Client): Promise<UserSession | void> {
     if (
