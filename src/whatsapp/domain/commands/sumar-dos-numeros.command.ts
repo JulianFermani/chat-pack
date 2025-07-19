@@ -1,18 +1,21 @@
 import { Message, Client } from 'whatsapp-web.js';
-import { UserSession } from './usersession.interface';
-import { Command } from './command.interface';
+import { Command } from './interfaces/command.interface';
+import { UserSession } from '../../session/user-session.interface';
+import { SumarSessionData } from './interfaces/sumar-session-data.interface';
 
-export class SumarNumerosCommand implements Command {
-  name = 'sumarNumeros';
+export class SumarDosNumerosCommand implements Command<SumarSessionData> {
+  name = 'sumarDosNumeros';
   description = 'Suma dos números en dos pasos';
+  usesSession = true;
 
   async execute(
     message: Message,
     client: Client,
-    session: UserSession,
-  ): Promise<UserSession | null> {
+    session: UserSession<SumarSessionData>,
+  ): Promise<UserSession<SumarSessionData> | void> {
     const userId = message.from;
     const text = message.body.trim();
+    console.log(`Session step en SumarDosNumerosCommand: ${session.step}`);
 
     switch (session.step) {
       case 1:
@@ -47,9 +50,12 @@ export class SumarNumerosCommand implements Command {
           return session; // repetir paso 3
         }
         session.data.num2 = num2;
-        const suma = session.data.num1 + session.data.num2;
+        let suma = 0;
+        if (session.data.num1 != undefined) {
+          suma = session.data.num1 + session.data.num2;
+        }
         await client.sendMessage(userId, `El resultado de la suma es: ${suma}`);
-        return null; // comando finalizado
+        return;
       }
       default:
         return session;
