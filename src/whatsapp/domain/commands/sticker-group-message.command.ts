@@ -1,6 +1,7 @@
 import { Message, Client } from 'whatsapp-web.js';
 import { Command } from './interfaces/command.interface';
 import { UserSession } from '../../session/user-session.interface';
+import { mediaSender } from './services/media-sender.service';
 
 export class StickerGroupMessageCommand implements Command {
   name = 'stickerGroupMessage';
@@ -13,48 +14,14 @@ export class StickerGroupMessageCommand implements Command {
       message.body.toLocaleLowerCase().includes('sticker') &&
       message.hasMedia
     ) {
-      void client.sendMessage(message.from, '*[⏳]* Cargando..');
-      try {
-        const media = await message.downloadMedia();
-        await client.sendMessage(message.from, media, {
-          sendMediaAsSticker: true,
-          stickerName: '...',
-          stickerAuthor: '...',
-        });
-        void client.sendMessage(message.from, '*[✅]* Servite pa');
-        console.log(
-          `Imagen --> Sticker a ${message.author}: ${(await message.getContact()).pushname} en grupo ${(await message.getChat()).name}`,
-        );
-      } catch (error) {
-        console.error(
-          `Error convirtiendole sticker --> imagen a ${message.author} en grupo ${(await message.getChat()).name}: ${error}`,
-        );
-        void client.sendMessage(message.from, '*[❎]* Uuuu algo falló');
-      }
+      await mediaSender(message, client, true);
     } else if (
       message.body.toLocaleLowerCase().includes('sticker') &&
       message.hasQuotedMsg
     ) {
       const quotedMsg = await message.getQuotedMessage();
       if (quotedMsg.hasMedia) {
-        void client.sendMessage(message.from, '*[⏳]* Cargando..');
-        try {
-          const media = await quotedMsg.downloadMedia();
-          await client.sendMessage(message.from, media, {
-            sendMediaAsSticker: true,
-            stickerName: '...',
-            stickerAuthor: '...',
-          });
-          console.log(
-            `Imagen --> Sticker a ${message.author}: ${(await message.getContact()).pushname} en grupo ${(await message.getChat()).name}`,
-          );
-          void client.sendMessage(message.from, '*[✅]* Servite pa');
-        } catch (error) {
-          console.error(
-            `Error convirtiendole sticker --> imagen a ${message.author} en grupo ${(await message.getChat()).name}: ${error}`,
-          );
-          void client.sendMessage(message.from, '*[❎]* Uuuu algo falló');
-        }
+        await mediaSender(quotedMsg, client, true);
       } else {
         void message.reply('*[❎]* Responde una imagen primero');
       }
@@ -64,22 +31,7 @@ export class StickerGroupMessageCommand implements Command {
     ) {
       const quotedMsg = await message.getQuotedMessage();
       if (quotedMsg.hasMedia) {
-        void client.sendMessage(message.from, '*[⏳]* Cargando..');
-        try {
-          const media = await quotedMsg.downloadMedia();
-          await client.sendMessage(message.from, media, {
-            caption: quotedMsg.body,
-          });
-          void client.sendMessage(message.from, '*[✅]* Servite pa');
-          console.log(
-            `Sticker --> Imagen a ${message.author}: ${(await message.getContact()).pushname} en grupo ${(await message.getChat()).name}`,
-          );
-        } catch (error) {
-          console.error(
-            `Error convirtiendole imagen --> sticker a ${message.author} en grupo ${(await message.getChat()).name}: ${error}`,
-          );
-          void client.sendMessage(message.from, '*[❎]* Uuuu algo falló');
-        }
+        await mediaSender(quotedMsg, client, false);
       } else {
         void message.reply('*[❎]* Responde un sticker primero');
       }
