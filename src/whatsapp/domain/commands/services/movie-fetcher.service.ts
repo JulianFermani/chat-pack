@@ -1,8 +1,10 @@
 import { Message } from 'whatsapp-web.js';
-import { Movie } from '../interfaces/movie.interface';
+import { UserMovie } from '../interfaces/movie.interface';
 import { MovieResponse } from '../dto/movie-response.dto';
 
-export async function fetchMovies(message: Message): Promise<Movie[] | null> {
+export async function fetchMovies(
+  message: Message,
+): Promise<UserMovie[] | null> {
   try {
     const url = `https://apiv2.gaf.adro.studio/nowPlaying/29/`;
     const res = await fetch(url);

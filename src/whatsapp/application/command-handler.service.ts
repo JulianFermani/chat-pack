@@ -24,11 +24,9 @@ export class CommandHandlerService {
     const session = this.sessionManager.get(userId);
     this.logger.log(`Session commandName: ${session?.commandName}`);
     this.logger.log(`Session step: ${session?.step}`);
-    this.logger.log(`${session ? 'true' : 'false'}`);
 
     // Si la sesión existe
     if (session) {
-      this.logger.log(`Entro acá al principio?`);
       // Busca el comando
       const commandName = session.commandName;
       if (!commandName) {
@@ -64,9 +62,6 @@ export class CommandHandlerService {
       this.logger.log(`commandName encontrado: ${commandName}`);
       command = this.commandRegistry.get(commandName);
 
-      this.logger.log(
-        `Command encontrado usesSession : ${command?.usesSession}`,
-      );
       if (!command) {
         await client.sendMessage(
           userId,
@@ -92,8 +87,6 @@ export class CommandHandlerService {
 
     try {
       if (!command) return;
-      this.logger.log(`Comando en el try: ${command.name}`);
-      this.logger.log(`UsesSession en el try: ${command.usesSession}`);
       if (command.usesSession) {
         const newSession: UserSession<any> = {
           commandName: command.name,
@@ -102,7 +95,6 @@ export class CommandHandlerService {
         };
         this.sessionManager.set(userId, newSession);
 
-        this.logger.log(`Step en el try: ${newSession.step}`);
         const updatedSession = await command.execute(
           message,
           client,
