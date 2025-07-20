@@ -13,7 +13,7 @@ import { getEmojiNumber } from './utils/number-format.util';
 export class SeeTicketsCommand implements Command {
   name = 'verEntradas';
   description =
-    'Devuelve las entradas sacadas que hay para una función del cine (sudcinemas villa maria) según la selección de fechas del usuario';
+    'Muestra las entradas vendidas para una función del cine SudCinemas Villa María según la fecha elegida por el usuario.';
   usesSession = true;
 
   async execute(
@@ -36,7 +36,6 @@ export class SeeTicketsCommand implements Command {
           return;
         }
 
-        // En un futuro cambiar el index + 1 por emojis de números? Muerte creo
         messageText = movies
           .map(
             (movie, index) =>

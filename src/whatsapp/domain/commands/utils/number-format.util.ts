@@ -17,3 +17,16 @@ export function getEmojiNumber(n: number): string {
     .map((d) => numberEmojis[Number(d)])
     .join('');
 }
+
+export function getEmojiForCommand(commandName: string): string {
+  const emojis: Record<string, string> = {
+    hola: '🗣️',
+    stickerDirectMessage: '🎨',
+    stickerGroupMessage: '👥',
+    sumarDosNumeros: '➕',
+    verPeliculas: '🎬',
+    comandos: '📜',
+  };
+
+  return emojis[commandName] || '🔧'; // emoji por defecto
+}

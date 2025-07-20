@@ -5,7 +5,8 @@ import { mediaSender } from './services/media-sender.service';
 
 export class StickerDirectMessageCommand implements Command {
   name = 'stickerDirectMessage';
-  description = 'Convierte una foto o un video a sticker y viceversa';
+  description =
+    'Convierte una foto o video a sticker, y viceversa, en mensajes privados.\nNo es necesario usar el comando: simplemente mandale una imagen o video y te lo convierte a sticker.\nPara convertir un sticker a imagen, enviás el sticker y te devuelve la imagen original.';
   usesSession = false;
 
   async execute(message: Message, client: Client): Promise<UserSession | void> {
