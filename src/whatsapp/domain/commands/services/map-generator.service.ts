@@ -23,7 +23,7 @@ export async function getStaticMapBuffer(
   });
 
   const { data } = await axios.get(
-    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyBYPsFR7fmYLm-zYlMcS-KCSmF9dM7lkn4`,
+    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${mapsApi}`,
   );
 
   const location = data.results[0].formatted_address;

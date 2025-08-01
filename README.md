@@ -48,10 +48,12 @@ docker run --network=chat-pack-net chat-pack:latest
 
 Para poder usar las funcionalidades de geolocalización (como obtener la ubicación de colectivos), necesitás configurar una API KEY de Google Maps.
 
-Debés colocar la misma clave en los siguientes archivos:
+Colocá la misma clave en los siguientes archivos:
 
 - `/config/env/development.env`
 - `/config/env/production.env`
+
+Aclaración: Los archivos .env.template son justamente templates para que copies y pegues sin el .template.
 
 Variable esperada:
 
