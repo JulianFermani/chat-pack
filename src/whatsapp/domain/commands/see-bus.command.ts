@@ -6,14 +6,13 @@ import { getResponseBus } from './services/response-bus.service';
 import { sleep } from './utils/sleep.util';
 import { SeeBusesData } from './interfaces/see-bus-data.interface';
 import { busSetter } from './services/bus-setter.service';
-import { getEmojiNumber } from './utils/number-format.util';
 import { getStaticMapBuffer } from './services/map-generator.service';
 import { placesFetcher } from './services/places-fetcher.service';
 
 export class SeeBusCommand implements Command {
   name = 'verColectivos';
   description =
-    'Responde con la ubicación del Villa del Rosario, desde Tio Pujio a Villa Maria';
+    'Muestra los horarios disponibles del servicio de colectivos Villa del Rosario (todas sus líneas) y, si se detecta ubicación GPS, permite visualizarla.';
   usesSession = true;
 
   async execute(
