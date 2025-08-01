@@ -5,6 +5,7 @@ import { SumarDosNumerosCommand } from './sumar-dos-numeros.command';
 import { SeeMoviesCommand } from './see-movies.command';
 import { Command } from './interfaces/command.interface';
 import { SeeTicketsCommand } from './see-tickets.command';
+import { SeeBusCommand } from './see-bus.command';
 
 export const baseCommandList: Command[] = [
   new HolaCommand(),
@@ -13,4 +14,5 @@ export const baseCommandList: Command[] = [
   new SumarDosNumerosCommand(),
   new SeeMoviesCommand(),
   new SeeTicketsCommand(),
+  new SeeBusCommand(),
 ];

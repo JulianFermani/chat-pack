@@ -25,6 +25,7 @@ export function getEmojiForCommand(commandName: string): string {
     stickerGroupMessage: '👥',
     sumarDosNumeros: '➕',
     verPeliculas: '🎬',
+    verColectivos: '🚌',
     comandos: '📜',
   };
 
