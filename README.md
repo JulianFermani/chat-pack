@@ -41,3 +41,24 @@ docker run --network=chat-pack-net chat-pack:latest
 ```
 
 - `--network=chat-pack-net`: conecta tu app a la misma red que MongoDB.
+
+---
+
+## 🗺 API Key de Google Maps (para ubicación de colectivos)
+
+Para poder usar las funcionalidades de geolocalización (como obtener la ubicación de colectivos), necesitás configurar una API KEY de Google Maps.
+
+Colocá la misma clave en los siguientes archivos:
+
+- `/config/env/development.env`
+- `/config/env/production.env`
+
+Aclaración: Los archivos .env.template son justamente templates para que copies y pegues sin el .template.
+
+Variable esperada:
+
+```
+MAPS_API=tu_api_key_aca
+```
+
+> ⚠️ Asegurate de habilitar la API de **Google Maps Static** y/o **Geocoding API**.
