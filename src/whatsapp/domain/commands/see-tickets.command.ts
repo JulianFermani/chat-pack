@@ -1,7 +1,7 @@
 import { Message, Client } from 'whatsapp-web.js';
 import { Command } from './interfaces/command.interface';
 import { UserSession } from 'src/whatsapp/session/user-session.interface';
-import { fetchMovies } from './services/movie-fetcher.service';
+import { movieFetcher } from 'src/whatsapp/features/see-movies/infra/movie-fetcher.service';
 import { UserMovie } from './interfaces/movie.interface';
 import { SeeTicketsData } from './interfaces/see-tickets-data.interface';
 import { fetchShowtimes } from './services/showtime-fetcher.service';
@@ -29,7 +29,7 @@ export class SeeTicketsCommand implements Command {
     // Mostrar peliculas y solicitar selección de una
     switch (session.step) {
       case 1: {
-        movies = await fetchMovies(message);
+        movies = await movieFetcher(message);
 
         if (movies === null || movies.length === 0) {
           await message.reply('No hay películas en cartelera en este momento.');

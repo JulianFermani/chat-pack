@@ -1,8 +1,8 @@
 import { Message } from 'whatsapp-web.js';
-import { UserMovie } from '../interfaces/movie.interface';
-import { MovieResponse } from '../dto/movie-response.dto';
+import { UserMovie } from 'src/whatsapp/domain/commands/interfaces/movie.interface';
+import { MovieResponse } from 'src/whatsapp/domain/commands/dto/movie-response.dto';
 
-export async function fetchMovies(
+export async function movieFetcher(
   message: Message,
 ): Promise<UserMovie[] | null> {
   try {
