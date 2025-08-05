@@ -1,4 +1,4 @@
-import { HolaCommand } from './hola.command';
+import { HolaCommand } from 'src/whatsapp/features/hola/hola.command';
 import { StickerDirectMessageCommand } from './sticker-direct-message.command';
 import { StickerGroupMessageCommand } from './sticker-group-message.command';
 import { SumarDosNumerosCommand } from './sumar-dos-numeros.command';
