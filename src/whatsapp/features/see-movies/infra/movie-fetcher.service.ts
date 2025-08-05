@@ -1,6 +1,6 @@
 import { Message } from 'whatsapp-web.js';
-import { UserMovie } from 'src/whatsapp/domain/commands/interfaces/movie.interface';
-import { MovieResponse } from 'src/whatsapp/domain/commands/dto/movie-response.dto';
+import { UserMovie } from '../model/see-movie-movie.interface';
+import { MovieResponse } from '../model/see-movie.dto';
 
 export async function movieFetcher(
   message: Message,

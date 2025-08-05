@@ -1,5 +1,5 @@
 import { Message, Client } from 'whatsapp-web.js';
-import { Command } from 'src/whatsapp/domain/commands/interfaces/command.interface';
+import { Command } from 'src/whatsapp/shared/interfaces/command.interface';
 import { UserSession } from '../../session/user-session.interface';
 import { SeeMoviesHandler } from './see-movies.handler';
 
