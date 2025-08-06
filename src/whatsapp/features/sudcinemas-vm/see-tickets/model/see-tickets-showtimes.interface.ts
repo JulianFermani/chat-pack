@@ -1,4 +1,4 @@
-import { FechaHora } from '../dto/showtime-response.dto';
+import { FechaHora } from './showtimes-response.dto';
 
 export interface UserShowtime {
   lenguaje: string;

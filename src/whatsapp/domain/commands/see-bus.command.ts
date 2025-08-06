@@ -1,5 +1,5 @@
 import { Message, Client, MessageMedia } from 'whatsapp-web.js';
-import { Command } from './interfaces/command.interface';
+import { Command } from 'src/whatsapp/shared/interfaces/command.interface';
 import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { getSeeBusCookie } from './services/cookie-fetcher.service';
 import { getResponseBus } from './services/response-bus.service';

@@ -1,4 +1,4 @@
-import { UserMovie } from 'src/whatsapp/domain/commands/interfaces/movie.interface';
+import { UserMovie } from '../../see-movies/model/see-movie-movie.interface';
 import { getEmojiNumber } from 'src/whatsapp/shared/utils/number-format.util';
 
 export function movieBuilderMessage(movies: UserMovie[]): string {
