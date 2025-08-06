@@ -1,5 +1,5 @@
 import { HolaCommand } from 'src/whatsapp/features/hola/hola.command';
-import { StickerDirectMessageCommand } from './domain/commands/sticker-direct-message.command';
+import { StickerDirectMessageCommand } from './features/stickers/sticker-direct-message/sticker-direct-message.command';
 import { StickerGroupMessageCommand } from './domain/commands/sticker-group-message.command';
 import { SumarDosNumerosCommand } from './features/sumar-dos-numeros/sumar-dos-numeros.command';
 import { SeeMoviesCommand } from 'src/whatsapp/features/see-movies/see-movies.command';
