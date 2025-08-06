@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { getEmojiNumber } from '../utils/number-format.util';
+import { getEmojiNumber } from 'src/whatsapp/shared/utils/number-format.util';
 interface PlacesResponse {
   places: { [key: string]: string };
   messageText: string;

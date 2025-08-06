@@ -1,6 +1,6 @@
 import { Client, Message } from 'whatsapp-web.js';
-import { movieFetcher } from '../infra/movie-fetcher.service';
-import { movieBuilderMessage } from '../presenter/see-movies.presenter';
+import { movieFetcher } from '../../shared/services/movie-fetcher.service';
+import { movieBuilderMessage } from '../../shared/presenter/see-movies.presenter';
 
 export async function seeMovieSender(
   message: Message,

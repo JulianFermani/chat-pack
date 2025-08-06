@@ -1,6 +1,6 @@
 import { Message, Client } from 'whatsapp-web.js';
 import { Command } from 'src/whatsapp/shared/interfaces/command.interface';
-import { UserSession } from '../../session/user-session.interface';
+import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { SeeMoviesHandler } from './see-movies.handler';
 
 export class SeeMoviesCommand implements Command {
@@ -10,6 +10,6 @@ export class SeeMoviesCommand implements Command {
   usesSession = false;
 
   async execute(message: Message, client: Client): Promise<UserSession | void> {
-    await SeeMoviesHandler.handle(message, client);
+    return SeeMoviesHandler.handle(message, client);
   }
 }

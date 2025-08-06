@@ -1,8 +1,25 @@
-import { UserShowtime } from '../interfaces/showtime.interface';
+import { UserShowtime } from '../model/see-tickets-showtimes.interface';
 
-export function buildWhatsAppShowtimesMessage(
+export function showtimesFilter(
+  dayNum: number,
+  daySelected: Date,
   showtimes: UserShowtime[],
-): string {
+): UserShowtime[] {
+  let userShowtimes: UserShowtime[] = [];
+  for (let index = 0; index < showtimes.length; index++) {
+    const dateShowtime: Date = new Date(showtimes[index].fechaHora.date);
+    if (dayNum === 3) {
+      userShowtimes = showtimes;
+      break;
+    }
+    if (daySelected.toDateString() === dateShowtime.toDateString()) {
+      userShowtimes.push(showtimes[index]);
+    }
+  }
+  return userShowtimes;
+}
+
+export function buildShowtimesMessage(showtimes: UserShowtime[]): string {
   if (showtimes.length === 0) {
     return 'No hay funciones disponibles para ese día.';
   }
