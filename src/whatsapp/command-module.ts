@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CommandRegistry } from './command-registry';
 import { baseCommandList } from './base-commands';
-import { GetCommandsCommand } from './domain/commands/get-commands.command';
+import { GetCommandsCommand } from './features/get-commands/get-command.command';
 
 @Module({
   providers: [
