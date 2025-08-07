@@ -105,8 +105,6 @@ export async function getResponseBus(
     message += `\n━━━━━━━━━━━━━━\n\n`;
   }
 
-  console.log(`${mapUrl}`);
-
   if (mapUrl) {
     message += `🗺️ *Se encontró ubicación en el mapa:*\n ¿Desea verlo?\n1️⃣ Si\n0️⃣ No  `;
   } else {

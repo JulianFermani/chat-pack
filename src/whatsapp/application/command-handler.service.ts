@@ -22,8 +22,6 @@ export class CommandHandlerService {
     const userId = message.from;
 
     const session = this.sessionManager.get(userId);
-    this.logger.log(`Session commandName: ${session?.commandName}`);
-    this.logger.log(`Session step: ${session?.step}`);
 
     // Si la sesión existe
     if (session) {
@@ -59,7 +57,6 @@ export class CommandHandlerService {
     // No existe una sesión activa, arranca una nueva
     if (body.startsWith('/')) {
       const [commandName] = body.slice(1).split(' ');
-      this.logger.log(`commandName encontrado: ${commandName}`);
       command = this.commandRegistry.get(commandName);
 
       if (!command) {
