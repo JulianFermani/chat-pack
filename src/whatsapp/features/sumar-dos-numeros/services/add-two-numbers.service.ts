@@ -20,6 +20,12 @@ export async function addTwoNumbers(
   if (session.data.num1 != undefined) {
     suma = session.data.num1 + session.data.num2;
   }
-  await client.sendMessage(message.from, `El resultado de la suma es: ${suma}`);
-  return;
+  await client.sendMessage(
+    message.from,
+    `El resultado de la suma es: ${suma}\n\n0. Para volver al paso anterior`,
+  );
+  session.step = 4;
+  console.log(`Session num1 en el tercer paso: ${session.data.num1}`);
+  console.log(`Session num2 en el tercer paso: ${session.data.num2}`);
+  return session;
 }

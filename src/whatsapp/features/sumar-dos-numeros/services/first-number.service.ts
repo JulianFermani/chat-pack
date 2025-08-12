@@ -8,6 +8,10 @@ export async function getFirstNumber(
   session: UserSession<SumarDosNumerosData>,
 ): Promise<UserSession<SumarDosNumerosData>> {
   await client.sendMessage(message.from, 'Por favor, envía el primer número:');
+  console.log(`Session num1 en el primer paso: ${session.data.num1}`);
+  console.log(`Session num2 en el primer paso: ${session.data.num2}`);
   session.step = 2;
+  session.back = false;
+  console.log(`Session back en el primer paso: ${session.back}`);
   return session;
 }
