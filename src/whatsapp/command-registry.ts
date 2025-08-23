@@ -1,4 +1,4 @@
-import { Command } from './domain/commands/interfaces/command.interface';
+import { Command } from './shared/interfaces/command.interface';
 import { Logger } from '@nestjs/common';
 
 export class CommandRegistry {

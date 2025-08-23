@@ -67,7 +67,6 @@ export class WhatsappService implements OnModuleInit {
     this.client.on('message', (message: Message) => {
       (async () => {
         await this.commandHandler.handle(message, this.client);
-        this.logger.log(`Mensaje recibido: ${message.body}`);
       })().catch(console.error);
     });
 
