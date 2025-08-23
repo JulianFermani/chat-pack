@@ -1,8 +1,7 @@
 import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { SeeBusesData } from '../see-bus.session';
 import { Client, Message } from 'whatsapp-web.js';
-import { busSetter } from '../infra/bus-setter.service';
-import { placesFetcher } from '../infra/places-fetcher.service';
+import { destinationPlacesFetcher } from '../infra/destination-fetcher.service';
 
 export async function seeBusOrigin(
   message: Message,
@@ -21,12 +20,18 @@ export async function seeBusOrigin(
     return session;
   }
 
-  const url = 'https://micronauta.dnsalias.net/usuario/select_destino.php';
-  const data = { id: valueOriginPlace.toString() };
+  const url =
+    'https://micronauta2.dnsalias.net/usuario/app/yaviene/buscador_cmd.php';
+  const data = {
+    cmd: 'buscar_destino_empresa',
+    idLocalidadGobierno: valueOriginPlace.toString(),
+  };
 
-  await busSetter(cookie, url, data);
-
-  const destinationPlacesResponse = await placesFetcher(cookie, url, data);
+  const destinationPlacesResponse = await destinationPlacesFetcher(
+    cookie,
+    url,
+    data,
+  );
 
   if (
     destinationPlacesResponse.messageText === null ||
