@@ -3,7 +3,7 @@ import { Client, Message } from 'whatsapp-web.js';
 import { SeeBusesData } from '../see-bus.session';
 import { seeBusCookieFetcher } from '../infra/cookie-fetcher.service';
 import { busSetter } from '../infra/bus-setter.service';
-import { placesFetcher } from '../infra/places-fetcher.service';
+import { originPlacesFetcher } from '../infra/origin-places-fetcher.service';
 
 export async function seeBusInit(
   message: Message,
@@ -11,25 +11,21 @@ export async function seeBusInit(
   session: UserSession<SeeBusesData>,
 ): Promise<UserSession<SeeBusesData> | void> {
   type Data = {
-    id: string;
-    c?: string;
-    a?: string;
+    cmd: string;
+    conf: string;
+    tkn: string;
   };
 
-  let url = 'https://micronauta.dnsalias.net/usuario/select_empresa.php';
-  let data: Data = { id: '5', c: '2,2,2,2,2', a: '1,2,3,4,5' };
-
   const cookie = await seeBusCookieFetcher();
+
+  let url =
+    'https://micronauta2.dnsalias.net/usuario/app/yaviene/?conf=elporvenir';
+  const originPlacesResponse = await originPlacesFetcher(cookie, url);
+
+  url = 'https://micronauta2.dnsalias.net/usuario/app/yaviene/buscador_cmd.php';
+  const data: Data = { cmd: 'isLogin', conf: 'elporvenir', tkn: 'null' };
+
   await busSetter(cookie, url, data);
-
-  url = 'https://micronauta.dnsalias.net/usuario/select_linea.php';
-  data = { id: '5=2=-1:0' };
-  await busSetter(cookie, url, data);
-
-  url = 'https://micronauta.dnsalias.net/usuario/select_origen.php';
-  data = { id: '0' };
-
-  const originPlacesResponse = await placesFetcher(cookie, url, data);
 
   if (
     originPlacesResponse.messageText === null ||
