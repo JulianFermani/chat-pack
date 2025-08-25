@@ -3,7 +3,11 @@ import axios, { AxiosResponse } from 'axios';
 export async function busSetter(
   cookie: string,
   url: string,
-  data: { id: string; c?: string; a?: string },
+  data: {
+    cmd: string;
+    conf: string;
+    tkn: string;
+  },
 ): Promise<AxiosResponse<any, any>> {
   const dataToUrl = new URLSearchParams(data).toString();
 

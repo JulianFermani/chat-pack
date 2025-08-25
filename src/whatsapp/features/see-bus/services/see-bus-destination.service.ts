@@ -1,7 +1,6 @@
 import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { Client, Message } from 'whatsapp-web.js';
 import { SeeBusesData } from '../see-bus.session';
-import { busSetter } from '../infra/bus-setter.service';
 import { sleep } from 'src/whatsapp/shared/utils/sleep.util';
 import { getResponseBus } from '../infra/bus-response.service';
 
@@ -23,18 +22,16 @@ export async function seeBusDestination(
     return session;
   }
 
-  const url = 'https://micronauta.dnsalias.net/usuario/select_origenp.php';
-  const data = { id: valueDestinationPlace.toString() };
-  await busSetter(cookie, url, data);
-
   const date = new Date();
-  const dateFormat = date.toLocaleDateString('es-AR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  });
+
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+
+  const dateFormat = `${year}-${month}-${day}`;
 
   const dataResponseBus = {
+    cmd: 'buscar_horarios',
     idOrigin: session.data.idOrigin,
     idDestination: valueDestinationPlace.toString(),
     todayDate: dateFormat,
