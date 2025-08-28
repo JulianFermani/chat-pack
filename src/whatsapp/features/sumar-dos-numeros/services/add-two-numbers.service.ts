@@ -20,6 +20,10 @@ export async function addTwoNumbers(
   if (session.data.num1 != undefined) {
     suma = session.data.num1 + session.data.num2;
   }
-  await client.sendMessage(message.from, `El resultado de la suma es: ${suma}`);
-  return;
+  await client.sendMessage(
+    message.from,
+    `El resultado de la suma es: ${suma}\n\n━━━━━━━━━━━━\n0️⃣ Volver atrás\n9️⃣9️⃣ Terminar sesión\n━━━━━━━━━━━━`,
+  );
+  session.step = 4;
+  return session;
 }

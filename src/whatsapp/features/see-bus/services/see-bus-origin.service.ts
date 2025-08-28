@@ -2,6 +2,7 @@ import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { SeeBusesData } from '../see-bus.session';
 import { Client, Message } from 'whatsapp-web.js';
 import { destinationPlacesFetcher } from '../infra/destination-fetcher.service';
+import { backOrDelete } from 'src/whatsapp/shared/utils/back-or-delete-message.util';
 
 export async function seeBusOrigin(
   message: Message,
@@ -10,7 +11,12 @@ export async function seeBusOrigin(
 ): Promise<UserSession<SeeBusesData> | void> {
   const cookie = session.data.cookie;
   const idBusPlaces = session.data.originPlaces;
-  const placeNum = Number(message.body.trim());
+  let placeNum: number;
+  if (session.data.numUserOrigin && session.back === true) {
+    placeNum = Number(session.data.numUserOrigin);
+  } else {
+    placeNum = Number(message.body.trim());
+  }
 
   const placeKeys = Object.keys(idBusPlaces);
   const keyOriginPlace = placeKeys[placeNum - 1];
@@ -41,13 +47,15 @@ export async function seeBusOrigin(
     return;
   }
 
-  await client.sendMessage(
-    message.from,
-    `🚏 Enviá el número a dónde vas: \n${destinationPlacesResponse.messageText}`,
-  );
+  let messageText = `🚏 Enviá el número a dónde vas: \n${destinationPlacesResponse.messageText}`;
+  messageText = backOrDelete(messageText);
+
+  await client.sendMessage(message.from, messageText);
 
   session.data.destinationPlaces = destinationPlacesResponse.places;
   session.data.idOrigin = valueOriginPlace.toString();
+  session.data.numUserOrigin = placeNum;
   session.step = 3;
+  session.back = false;
   return session;
 }

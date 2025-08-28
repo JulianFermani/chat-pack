@@ -4,6 +4,7 @@ import { SeeBusesData } from '../see-bus.session';
 import { seeBusCookieFetcher } from '../infra/cookie-fetcher.service';
 import { busSetter } from '../infra/bus-setter.service';
 import { originPlacesFetcher } from '../infra/origin-places-fetcher.service';
+import { backOrDelete } from 'src/whatsapp/shared/utils/back-or-delete-message.util';
 
 export async function seeBusInit(
   message: Message,
@@ -35,13 +36,14 @@ export async function seeBusInit(
     return;
   }
 
-  await client.sendMessage(
-    message.from,
-    `🚏 Enviá el número desde dónde salis: \n${originPlacesResponse.messageText}`,
-  );
+  let messageText = `🚏 Enviá el número desde dónde salis: \n${originPlacesResponse.messageText}`;
+  messageText = backOrDelete(messageText);
+
+  await client.sendMessage(message.from, messageText);
 
   session.data.originPlaces = originPlacesResponse.places;
   session.step = 2;
   session.data.cookie = cookie;
+  session.back = false;
   return session;
 }

@@ -7,7 +7,12 @@ export async function getSecondNumer(
   client: Client,
   session: UserSession<SumarDosNumerosData>,
 ): Promise<UserSession<SumarDosNumerosData>> {
-  const num1 = Number(message.body.trim());
+  let num1: number;
+  if (session.data.num1 && session.back === true) {
+    num1 = session.data.num1;
+  } else {
+    num1 = Number(message.body.trim());
+  }
   if (isNaN(num1)) {
     await client.sendMessage(
       message.from,
@@ -18,5 +23,6 @@ export async function getSecondNumer(
   session.data.num1 = num1;
   await client.sendMessage(message.from, 'Ahora envía el segundo número:');
   session.step = 3;
+  session.back = false;
   return session;
 }

@@ -1,11 +1,11 @@
 import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { SeeTicketsData } from '../see-tickets.session';
 import { Client, Message } from 'whatsapp-web.js';
-import { UserShowtime } from '../model/see-tickets-showtimes.interface';
 import {
   buildShowtimesMessage,
   showtimesFilter,
 } from '../presenter/see-tickets.presenter';
+import { backOrDelete } from 'src/whatsapp/shared/utils/back-or-delete-message.util';
 
 export async function sendUserShowtimes(
   message: Message,
@@ -24,7 +24,7 @@ export async function sendUserShowtimes(
 
   const dates = session.data.dates;
   const dayNum = Number(message.body.trim());
-  if (isNaN(dayNum)) {
+  if (isNaN(dayNum) || dayNum > 3 || dayNum < 0) {
     await client.sendMessage(
       message.from,
       'No es un número válido. Intenta de nuevo:',
@@ -34,7 +34,9 @@ export async function sendUserShowtimes(
 
   const daySelected = dates[dayNum - 1];
   const userShowtimes = showtimesFilter(dayNum, daySelected, showtimes);
-  const mensajeFinal = buildShowtimesMessage(userShowtimes);
+  let mensajeFinal = buildShowtimesMessage(userShowtimes);
+  mensajeFinal = backOrDelete(mensajeFinal);
   await client.sendMessage(message.from, mensajeFinal);
-  return;
+  session.step = 4;
+  return session;
 }

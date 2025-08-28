@@ -24,6 +24,7 @@
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/schedule": "^6.0.0",
     "@types/qrcode-terminal": "^0.12.2",
     "axios": "^1.10.0",
     "cheerio": "^1.1.2",

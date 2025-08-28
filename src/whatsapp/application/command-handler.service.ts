@@ -4,6 +4,7 @@ import { Command } from '../shared/interfaces/command.interface';
 import { UserSession } from '../session/user-session.interface';
 import { CommandRegistry } from '../command-registry';
 import { SessionManager } from '../session/session-manager';
+import { backOneSession } from '../shared/utils/back-one-session.util';
 
 @Injectable()
 export class CommandHandlerService {
@@ -21,10 +22,22 @@ export class CommandHandlerService {
     const hasSome = words.some((word) => text.includes(word));
     const userId = message.from;
 
-    const session = this.sessionManager.get(userId);
+    let session = this.sessionManager.get(userId);
 
     // Si la sesión existe
     if (session) {
+      // Antes chequeo si el mensaje es:
+      // 0: Retrocedo un paso la sesión del usuario
+      // 99: Mato la sesión del usuario
+      session = await backOneSession(
+        message,
+        client,
+        session,
+        this.sessionManager,
+      );
+      // Si elimina la sesión que retorne vacio
+      if (!session) return;
+
       // Busca el comando
       const commandName = session.commandName;
       if (!commandName) {
