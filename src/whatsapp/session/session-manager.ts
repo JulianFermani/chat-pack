@@ -8,6 +8,7 @@ export class SessionManager {
   }
 
   set(userId: string, session: UserSession<any>): void {
+    session.lastActivity = Date.now();
     this.sessions.set(userId, session);
   }
 
@@ -25,5 +26,19 @@ export class SessionManager {
 
   getAll(): UserSession<any>[] {
     return Array.from(this.sessions.values());
+  }
+
+  cleanInactiveSessions(ttlMs: number): string[] {
+    const now = Date.now();
+    const removed: string[] = [];
+
+    for (const [userId, session] of this.sessions.entries()) {
+      if (session.lastActivity && now - session.lastActivity > ttlMs) {
+        this.sessions.delete(userId);
+        removed.push(userId);
+      }
+    }
+
+    return removed;
   }
 }

@@ -3,4 +3,5 @@ export interface UserSession<T = unknown> {
   step: number;
   data: T;
   back?: boolean;
+  lastActivity?: number;
 }
