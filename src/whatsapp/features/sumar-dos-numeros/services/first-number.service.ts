@@ -9,5 +9,6 @@ export async function getFirstNumber(
 ): Promise<UserSession<SumarDosNumerosData>> {
   await client.sendMessage(message.from, 'Por favor, envía el primer número:');
   session.step = 2;
+  session.back = false;
   return session;
 }

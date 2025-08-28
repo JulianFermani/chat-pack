@@ -72,4 +72,8 @@ export class WhatsappService implements OnModuleInit {
 
     void this.client.initialize();
   }
+
+  getClient() {
+    return this.client;
+  }
 }

@@ -5,6 +5,8 @@ import { ConfigModule } from '@nestjs/config';
 import { configuration } from 'config/configuration';
 import { CommandModule } from './whatsapp/command-module';
 import { SessionManager } from './whatsapp/session/session-manager';
+import { ScheduleModule } from '@nestjs/schedule';
+import { SessionCleaner } from './whatsapp/session/session-cleaner';
 
 @Module({
   imports: [
@@ -13,8 +15,14 @@ import { SessionManager } from './whatsapp/session/session-manager';
       load: [configuration],
     }),
     CommandModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [],
-  providers: [WhatsappService, CommandHandlerService, SessionManager],
+  providers: [
+    WhatsappService,
+    CommandHandlerService,
+    SessionManager,
+    SessionCleaner,
+  ],
 })
 export class AppModule {}

@@ -3,17 +3,25 @@ import { Client, Message } from 'whatsapp-web.js';
 import { SeeBusesData } from '../see-bus.session';
 import { sleep } from 'src/whatsapp/shared/utils/sleep.util';
 import { getResponseBus } from '../infra/bus-response.service';
+import { backOrDelete } from '../../../shared/utils/back-or-delete-message.util';
 
 export async function seeBusDestination(
   message: Message,
   client: Client,
   session: UserSession<SeeBusesData>,
-): Promise<UserSession<SeeBusesData> | void> {
+): Promise<UserSession<SeeBusesData>> {
   const cookie = session.data.cookie;
   const idBusPlaces = session.data.destinationPlaces;
-  const placeNum = Number(message.body.trim());
+  let placeNum: number;
+
+  if (session.data.numUserDestination && session.back === true) {
+    placeNum = Number(session.data.numUserDestination);
+  } else {
+    placeNum = Number(message.body.trim());
+  }
 
   const placeKeys = Object.keys(idBusPlaces);
+  placeKeys.forEach((value) => console.log(value));
   const keyDestinationPlace = placeKeys[placeNum - 1];
   const valueDestinationPlace = idBusPlaces[keyDestinationPlace];
 
@@ -39,15 +47,15 @@ export async function seeBusDestination(
 
   await sleep(5000);
   const responseBus = await getResponseBus(cookie, dataResponseBus);
-  await client.sendMessage(message.from, responseBus.message);
+  const messageText = backOrDelete(responseBus.message);
+  await client.sendMessage(message.from, messageText);
   session.data.idDestination = valueDestinationPlace.toString();
+  session.data.numUserDestination = placeNum;
   if (responseBus.hasUbication) {
-    session.step = 4;
     session.data.lat = responseBus.lat;
     session.data.lng = responseBus.lng;
-  } else {
-    // Esto deberia bastar para borrar la sesión, creo?
-    return;
   }
+  session.step = 4;
+  session.back = false;
   return session;
 }
