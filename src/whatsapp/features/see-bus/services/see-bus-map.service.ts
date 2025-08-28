@@ -2,28 +2,35 @@ import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { Client, Message, MessageMedia } from 'whatsapp-web.js';
 import { SeeBusesData } from '../see-bus.session';
 import { seeBusMapGenerator } from '../infra/map-generator.service';
+import { backOrDelete } from 'src/whatsapp/shared/utils/back-or-delete-message.util';
 
 export async function seeBusMap(
   message: Message,
   client: Client,
   session: UserSession<SeeBusesData>,
-): Promise<void> {
+): Promise<UserSession<SeeBusesData> | undefined> {
   const ubicationNum = Number(message.body.trim());
-  if (ubicationNum === 0) {
+  if (ubicationNum === 2) {
     return;
   } else if (ubicationNum === 1) {
-    await client.sendMessage(message.from, '⏱️ Cargando ubicación...');
+    // Quizás queda más limpio sin el siguiente mensaje?
+    // await client.sendMessage(message.from, '⏱️ Cargando ubicación...');
     const mapResponse = await seeBusMapGenerator(
       session.data.lat,
       session.data.lng,
     );
+
     const media = new MessageMedia(
       'image/png',
       mapResponse.buffer.toString('base64'),
     );
+
+    let messageCaption = `Se encuentra en \n📍 *${mapResponse.location}*`;
+    messageCaption = backOrDelete(messageCaption);
     await client.sendMessage(message.from, media, {
-      caption: `Se encuentra en \n📍 *${mapResponse.location}*`,
+      caption: messageCaption,
     });
-    return;
+    session.step = 5;
+    return session;
   }
 }

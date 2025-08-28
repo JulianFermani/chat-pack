@@ -3,6 +3,7 @@ import { Client, Message } from 'whatsapp-web.js';
 import { SeeTicketsData } from '../see-tickets.session';
 import { movieFetcher } from '../../shared/services/movie-fetcher.service';
 import { movieBuilderMessage } from '../../shared/presenter/see-movies.presenter';
+import { backOrDelete } from 'src/whatsapp/shared/utils/back-or-delete-message.util';
 
 export async function getUserMovie(
   message: Message,
@@ -16,14 +17,14 @@ export async function getUserMovie(
     return;
   }
 
-  const messageText = movieBuilderMessage(movies);
+  let messageText = movieBuilderMessage(movies);
+  messageText = `🎟️ Enviá el número de la película que querés ver las entradas: \n${messageText}`;
+  messageText = backOrDelete(messageText);
 
-  await client.sendMessage(
-    message.from,
-    `🎟️ Enviá el número de la película que querés ver las entradas: \n${messageText}`,
-  );
+  await client.sendMessage(message.from, messageText);
 
   session.data.movies = movies;
   session.step = 2;
+  session.back = false;
   return session;
 }

@@ -97,7 +97,7 @@ export async function getResponseBus(
   });
 
   if (responseBus.hasUbication) {
-    message += `🗺️ *Se encontró ubicación en el mapa:*\n ¿Desea verlo?\n1️⃣ Si\n0️⃣ No  `;
+    message += `🗺️ *Se encontró ubicación en el mapa:*\n ¿Desea verlo?\n1️⃣ Si\n2️⃣ No  `;
   } else {
     message += `📍 *No se encontró ubicación en el mapa.*`;
   }

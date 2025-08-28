@@ -22,4 +22,8 @@ export class SessionManager {
   clear(): void {
     this.sessions.clear();
   }
+
+  getAll(): UserSession<any>[] {
+    return Array.from(this.sessions.values());
+  }
 }

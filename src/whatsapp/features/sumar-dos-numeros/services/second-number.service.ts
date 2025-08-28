@@ -8,10 +8,7 @@ export async function getSecondNumer(
   session: UserSession<SumarDosNumerosData>,
 ): Promise<UserSession<SumarDosNumerosData>> {
   let num1: number;
-  console.log(`message.body: ${message.body}`);
-  console.log(`Session back en el segundo paso: ${session.back}`);
   if (session.data.num1 && session.back === true) {
-    console.log(`ENTRO ALGUNA VEZ ACÁ`);
     num1 = session.data.num1;
   } else {
     num1 = Number(message.body.trim());
@@ -26,7 +23,6 @@ export async function getSecondNumer(
   session.data.num1 = num1;
   await client.sendMessage(message.from, 'Ahora envía el segundo número:');
   session.step = 3;
-  console.log(`Session num1 en el segundo paso: ${session.data.num1}`);
-  console.log(`Session num2 en el segundo paso: ${session.data.num2}`);
+  session.back = false;
   return session;
 }

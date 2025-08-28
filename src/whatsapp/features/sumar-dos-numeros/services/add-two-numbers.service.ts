@@ -22,10 +22,8 @@ export async function addTwoNumbers(
   }
   await client.sendMessage(
     message.from,
-    `El resultado de la suma es: ${suma}\n\n0. Para volver al paso anterior`,
+    `El resultado de la suma es: ${suma}\n\n━━━━━━━━━━━━\n0️⃣ Volver atrás\n9️⃣9️⃣ Terminar sesión\n━━━━━━━━━━━━`,
   );
   session.step = 4;
-  console.log(`Session num1 en el tercer paso: ${session.data.num1}`);
-  console.log(`Session num2 en el tercer paso: ${session.data.num2}`);
   return session;
 }
