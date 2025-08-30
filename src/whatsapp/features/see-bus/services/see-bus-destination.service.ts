@@ -21,7 +21,6 @@ export async function seeBusDestination(
   }
 
   const placeKeys = Object.keys(idBusPlaces);
-  placeKeys.forEach((value) => console.log(value));
   const keyDestinationPlace = placeKeys[placeNum - 1];
   const valueDestinationPlace = idBusPlaces[keyDestinationPlace];
 
