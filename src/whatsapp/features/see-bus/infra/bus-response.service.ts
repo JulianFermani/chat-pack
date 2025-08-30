@@ -15,6 +15,7 @@ interface BusData {
   llega: string;
   demora: string;
   se_anuncia: string;
+  horario_leyenda: string;
   coche: string;
   lat: string;
   lon: string;
@@ -82,11 +83,15 @@ export async function getResponseBus(
         message += `📢 *Se anuncia:* ${bus.se_anuncia}\n`;
       }
 
-      if (bus.coche) {
-        message += `🚍 *Coche:* ${bus.coche}`;
+      if (bus.horario_leyenda) {
+        message += `👀 *Observación:* ${bus.horario_leyenda}\n`;
       }
 
-      message += `\n━━━━━━━━━━━━━━\n\n`;
+      if (bus.coche) {
+        message += `🚍 *Coche:* ${bus.coche}\n`;
+      }
+
+      message += `━━━━━━━━━━━━━━\n\n`;
 
       if (bus.lat && bus.lon) {
         responseBus.hasUbication = true;
