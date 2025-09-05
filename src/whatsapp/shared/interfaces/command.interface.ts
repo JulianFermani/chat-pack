@@ -1,4 +1,4 @@
-import { Message, Client } from 'whatsapp-web.js';
+import { Message } from 'whatsapp-web.js';
 import { UserSession } from 'src/whatsapp/session/user-session.interface';
 export interface Command<T = any> {
   name: string;
@@ -6,7 +6,6 @@ export interface Command<T = any> {
   usesSession: boolean;
   execute(
     message: Message,
-    client: Client,
     session?: UserSession<T>,
   ): Promise<UserSession<T> | void>;
 }

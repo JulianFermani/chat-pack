@@ -1,10 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Message, Client, MessageTypes } from 'whatsapp-web.js';
+import { Message, MessageTypes } from 'whatsapp-web.js';
 import { Command } from '../shared/interfaces/command.interface';
 import { UserSession } from '../session/user-session.interface';
-import { CommandRegistry } from '../command-registry';
+import { CommandRegistry } from './command-registry';
 import { SessionManager } from '../session/session-manager';
 import { backOneSession } from '../shared/utils/back-one-session.util';
+import { WhatsappService } from './whatsapp.service';
+import { OnEvent } from '@nestjs/event-emitter';
 
 @Injectable()
 export class CommandHandlerService {
@@ -12,9 +14,11 @@ export class CommandHandlerService {
   constructor(
     private readonly commandRegistry: CommandRegistry,
     private readonly sessionManager: SessionManager,
+    private readonly whatsappClient: WhatsappService,
   ) {}
 
-  async handle(message: Message, client: Client) {
+  @OnEvent('whatsapp.message')
+  async handle(message: Message) {
     let command: Command | undefined;
     const body = message.body.trim();
     const text = message.body.toLocaleLowerCase();
@@ -31,7 +35,7 @@ export class CommandHandlerService {
       // 99: Mato la sesión del usuario
       session = await backOneSession(
         message,
-        client,
+        this.whatsappClient,
         session,
         this.sessionManager,
       );
@@ -49,16 +53,16 @@ export class CommandHandlerService {
       // Elimina el usuario de la sesión y envia un mensaje
       if (!command) {
         this.sessionManager.delete(userId);
-        await client.sendMessage(
+        await this.whatsappClient.sendMessage(
           userId,
           'Error: comando no encontrado, para ver la lista de comandos envie */comandos*',
         );
-        await client.sendSeen(userId);
+        await this.whatsappClient.sendSeen(userId);
         return;
       }
 
       // Ejecuta el comando y recibe la sesión updateada del usuario
-      const updatedSession = await command.execute(message, client, session);
+      const updatedSession = await command.execute(message, session);
       if (updatedSession) {
         this.sessionManager.set(userId, updatedSession);
       } else {
@@ -73,11 +77,11 @@ export class CommandHandlerService {
       command = this.commandRegistry.get(commandName);
 
       if (!command) {
-        await client.sendMessage(
+        await this.whatsappClient.sendMessage(
           userId,
           `Comando desconocido: ${commandName}, para ver la lista de comandos envie */comandos*`,
         );
-        await client.sendSeen(userId);
+        await this.whatsappClient.sendSeen(userId);
         return;
       }
     } else if (
@@ -91,7 +95,7 @@ export class CommandHandlerService {
         isGroup ? 'stickergroupmessage' : 'stickerdirectmessage',
       );
     } else {
-      await client.sendSeen(userId);
+      await this.whatsappClient.sendSeen(userId);
       return;
     }
 
@@ -105,25 +109,24 @@ export class CommandHandlerService {
         };
         this.sessionManager.set(userId, newSession);
 
-        const updatedSession = await command.execute(
-          message,
-          client,
-          newSession,
-        );
+        const updatedSession = await command.execute(message, newSession);
         if (updatedSession) {
           this.sessionManager.set(userId, updatedSession);
         } else {
           this.sessionManager.delete(userId);
         }
       } else {
-        await command.execute(message, client);
+        await command.execute(message);
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
         this.logger.error(`Error ejecutando comando: ${error.message}`);
       }
-      await client.sendMessage(userId, 'Error ejecutando el comando.');
-      await client.sendSeen(userId);
+      await this.whatsappClient.sendMessage(
+        userId,
+        'Error ejecutando el comando.',
+      );
+      await this.whatsappClient.sendSeen(userId);
     }
   }
 }
