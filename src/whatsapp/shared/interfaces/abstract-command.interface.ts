@@ -4,7 +4,9 @@ import { CommandRegistry } from 'src/whatsapp/application/command-registry';
 import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { Message } from 'whatsapp-web.js';
 
-export abstract class AbstractCommand implements Command, OnModuleInit {
+export abstract class AbstractCommand<T = any>
+  implements Command<T>, OnModuleInit
+{
   abstract name: string;
   abstract description: string;
   abstract usesSession: boolean;
@@ -17,6 +19,6 @@ export abstract class AbstractCommand implements Command, OnModuleInit {
 
   abstract execute(
     message: Message,
-    session: UserSession,
-  ): Promise<UserSession | void>;
+    session: UserSession<T>,
+  ): Promise<UserSession<T> | void>;
 }
