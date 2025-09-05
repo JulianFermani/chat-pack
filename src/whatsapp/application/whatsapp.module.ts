@@ -11,6 +11,8 @@ import { SeeMoviesModule } from '../features/sudcinemas-vm/see-movies/see-movies
 import { SeeTicketsModule } from '../features/sudcinemas-vm/see-tickets/see-tickets.module';
 import { SumarDosNumerosModule } from '../features/sumar-dos-numeros/sumar-dos-numeros.module';
 import { SeeBusModule } from '../features/see-bus/see-bus.module';
+import { StickerDirectMessageModule } from '../features/stickers/sticker-direct-message/sticker-direct-message.module';
+import { StickerGroupMessageModule } from '../features/stickers/sticker-group-message/sticker-group-message.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { SeeBusModule } from '../features/see-bus/see-bus.module';
     forwardRef(() => SeeTicketsModule),
     forwardRef(() => SumarDosNumerosModule),
     forwardRef(() => SeeBusModule),
+    forwardRef(() => StickerDirectMessageModule),
+    forwardRef(() => StickerGroupMessageModule),
     ConfigModule,
   ],
   providers: [

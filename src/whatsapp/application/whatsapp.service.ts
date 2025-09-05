@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit, Logger, Inject } from '@nestjs/common';
-import { Client, MessageMedia } from 'whatsapp-web.js';
+import { Client, MessageMedia, MessageSendOptions } from 'whatsapp-web.js';
 import * as qrcode from 'qrcode-terminal';
 import { WHATSAPP_CLIENT } from './whatsapp.provider';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -44,9 +44,21 @@ export class WhatsappService implements OnModuleInit {
     await this.client.sendSeen(to);
   }
 
-  async sendPhotoWithCaption(to: string, media: MessageMedia, caption: string) {
+  async sendPhotoWithCaption(
+    to: string,
+    media: MessageMedia,
+    caption?: string,
+  ) {
     await this.client.sendMessage(to, media, {
       caption: caption,
     });
+  }
+
+  async sendMediaToSticker(
+    to: string,
+    media: MessageMedia,
+    options: MessageSendOptions,
+  ) {
+    await this.client.sendMessage(to, media, options);
   }
 }
