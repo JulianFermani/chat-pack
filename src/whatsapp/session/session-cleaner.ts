@@ -14,10 +14,9 @@ export class SessionCleaner {
 
   @Cron(CronExpression.EVERY_5_MINUTES)
   async handleCleanup(): Promise<void> {
-    const client = this.whatsappService.getClient();
     const removed = this.sessionManager.cleanInactiveSessions(5 * 60 * 1000);
     for (const userId of removed) {
-      await client.sendMessage(
+      await this.whatsappService.sendMessage(
         userId,
         '🚮 Tu sesión expiró por inactividad. Si querés empezar de nuevo, enviá un comando.',
       );

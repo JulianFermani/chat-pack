@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { configuration } from 'config/configuration';
 import { ScheduleModule } from '@nestjs/schedule';
-import { SessionCleaner } from './whatsapp/session/session-cleaner';
 import { WhatsappModule } from './whatsapp/application/whatsapp.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { SessionModule } from './whatsapp/session/session.module';
 
 @Module({
   imports: [
@@ -13,6 +13,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
       load: [configuration],
     }),
     WhatsappModule,
+    SessionModule,
     ScheduleModule.forRoot(),
     EventEmitterModule.forRoot({
       wildcard: true,
@@ -20,6 +21,6 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     }),
   ],
   controllers: [],
-  providers: [SessionCleaner],
+  providers: [],
 })
 export class AppModule {}

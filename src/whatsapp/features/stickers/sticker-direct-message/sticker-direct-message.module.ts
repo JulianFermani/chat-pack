@@ -5,7 +5,7 @@ import { StickerDirectMessageHandler } from './sticker-direct-message.handler';
 
 @Module({
   imports: [forwardRef(() => WhatsappModule)],
-  controllers: [StickerDirectMessageCommand, StickerDirectMessageHandler],
+  providers: [StickerDirectMessageCommand, StickerDirectMessageHandler],
   exports: [StickerDirectMessageCommand],
 })
 export class StickerDirectMessageModule {}
