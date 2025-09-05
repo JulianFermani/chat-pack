@@ -6,11 +6,12 @@ import { CommandHandlerService } from './command-handler.service';
 import { whatsappClientProvider } from './whatsapp.provider';
 import { HolaModule } from '../features/hola/hola.module';
 import { SessionManager } from '../session/session-manager';
+import { CommandModule } from '../features/get-commands/get-command.module';
 
 @Module({
   imports: [
     forwardRef(() => HolaModule),
-    // forwardRef(() => CommandModule),
+    forwardRef(() => CommandModule),
     ConfigModule,
   ],
   providers: [
