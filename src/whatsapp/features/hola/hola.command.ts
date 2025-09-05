@@ -1,14 +1,24 @@
-import { Message, Client } from 'whatsapp-web.js';
-import { Command } from 'src/whatsapp/shared/interfaces/command.interface';
+import { Message } from 'whatsapp-web.js';
 import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { HolaHandler } from './hola.handler';
+import { Injectable } from '@nestjs/common';
+import { AbstractCommand } from 'src/whatsapp/shared/interfaces/abstract-command.interface';
+import { CommandRegistry } from 'src/whatsapp/application/command-registry';
 
-export class HolaCommand implements Command {
+@Injectable()
+export class HolaCommand extends AbstractCommand {
   name = 'hola';
   description = 'Responde con un saludo.';
   usesSession = false;
 
-  async execute(message: Message, client: Client): Promise<UserSession | void> {
-    await HolaHandler.handle(message, client);
+  constructor(
+    registry: CommandRegistry,
+    private readonly handler: HolaHandler,
+  ) {
+    super(registry);
+  }
+
+  async execute(message: Message): Promise<UserSession | void> {
+    await this.handler.handle(message);
   }
 }

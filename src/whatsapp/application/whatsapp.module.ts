@@ -4,10 +4,12 @@ import { CommandRegistry } from './command-registry';
 import { ConfigModule } from '@nestjs/config';
 import { CommandHandlerService } from './command-handler.service';
 import { whatsappClientProvider } from './whatsapp.provider';
+import { HolaModule } from '../features/hola/hola.module';
+import { SessionManager } from '../session/session-manager';
 
 @Module({
   imports: [
-    // forwardRef(() => HolaModule),
+    forwardRef(() => HolaModule),
     // forwardRef(() => CommandModule),
     ConfigModule,
   ],
@@ -16,6 +18,7 @@ import { whatsappClientProvider } from './whatsapp.provider';
     CommandHandlerService,
     CommandRegistry,
     whatsappClientProvider,
+    SessionManager,
   ],
   exports: [WhatsappService, CommandRegistry],
 })
