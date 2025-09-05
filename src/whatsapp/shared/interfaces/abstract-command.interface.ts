@@ -2,6 +2,7 @@ import { OnModuleInit } from '@nestjs/common';
 import { Command } from './command.interface';
 import { CommandRegistry } from 'src/whatsapp/application/command-registry';
 import { UserSession } from 'src/whatsapp/session/user-session.interface';
+import { Message } from 'whatsapp-web.js';
 
 export abstract class AbstractCommand implements Command, OnModuleInit {
   abstract name: string;
@@ -14,5 +15,8 @@ export abstract class AbstractCommand implements Command, OnModuleInit {
     this.registry.register(this);
   }
 
-  abstract execute(message: any): Promise<UserSession | void>;
+  abstract execute(
+    message: Message,
+    session: UserSession,
+  ): Promise<UserSession | void>;
 }

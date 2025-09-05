@@ -1,23 +1,26 @@
 import { UserSession } from 'src/whatsapp/session/user-session.interface';
-import { Client, Message } from 'whatsapp-web.js';
+import { Message } from 'whatsapp-web.js';
 import { SeeTicketsData } from './see-tickets.session';
 import { getUserMovie } from './services/get-user-movie.service';
 import { getUserShowtime } from './services/get-user-showtime.service';
 import { sendUserShowtimes } from './services/send-user-showtimes.service';
+import { Injectable } from '@nestjs/common';
+import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
 
+@Injectable()
 export class SeeTicketsHandler {
-  static async handle(
+  constructor(private readonly whatsappClient: WhatsappService) {}
+  async handle(
     message: Message,
-    client: Client,
     session: UserSession<SeeTicketsData>,
   ): Promise<UserSession<SeeTicketsData> | void> {
     switch (session.step) {
       case 1:
-        return getUserMovie(message, client, session);
+        return getUserMovie(message, this.whatsappClient, session);
       case 2:
-        return getUserShowtime(message, client, session);
+        return getUserShowtime(message, this.whatsappClient, session);
       case 3:
-        return sendUserShowtimes(message, client, session);
+        return sendUserShowtimes(message, this.whatsappClient, session);
     }
   }
 }

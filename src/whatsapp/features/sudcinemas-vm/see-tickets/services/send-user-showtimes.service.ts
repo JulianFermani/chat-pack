@@ -1,15 +1,16 @@
 import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { SeeTicketsData } from '../see-tickets.session';
-import { Client, Message } from 'whatsapp-web.js';
+import { Message } from 'whatsapp-web.js';
 import {
   buildShowtimesMessage,
   showtimesFilter,
 } from '../presenter/see-tickets.presenter';
 import { backOrDelete } from 'src/whatsapp/shared/utils/back-or-delete-message.util';
+import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
 
 export async function sendUserShowtimes(
   message: Message,
-  client: Client,
+  whatsappClient: WhatsappService,
   session: UserSession<SeeTicketsData>,
 ): Promise<UserSession<SeeTicketsData> | void> {
   // Tomar la fecha deseada, buscar los showtimes y enviarlos al usuario
@@ -25,7 +26,7 @@ export async function sendUserShowtimes(
   const dates = session.data.dates;
   const dayNum = Number(message.body.trim());
   if (isNaN(dayNum) || dayNum > 3 || dayNum < 0) {
-    await client.sendMessage(
+    await whatsappClient.sendMessage(
       message.from,
       'No es un número válido. Intenta de nuevo:',
     );
@@ -36,7 +37,7 @@ export async function sendUserShowtimes(
   const userShowtimes = showtimesFilter(dayNum, daySelected, showtimes);
   let mensajeFinal = buildShowtimesMessage(userShowtimes);
   mensajeFinal = backOrDelete(mensajeFinal);
-  await client.sendMessage(message.from, mensajeFinal);
+  await whatsappClient.sendMessage(message.from, mensajeFinal);
   session.step = 4;
   return session;
 }
