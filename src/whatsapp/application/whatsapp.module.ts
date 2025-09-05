@@ -10,6 +10,7 @@ import { CommandModule } from '../features/get-commands/get-command.module';
 import { SeeMoviesModule } from '../features/sudcinemas-vm/see-movies/see-movies.module';
 import { SeeTicketsModule } from '../features/sudcinemas-vm/see-tickets/see-tickets.module';
 import { SumarDosNumerosModule } from '../features/sumar-dos-numeros/sumar-dos-numeros.module';
+import { SeeBusModule } from '../features/see-bus/see-bus.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { SumarDosNumerosModule } from '../features/sumar-dos-numeros/sumar-dos-n
     forwardRef(() => SeeMoviesModule),
     forwardRef(() => SeeTicketsModule),
     forwardRef(() => SumarDosNumerosModule),
+    forwardRef(() => SeeBusModule),
     ConfigModule,
   ],
   providers: [

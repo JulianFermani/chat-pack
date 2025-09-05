@@ -1,12 +1,13 @@
 import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { SeeBusesData } from '../see-bus.session';
-import { Client, Message } from 'whatsapp-web.js';
+import { Message } from 'whatsapp-web.js';
 import { destinationPlacesFetcher } from '../infra/destination-fetcher.service';
 import { backOrDelete } from 'src/whatsapp/shared/utils/back-or-delete-message.util';
+import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
 
 export async function seeBusOrigin(
   message: Message,
-  client: Client,
+  whatsappClient: WhatsappService,
   session: UserSession<SeeBusesData>,
 ): Promise<UserSession<SeeBusesData> | void> {
   const cookie = session.data.cookie;
@@ -22,7 +23,7 @@ export async function seeBusOrigin(
   const keyOriginPlace = placeKeys[placeNum - 1];
   const valueOriginPlace = idBusPlaces[keyOriginPlace];
   if (!valueOriginPlace) {
-    await client.sendMessage(message.from, 'Número inválido.');
+    await whatsappClient.sendMessage(message.from, 'Número inválido.');
     return session;
   }
 
@@ -43,14 +44,17 @@ export async function seeBusOrigin(
     destinationPlacesResponse.messageText === null ||
     destinationPlacesResponse.places === null
   ) {
-    await client.sendMessage(message.from, `😞 No se encontraron destinos`);
+    await whatsappClient.sendMessage(
+      message.from,
+      `😞 No se encontraron destinos`,
+    );
     return;
   }
 
   let messageText = `🚏 Enviá el número a dónde vas: \n${destinationPlacesResponse.messageText}`;
   messageText = backOrDelete(messageText);
 
-  await client.sendMessage(message.from, messageText);
+  await whatsappClient.sendMessage(message.from, messageText);
 
   session.data.destinationPlaces = destinationPlacesResponse.places;
   session.data.idOrigin = valueOriginPlace.toString();
