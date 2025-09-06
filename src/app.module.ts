@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
-import { WhatsappService } from './whatsapp/application/whatsapp.service';
-import { CommandHandlerService } from './whatsapp/application/command-handler.service';
 import { ConfigModule } from '@nestjs/config';
 import { configuration } from 'config/configuration';
-import { CommandModule } from './whatsapp/command-module';
-import { SessionManager } from './whatsapp/session/session-manager';
 import { ScheduleModule } from '@nestjs/schedule';
-import { SessionCleaner } from './whatsapp/session/session-cleaner';
+import { WhatsappModule } from './whatsapp/application/whatsapp.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { SessionModule } from './whatsapp/session/session.module';
 
 @Module({
   imports: [
@@ -14,15 +12,15 @@ import { SessionCleaner } from './whatsapp/session/session-cleaner';
       envFilePath: `${process.cwd()}/config/env/${process.env.NODE_ENV}.env`,
       load: [configuration],
     }),
-    CommandModule,
+    WhatsappModule,
+    SessionModule,
     ScheduleModule.forRoot(),
+    EventEmitterModule.forRoot({
+      wildcard: true,
+      delimiter: '.',
+    }),
   ],
   controllers: [],
-  providers: [
-    WhatsappService,
-    CommandHandlerService,
-    SessionManager,
-    SessionCleaner,
-  ],
+  providers: [],
 })
 export class AppModule {}

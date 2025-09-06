@@ -1,5 +1,5 @@
 import { UserSession } from 'src/whatsapp/session/user-session.interface';
-import { Client, Message } from 'whatsapp-web.js';
+import { Message } from 'whatsapp-web.js';
 import { SeeTicketsData } from '../see-tickets.session';
 import { fetchShowtimes } from '../infra/fetch-showtimes';
 import {
@@ -9,10 +9,11 @@ import {
 import { getEmojiNumber } from 'src/whatsapp/shared/utils/number-format.util';
 import { UserMovie } from '../../see-movies/model/see-movie-movie.interface';
 import { backOrDelete } from 'src/whatsapp/shared/utils/back-or-delete-message.util';
+import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
 
 export async function getUserShowtime(
   message: Message,
-  client: Client,
+  whatsappClient: WhatsappService,
   session: UserSession<SeeTicketsData>,
 ) {
   // Buscar las funciones para esa peli y solicitar seleccion una fecha
@@ -24,7 +25,7 @@ export async function getUserShowtime(
     selectedMovie = session.data.movies?.[movieNum - 1];
   }
   if (!selectedMovie) {
-    await client.sendMessage(message.from, 'Número inválido.');
+    await whatsappClient.sendMessage(message.from, 'Número inválido.');
     return session;
   }
 
@@ -49,7 +50,7 @@ export async function getUserShowtime(
   let messageText = `📅 ¿Qué día querés ver la función? Elegí un número:\n${getEmojiNumber(1)}. ${formatDate(d1)}\n${getEmojiNumber(2)}. ${formatDate(d2)}\n${getEmojiNumber(3)}. ${formatDate(d1)} al ${formatDate(d3)}`;
   messageText = backOrDelete(messageText);
 
-  await client.sendMessage(message.from, messageText);
+  await whatsappClient.sendMessage(message.from, messageText);
   session.back = false;
   return session;
 }

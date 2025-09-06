@@ -1,13 +1,14 @@
 import { UserSession } from 'src/whatsapp/session/user-session.interface';
-import { Client, Message } from 'whatsapp-web.js';
+import { Message } from 'whatsapp-web.js';
 import { SeeBusesData } from '../see-bus.session';
 import { sleep } from 'src/whatsapp/shared/utils/sleep.util';
 import { getResponseBus } from '../infra/bus-response.service';
 import { backOrDelete } from '../../../shared/utils/back-or-delete-message.util';
+import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
 
 export async function seeBusDestination(
   message: Message,
-  client: Client,
+  whatsappClient: WhatsappService,
   session: UserSession<SeeBusesData>,
 ): Promise<UserSession<SeeBusesData>> {
   const cookie = session.data.cookie;
@@ -25,7 +26,7 @@ export async function seeBusDestination(
   const valueDestinationPlace = idBusPlaces[keyDestinationPlace];
 
   if (!valueDestinationPlace) {
-    await client.sendMessage(message.from, 'Número inválido.');
+    await whatsappClient.sendMessage(message.from, 'Número inválido.');
     return session;
   }
 
@@ -47,7 +48,7 @@ export async function seeBusDestination(
   await sleep(5000);
   const responseBus = await getResponseBus(cookie, dataResponseBus);
   const messageText = backOrDelete(responseBus.message);
-  await client.sendMessage(message.from, messageText);
+  await whatsappClient.sendMessage(message.from, messageText);
   session.data.idDestination = valueDestinationPlace.toString();
   session.data.numUserDestination = placeNum;
   if (responseBus.hasUbication) {

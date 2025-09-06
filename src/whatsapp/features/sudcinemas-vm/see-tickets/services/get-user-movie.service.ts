@@ -1,13 +1,14 @@
 import { UserSession } from 'src/whatsapp/session/user-session.interface';
-import { Client, Message } from 'whatsapp-web.js';
+import { Message } from 'whatsapp-web.js';
 import { SeeTicketsData } from '../see-tickets.session';
 import { movieFetcher } from '../../shared/services/movie-fetcher.service';
 import { movieBuilderMessage } from '../../shared/presenter/see-movies.presenter';
 import { backOrDelete } from 'src/whatsapp/shared/utils/back-or-delete-message.util';
+import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
 
 export async function getUserMovie(
   message: Message,
-  client: Client,
+  whatsappClient: WhatsappService,
   session: UserSession<SeeTicketsData>,
 ): Promise<UserSession<SeeTicketsData> | undefined> {
   const movies = await movieFetcher(message);
@@ -21,7 +22,7 @@ export async function getUserMovie(
   messageText = `🎟️ Enviá el número de la película que querés ver las entradas: \n${messageText}`;
   messageText = backOrDelete(messageText);
 
-  await client.sendMessage(message.from, messageText);
+  await whatsappClient.sendMessage(message.from, messageText);
 
   session.data.movies = movies;
   session.step = 2;

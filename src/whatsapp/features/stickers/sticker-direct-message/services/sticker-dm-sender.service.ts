@@ -1,17 +1,18 @@
-import { Client, Message, MessageTypes } from 'whatsapp-web.js';
+import { Message, MessageTypes } from 'whatsapp-web.js';
 import { stickerMediaSender } from '../../shared/services/sticker-media-sender.service';
+import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
 
 export async function stickerDirectMessageSender(
   message: Message,
-  client: Client,
+  whatsappClient: WhatsappService,
 ) {
   if (
     message.type == MessageTypes.IMAGE ||
     message.type == MessageTypes.VIDEO
   ) {
-    await stickerMediaSender(message, client, true);
+    await stickerMediaSender(message, whatsappClient, true);
   } else if (message.type == MessageTypes.STICKER) {
-    await stickerMediaSender(message, client, false);
+    await stickerMediaSender(message, whatsappClient, false);
   }
   return;
 }

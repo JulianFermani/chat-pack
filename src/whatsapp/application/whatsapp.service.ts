@@ -1,56 +1,21 @@
-import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
-import { Client, Message, RemoteAuth } from 'whatsapp-web.js';
+import { Injectable, OnModuleInit, Logger, Inject } from '@nestjs/common';
+import { Client, MessageMedia, MessageSendOptions } from 'whatsapp-web.js';
 import * as qrcode from 'qrcode-terminal';
-import { CommandHandlerService } from './command-handler.service';
-import { ConfigService } from '@nestjs/config';
-import { MongoStore } from 'wwebjs-mongo';
-import mongoose from 'mongoose';
-import type { Store } from 'whatsapp-web.js';
+import { WHATSAPP_CLIENT } from './whatsapp.provider';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class WhatsappService implements OnModuleInit {
   private readonly logger = new Logger(WhatsappService.name, {
     timestamp: true,
   });
-  private client: Client;
 
   constructor(
-    private readonly commandHandler: CommandHandlerService,
-    private configService: ConfigService,
+    private readonly eventEmitter: EventEmitter2,
+    @Inject(WHATSAPP_CLIENT) private readonly client: Client,
   ) {}
 
-  async onModuleInit() {
-    const mongoUri = this.configService.get<string>('MONGODB_URI')!;
-    await mongoose.connect(mongoUri);
-
-    const store = new MongoStore({ mongoose }) as unknown as Store;
-
-    this.client = new Client({
-      authStrategy: new RemoteAuth({
-        store: store,
-        clientId: 'cliente',
-        backupSyncIntervalMs: 60000,
-      }),
-      puppeteer: {
-        executablePath: this.configService.get<string>('chromium_dir'),
-        headless: true,
-        ignoreHTTPSErrors: true,
-        args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage',
-          '--disable-accelerated-2d-canvas',
-          '--no-first-run',
-          '--no-zygote',
-          '--disable-gpu',
-        ],
-      },
-      ffmpegPath: '/usr/bin/ffmpeg',
-      webVersionCache: {
-        type: 'none',
-      },
-    });
-
+  onModuleInit() {
     this.client.on('qr', (qr: string) => {
       this.logger.log(`Escaneá el QR: `);
       qrcode.generate(qr, { small: true });
@@ -64,16 +29,36 @@ export class WhatsappService implements OnModuleInit {
       this.logger.log('Sesión remota guardada en MongoDB.');
     });
 
-    this.client.on('message', (message: Message) => {
-      (async () => {
-        await this.commandHandler.handle(message, this.client);
-      })().catch(console.error);
+    this.client.on('message', (message) => {
+      this.eventEmitter.emit('whatsapp.message', message);
     });
 
     void this.client.initialize();
   }
 
-  getClient() {
-    return this.client;
+  async sendMessage(to: string, body: string) {
+    await this.client.sendMessage(to, body);
+  }
+
+  async sendSeen(to: string) {
+    await this.client.sendSeen(to);
+  }
+
+  async sendPhotoWithCaption(
+    to: string,
+    media: MessageMedia,
+    caption?: string,
+  ) {
+    await this.client.sendMessage(to, media, {
+      caption: caption,
+    });
+  }
+
+  async sendMediaToSticker(
+    to: string,
+    media: MessageMedia,
+    options: MessageSendOptions,
+  ) {
+    await this.client.sendMessage(to, media, options);
   }
 }

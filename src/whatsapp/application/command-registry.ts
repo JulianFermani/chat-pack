@@ -1,6 +1,7 @@
-import { Command } from './shared/interfaces/command.interface';
-import { Logger } from '@nestjs/common';
+import { Command } from '../shared/interfaces/command.interface';
+import { Injectable, Logger } from '@nestjs/common';
 
+@Injectable()
 export class CommandRegistry {
   private readonly commands = new Map<string, Command>();
   private readonly logger = new Logger(CommandRegistry.name);
@@ -20,6 +21,6 @@ export class CommandRegistry {
   }
 
   getAll(): Command[] {
-    return [...this.commands.values()];
+    return Array.from(this.commands.values());
   }
 }
