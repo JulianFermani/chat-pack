@@ -1,0 +1,21 @@
+name: Despliegue on cloud
+on:
+  push:
+    branches:
+      - main
+ 
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: pull codigo en VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+                    cd ~/chat-pack/
+                    git fetch origin main
+                    git reset --hard origin/main
