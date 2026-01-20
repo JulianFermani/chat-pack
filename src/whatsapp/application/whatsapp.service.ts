@@ -47,8 +47,9 @@ export class WhatsappService implements OnModuleInit {
       },
       ffmpegPath: '/usr/bin/ffmpeg',
       webVersionCache: {
-        type: 'none',
-      },
+        type: 'remote',
+        remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/refs/heads/main/html/2.3000.1032040031-alpha.html'
+    },
     });
 
     this.client.on('qr', (qr: string) => {
