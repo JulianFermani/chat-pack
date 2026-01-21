@@ -31,7 +31,11 @@ export const whatsappClientProvider = {
         ],
       },
       ffmpegPath: '/usr/bin/ffmpeg',
-      webVersionCache: { type: 'none' },
+      webVersionCache: {
+        type: 'remote',
+        remotePath:
+          'https://raw.githubusercontent.com/wppconnect-team/wa-version/refs/heads/main/html/2.3000.1032040031-alpha.html',
+      },
     });
     return client;
   },
