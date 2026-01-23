@@ -29,4 +29,4 @@ jobs:
                       echo "No containers found for image 'chat-pack:latest'"
                     fi
                     docker build -t chat-pack .
-                    docker run --network=chat-pack-net -d chat-pack:latest
+                    docker run --restart always --network=chat-pack-net -d chat-pack:latest
