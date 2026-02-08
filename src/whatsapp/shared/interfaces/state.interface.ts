@@ -1,11 +1,10 @@
 import { Message } from 'whatsapp-web.js';
 import { UserSession } from 'src/whatsapp/session/user-session.interface';
-export interface Command<T = any> {
-  name: string;
-  description: string;
-  usesSession: boolean;
-  execute(
+
+export interface State<T = any> {
+  handle(
     message: Message,
-    session?: UserSession<T>,
+    session: UserSession<T>,
   ): Promise<UserSession<T> | void>;
+  stepId: number;
 }

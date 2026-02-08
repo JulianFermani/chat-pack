@@ -1,22 +1,23 @@
-import { Client, Message } from 'whatsapp-web.js';
+import { Message } from 'whatsapp-web.js';
 import { stickerMediaSender } from '../../shared/services/sticker-media-sender.service';
+import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
 
 export async function stickerGroupMessageSender(
   message: Message,
-  client: Client,
+  whatsappClient: WhatsappService,
 ) {
   if (
     message.body.toLocaleLowerCase().includes('sticker') &&
     message.hasMedia
   ) {
-    await stickerMediaSender(message, client, true);
+    await stickerMediaSender(message, whatsappClient, true);
   } else if (
     message.body.toLocaleLowerCase().includes('sticker') &&
     message.hasQuotedMsg
   ) {
     const quotedMsg = await message.getQuotedMessage();
     if (quotedMsg.hasMedia) {
-      await stickerMediaSender(quotedMsg, client, true);
+      await stickerMediaSender(quotedMsg, whatsappClient, true);
     } else {
       await message.reply('*[❎]* Responde una imagen primero');
     }
@@ -26,7 +27,7 @@ export async function stickerGroupMessageSender(
   ) {
     const quotedMsg = await message.getQuotedMessage();
     if (quotedMsg.hasMedia) {
-      await stickerMediaSender(quotedMsg, client, false);
+      await stickerMediaSender(quotedMsg, whatsappClient, false);
     } else {
       await message.reply('*[❎]* Responde un sticker primero');
     }

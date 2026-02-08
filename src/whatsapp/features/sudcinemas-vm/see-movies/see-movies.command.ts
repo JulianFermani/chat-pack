@@ -1,15 +1,25 @@
-import { Message, Client } from 'whatsapp-web.js';
-import { Command } from 'src/whatsapp/shared/interfaces/command.interface';
+import { Message } from 'whatsapp-web.js';
 import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { SeeMoviesHandler } from './see-movies.handler';
+import { AbstractCommand } from 'src/whatsapp/shared/interfaces/abstract-command.interface';
+import { CommandRegistry } from 'src/whatsapp/application/command-registry';
+import { Injectable } from '@nestjs/common';
 
-export class SeeMoviesCommand implements Command {
+@Injectable()
+export class SeeMoviesCommand extends AbstractCommand {
   name = 'verPeliculas';
   description =
     'Muestra todas las películas en cartelera del cine SudCinemas Villa María.';
   usesSession = false;
 
-  async execute(message: Message, client: Client): Promise<UserSession | void> {
-    return SeeMoviesHandler.handle(message, client);
+  constructor(
+    registry: CommandRegistry,
+    private readonly handler: SeeMoviesHandler,
+  ) {
+    super(registry);
+  }
+
+  async execute(message: Message): Promise<UserSession | void> {
+    return this.handler.handle(message);
   }
 }

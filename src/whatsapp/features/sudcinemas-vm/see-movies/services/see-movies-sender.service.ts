@@ -1,10 +1,11 @@
-import { Client, Message } from 'whatsapp-web.js';
+import { Message } from 'whatsapp-web.js';
 import { movieFetcher } from '../../shared/services/movie-fetcher.service';
 import { movieBuilderMessage } from '../../shared/presenter/see-movies.presenter';
+import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
 
 export async function seeMovieSender(
   message: Message,
-  client: Client,
+  whatsappClient: WhatsappService,
 ): Promise<void> {
   const movies = await movieFetcher(message);
 
@@ -15,7 +16,7 @@ export async function seeMovieSender(
 
   const messageText = movieBuilderMessage(movies);
 
-  await client.sendMessage(
+  await whatsappClient.sendMessage(
     message.from,
     `🍿 Películas en cartelera: \n${messageText}`,
   );

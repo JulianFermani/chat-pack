@@ -1,23 +1,20 @@
 import { SumarDosNumerosData } from './sumar-dos-numeros.session';
 import { UserSession } from 'src/whatsapp/session/user-session.interface';
-import { Client, Message } from 'whatsapp-web.js';
-import { getFirstNumber } from './services/first-number.service';
-import { getSecondNumer } from './services/second-number.service';
-import { addTwoNumbers } from './services/add-two-numbers.service';
+import { Message } from 'whatsapp-web.js';
+import { Injectable } from '@nestjs/common';
+import { SumarDosNumerosStateFactory } from './states/sumar-dos-numeros-state.factory';
 
+@Injectable()
 export class SumarDosNumerosHandler {
-  static async handle(
+  constructor(private readonly stateFactory: SumarDosNumerosStateFactory) {}
+  async handle(
     message: Message,
-    client: Client,
     session: UserSession<SumarDosNumerosData>,
   ): Promise<UserSession<SumarDosNumerosData> | void> {
-    switch (session.step) {
-      case 1:
-        return await getFirstNumber(message, client, session);
-      case 2:
-        return await getSecondNumer(message, client, session);
-      case 3:
-        return await addTwoNumbers(message, client, session);
+    const state = this.stateFactory.get(session.step);
+    if (!state) {
+      return;
     }
+    return state.handle(message, session);
   }
 }

@@ -1,8 +1,13 @@
-import { Client, Message } from 'whatsapp-web.js';
+import { Message } from 'whatsapp-web.js';
 import { holaSender } from './services/hola-sender.service';
+import { Injectable } from '@nestjs/common';
+import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
 
+@Injectable()
 export class HolaHandler {
-  static async handle(message: Message, client: Client): Promise<void> {
-    await holaSender(message, client);
+  constructor(private readonly whatsappClient: WhatsappService) {}
+
+  async handle(message: Message): Promise<void> {
+    await holaSender(message, this.whatsappClient);
   }
 }

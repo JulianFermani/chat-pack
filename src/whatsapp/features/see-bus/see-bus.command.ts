@@ -1,20 +1,29 @@
 import { UserSession } from 'src/whatsapp/session/user-session.interface';
-import { Command } from 'src/whatsapp/shared/interfaces/command.interface';
-import { Client, Message } from 'whatsapp-web.js';
+import { Message } from 'whatsapp-web.js';
 import { SeeBusesData } from './see-bus.session';
 import { SeeBusHandler } from './see-bus.handler';
+import { AbstractCommand } from 'src/whatsapp/shared/interfaces/abstract-command.interface';
+import { CommandRegistry } from 'src/whatsapp/application/command-registry';
+import { Injectable } from '@nestjs/common';
 
-export class SeeBusCommand implements Command {
+@Injectable()
+export class SeeBusCommand extends AbstractCommand {
   name = 'verColectivos';
   description =
     'Muestra los horarios disponibles del servicio de colectivos Villa del Rosario (todas sus líneas) y, si se detecta ubicación GPS, permite visualizarla.';
   usesSession = true;
 
+  constructor(
+    registry: CommandRegistry,
+    private readonly handler: SeeBusHandler,
+  ) {
+    super(registry);
+  }
+
   async execute(
     message: Message,
-    client: Client,
     session: UserSession<SeeBusesData>,
   ): Promise<UserSession | void> {
-    return SeeBusHandler.handle(message, client, session);
+    return this.handler.handle(message, session);
   }
 }
