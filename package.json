@@ -48,7 +48,7 @@
     "@types/jest": "^29.5.14",
     "@types/mime-types": "^3.0.1",
     "@types/mongoose": "^5.11.96",
-    "@types/node": "^22.16.0",
+    "@types/node": "^22.19.15",
     "@types/qrcode": "^1.5.5",
     "@types/supertest": "^6.0.2",
     "eslint": "^9.18.0",
