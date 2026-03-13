@@ -1,7 +1,9 @@
 import { Message } from 'whatsapp-web.js';
-import { stickerDirectMessageSender } from './services/sticker-dm-sender.service';
+
 import { Injectable } from '@nestjs/common';
-import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
+
+import { WhatsappService } from '@application/whatsapp.service';
+import { stickerDirectMessageSender } from './services/sticker-dm-sender.service';
 
 @Injectable()
 export class StickerDirectMessageHandler {

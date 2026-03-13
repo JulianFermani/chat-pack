@@ -1,13 +1,14 @@
-import { Injectable, Logger } from '@nestjs/common';
 import { Message, MessageTypes } from 'whatsapp-web.js';
-import { Command } from '../shared/interfaces/command.interface';
-import { UserSession } from '../session/user-session.interface';
-import { CommandRegistry } from './command-registry';
-import { SessionManager } from '../session/session-manager';
-import { backOneSession } from '../shared/utils/back-one-session.util';
-import { WhatsappService } from './whatsapp.service';
+
+import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
+import { CommandRegistry } from './command-registry';
+import { WhatsappService } from './whatsapp.service';
+import { SessionManager } from '@session/session-manager';
+import { UserSession } from '@session/user-session.interface';
+import { Command } from '@shared/interfaces/command.interface';
+import { backOneSession } from '@shared/utils/back-one-session.util';
 @Injectable()
 export class CommandHandlerService {
   private readonly logger = new Logger(CommandHandlerService.name);

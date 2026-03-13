@@ -17,6 +17,12 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@application/*": ["./src/whatsapp/application/*"],
+      "@features/*": ["./src/whatsapp/features/*"],
+      "@session/*": ["./src/whatsapp/session/*"],
+      "@shared/*": ["./src/whatsapp/shared/*"]
+    }
   }
 }

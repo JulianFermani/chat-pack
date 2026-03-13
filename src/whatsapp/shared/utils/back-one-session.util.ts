@@ -1,7 +1,8 @@
-import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
-import { SessionManager } from 'src/whatsapp/session/session-manager';
-import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { Message } from 'whatsapp-web.js';
+
+import { WhatsappService } from '@application/whatsapp.service';
+import { SessionManager } from '@session/session-manager';
+import { UserSession } from '@session/user-session.interface';
 
 export async function backOneSession<T>(
   message: Message,

@@ -1,8 +1,10 @@
-import { SumarDosNumerosData } from './sumar-dos-numeros.session';
-import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { Message } from 'whatsapp-web.js';
+
 import { Injectable } from '@nestjs/common';
+
 import { SumarDosNumerosStateFactory } from './states/sumar-dos-numeros-state.factory';
+import { SumarDosNumerosData } from './sumar-dos-numeros.session';
+import { UserSession } from '@session/user-session.interface';
 
 @Injectable()
 export class SumarDosNumerosHandler {

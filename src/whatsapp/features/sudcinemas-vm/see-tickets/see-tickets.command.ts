@@ -1,10 +1,12 @@
 import { Message } from 'whatsapp-web.js';
-import { UserSession } from 'src/whatsapp/session/user-session.interface';
-import { SeeTicketsData } from './see-tickets.session';
-import { SeeTicketsHandler } from './see-tickets.handler';
-import { AbstractCommand } from 'src/whatsapp/shared/interfaces/abstract-command.interface';
-import { CommandRegistry } from 'src/whatsapp/application/command-registry';
+
 import { Injectable } from '@nestjs/common';
+
+import { SeeTicketsHandler } from './see-tickets.handler';
+import { SeeTicketsData } from './see-tickets.session';
+import { CommandRegistry } from '@application/command-registry';
+import { UserSession } from '@session/user-session.interface';
+import { AbstractCommand } from '@shared/interfaces/abstract-command.interface';
 
 @Injectable()
 export class SeeTicketsCommand extends AbstractCommand {

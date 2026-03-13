@@ -1,8 +1,9 @@
-import { State } from 'src/whatsapp/shared/interfaces/state.interface';
+import { Injectable } from '@nestjs/common';
+
 import { AddTwoNumbersState } from './add-two-numbers.state';
 import { FirstNumberState } from './first-number.state';
 import { SecondNumberState } from './second-number.state';
-import { Injectable } from '@nestjs/common';
+import { State } from '@shared/interfaces/state.interface';
 
 @Injectable()
 export class SumarDosNumerosStateFactory {

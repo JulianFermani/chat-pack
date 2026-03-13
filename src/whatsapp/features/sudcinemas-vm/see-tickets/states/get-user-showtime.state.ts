@@ -1,17 +1,19 @@
-import { State } from 'src/whatsapp/shared/interfaces/state.interface';
-import { SeeTicketsData } from '../see-tickets.session';
-import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
-import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { Message } from 'whatsapp-web.js';
+
 import { Injectable } from '@nestjs/common';
-import { UserMovie } from '../../see-movies/model/see-movie-movie.interface';
+
 import { fetchShowtimes } from '../infra/fetch-showtimes';
+import { SeeTicketsData } from '../see-tickets.session';
+import { WhatsappService } from '@application/whatsapp.service';
+import { UserMovie } from '@features/sudcinemas-vm/see-movies/model/see-movie-movie.interface';
+import { UserSession } from '@session/user-session.interface';
+import { State } from '@shared/interfaces/state.interface';
+import { backOrDelete } from '@shared/utils/back-or-delete-message.util';
 import {
-  formatDate,
   generateDateOptions,
-} from 'src/whatsapp/shared/utils/date-format.util';
-import { backOrDelete } from 'src/whatsapp/shared/utils/back-or-delete-message.util';
-import { getEmojiNumber } from 'src/whatsapp/shared/utils/number-format.util';
+  formatDate,
+} from '@shared/utils/date-format.util';
+import { getEmojiNumber } from '@shared/utils/number-format.util';
 
 @Injectable()
 export class GetUserShowtimeState implements State<SeeTicketsData> {

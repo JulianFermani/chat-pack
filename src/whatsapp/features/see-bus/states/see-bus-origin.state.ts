@@ -1,12 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { State } from '../../../shared/interfaces/state.interface';
-import { SeeBusesData } from '../see-bus.session';
-import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
-import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { Message } from 'whatsapp-web.js';
-import { destinationPlacesFetcher } from '../infra/destination-fetcher.service';
-import { backOrDelete } from 'src/whatsapp/shared/utils/back-or-delete-message.util';
+
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+
+import { destinationPlacesFetcher } from '../infra/destination-fetcher.service';
+import { SeeBusesData } from '../see-bus.session';
+import { WhatsappService } from '@application/whatsapp.service';
+import { UserSession } from '@session/user-session.interface';
+import { State } from '@shared/interfaces/state.interface';
+import { backOrDelete } from '@shared/utils/back-or-delete-message.util';
 
 @Injectable()
 export class SeeBusOriginState implements State<SeeBusesData> {

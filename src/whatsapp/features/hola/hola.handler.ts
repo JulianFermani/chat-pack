@@ -1,7 +1,9 @@
 import { Message } from 'whatsapp-web.js';
-import { holaSender } from './services/hola-sender.service';
+
 import { Injectable } from '@nestjs/common';
-import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
+
+import { holaSender } from './services/hola-sender.service';
+import { WhatsappService } from '@application/whatsapp.service';
 
 @Injectable()
 export class HolaHandler {

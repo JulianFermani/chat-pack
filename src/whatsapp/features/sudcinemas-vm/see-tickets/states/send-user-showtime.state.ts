@@ -1,14 +1,16 @@
-import { State } from 'src/whatsapp/shared/interfaces/state.interface';
-import { SeeTicketsData } from '../see-tickets.session';
-import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
-import { Injectable } from '@nestjs/common';
-import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { Message } from 'whatsapp-web.js';
+
+import { Injectable } from '@nestjs/common';
+
+import { SeeTicketsData } from '../see-tickets.session';
 import {
-  buildShowtimesMessage,
   showtimesFilter,
+  buildShowtimesMessage,
 } from '../presenter/see-tickets.presenter';
-import { backOrDelete } from 'src/whatsapp/shared/utils/back-or-delete-message.util';
+import { WhatsappService } from '@application/whatsapp.service';
+import { UserSession } from '@session/user-session.interface';
+import { State } from '@shared/interfaces/state.interface';
+import { backOrDelete } from '@shared/utils/back-or-delete-message.util';
 
 @Injectable()
 export class SendUserShowtimesState implements State<SeeTicketsData> {

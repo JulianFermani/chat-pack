@@ -1,12 +1,14 @@
-import { State } from 'src/whatsapp/shared/interfaces/state.interface';
-import { SeeTicketsData } from '../see-tickets.session';
-import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
-import { Injectable } from '@nestjs/common';
-import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { Message } from 'whatsapp-web.js';
-import { movieFetcher } from '../../shared/services/movie-fetcher.service';
-import { movieBuilderMessage } from '../../shared/presenter/see-movies.presenter';
-import { backOrDelete } from 'src/whatsapp/shared/utils/back-or-delete-message.util';
+
+import { Injectable } from '@nestjs/common';
+
+import { SeeTicketsData } from '../see-tickets.session';
+import { WhatsappService } from '@application/whatsapp.service';
+import { UserSession } from '@session/user-session.interface';
+import { movieFetcher } from '@features/sudcinemas-vm/shared/services/movie-fetcher.service';
+import { movieBuilderMessage } from '@features/sudcinemas-vm/shared/presenter/see-movies.presenter';
+import { State } from '@shared/interfaces/state.interface';
+import { backOrDelete } from '@shared/utils/back-or-delete-message.util';
 
 @Injectable()
 export class GetUserMovieState implements State<SeeTicketsData> {

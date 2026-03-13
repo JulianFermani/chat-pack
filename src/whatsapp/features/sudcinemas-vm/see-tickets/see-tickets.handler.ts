@@ -1,8 +1,10 @@
-import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { Message } from 'whatsapp-web.js';
-import { SeeTicketsData } from './see-tickets.session';
+
 import { Injectable } from '@nestjs/common';
+
+import { SeeTicketsData } from './see-tickets.session';
 import { SeeTicketsStateFactory } from './states/see-tickets-state.factory';
+import { UserSession } from '@session/user-session.interface';
 
 @Injectable()
 export class SeeTicketsHandler {

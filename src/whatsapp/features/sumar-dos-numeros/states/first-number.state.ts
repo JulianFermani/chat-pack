@@ -1,9 +1,11 @@
-import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
-import { SumarDosNumerosData } from '../sumar-dos-numeros.session';
-import { State } from 'src/whatsapp/shared/interfaces/state.interface';
-import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { Message } from 'whatsapp-web.js';
+
 import { Injectable } from '@nestjs/common';
+
+import { SumarDosNumerosData } from '../sumar-dos-numeros.session';
+import { WhatsappService } from '@application/whatsapp.service';
+import { UserSession } from '@session/user-session.interface';
+import { State } from '@shared/interfaces/state.interface';
 
 @Injectable()
 export class FirstNumberState implements State<SumarDosNumerosData> {

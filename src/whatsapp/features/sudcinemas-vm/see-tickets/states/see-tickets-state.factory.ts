@@ -1,8 +1,9 @@
-import { State } from 'src/whatsapp/shared/interfaces/state.interface';
+import { Injectable } from '@nestjs/common';
+
 import { GetUserMovieState } from './get-user-movie.state';
 import { GetUserShowtimeState } from './get-user-showtime.state';
 import { SendUserShowtimesState } from './send-user-showtime.state';
-import { Injectable } from '@nestjs/common';
+import { State } from '@shared/interfaces/state.interface';
 
 @Injectable()
 export class SeeTicketsStateFactory {

@@ -1,14 +1,16 @@
-import { Injectable } from '@nestjs/common';
 import { Message } from 'whatsapp-web.js';
-import { UserSession } from 'src/whatsapp/session/user-session.interface';
-import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
-import { State } from '../../../shared/interfaces/state.interface';
+
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+
+import { busSetter } from '../infra/bus-setter.service';
 import { SeeBusesData } from '../see-bus.session';
 import { seeBusCookieFetcher } from '../infra/cookie-fetcher.service';
 import { originPlacesFetcher } from '../infra/origin-places-fetcher.service';
-import { busSetter } from '../infra/bus-setter.service';
-import { backOrDelete } from 'src/whatsapp/shared/utils/back-or-delete-message.util';
-import { ConfigService } from '@nestjs/config';
+import { WhatsappService } from '@application/whatsapp.service';
+import { UserSession } from '@session/user-session.interface';
+import { State } from '@shared/interfaces/state.interface';
+import { backOrDelete } from '@shared/utils/back-or-delete-message.util';
 
 type Data = {
   cmd: string;

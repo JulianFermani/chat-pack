@@ -1,11 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { State } from '../../../shared/interfaces/state.interface';
-import { SeeBusesData } from '../see-bus.session';
-import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
-import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { Message, MessageMedia } from 'whatsapp-web.js';
+
+import { Injectable } from '@nestjs/common';
+
 import { seeBusMapGenerator } from '../infra/map-generator.service';
-import { backOrDelete } from 'src/whatsapp/shared/utils/back-or-delete-message.util';
+import { SeeBusesData } from '../see-bus.session';
+import { WhatsappService } from '@application/whatsapp.service';
+import { UserSession } from '@session/user-session.interface';
+import { State } from '@shared/interfaces/state.interface';
+import { backOrDelete } from '@shared/utils/back-or-delete-message.util';
 
 @Injectable()
 export class SeeBusMapState implements State<SeeBusesData> {

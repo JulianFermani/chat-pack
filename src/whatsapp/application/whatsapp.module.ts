@@ -1,18 +1,19 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { WhatsappService } from './whatsapp.service';
-import { CommandRegistry } from './command-registry';
 import { ConfigModule } from '@nestjs/config';
+
 import { CommandHandlerService } from './command-handler.service';
+import { CommandRegistry } from './command-registry';
 import { whatsappClientProvider } from './whatsapp.provider';
-import { HolaModule } from '../features/hola/hola.module';
-import { SessionManager } from '../session/session-manager';
-import { CommandModule } from '../features/get-commands/get-command.module';
-import { SeeMoviesModule } from '../features/sudcinemas-vm/see-movies/see-movies.module';
-import { SeeTicketsModule } from '../features/sudcinemas-vm/see-tickets/see-tickets.module';
-import { SumarDosNumerosModule } from '../features/sumar-dos-numeros/sumar-dos-numeros.module';
-import { SeeBusModule } from '../features/see-bus/see-bus.module';
-import { StickerDirectMessageModule } from '../features/stickers/sticker-direct-message/sticker-direct-message.module';
-import { StickerGroupMessageModule } from '../features/stickers/sticker-group-message/sticker-group-message.module';
+import { WhatsappService } from './whatsapp.service';
+import { CommandModule } from '@features/get-commands/get-command.module';
+import { HolaModule } from '@features/hola/hola.module';
+import { SeeBusModule } from '@features/see-bus/see-bus.module';
+import { StickerDirectMessageModule } from '@features/stickers/sticker-direct-message/sticker-direct-message.module';
+import { StickerGroupMessageModule } from '@features/stickers/sticker-group-message/sticker-group-message.module';
+import { SeeMoviesModule } from '@features/sudcinemas-vm/see-movies/see-movies.module';
+import { SeeTicketsModule } from '@features/sudcinemas-vm/see-tickets/see-tickets.module';
+import { SumarDosNumerosModule } from '@features/sumar-dos-numeros/sumar-dos-numeros.module';
+import { SessionManager } from '@session/session-manager';
 
 @Module({
   imports: [

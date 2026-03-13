@@ -1,7 +1,8 @@
 import { forwardRef, Module } from '@nestjs/common';
+
 import { SessionCleaner } from './session-cleaner';
-import { WhatsappModule } from '../application/whatsapp.module';
 import { SessionManager } from './session-manager';
+import { WhatsappModule } from '@application/whatsapp.module';
 
 @Module({
   imports: [forwardRef(() => WhatsappModule)],

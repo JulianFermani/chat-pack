@@ -1,7 +1,11 @@
 import { Client, RemoteAuth } from 'whatsapp-web.js';
-import { MongoStore } from 'wwebjs-mongo';
-import mongoose from 'mongoose';
+
 import { ConfigService } from '@nestjs/config';
+
+import mongoose from 'mongoose';
+
+import { MongoStore } from 'wwebjs-mongo';
+
 export const WHATSAPP_CLIENT = 'WHATSAPP_CLIENT';
 export const whatsappClientProvider = {
   provide: WHATSAPP_CLIENT,

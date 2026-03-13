@@ -1,8 +1,10 @@
-import { OnModuleInit } from '@nestjs/common';
-import { Command } from './command.interface';
-import { CommandRegistry } from 'src/whatsapp/application/command-registry';
-import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { Message } from 'whatsapp-web.js';
+
+import { OnModuleInit } from '@nestjs/common';
+
+import { Command } from './command.interface';
+import { CommandRegistry } from '@application/command-registry';
+import { UserSession } from '@session/user-session.interface';
 
 export abstract class AbstractCommand<T = any>
   implements Command<T>, OnModuleInit

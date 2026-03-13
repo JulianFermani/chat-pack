@@ -1,7 +1,8 @@
 import { Message } from 'whatsapp-web.js';
-import { movieFetcher } from '../../shared/services/movie-fetcher.service';
-import { movieBuilderMessage } from '../../shared/presenter/see-movies.presenter';
-import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
+
+import { WhatsappService } from '@application/whatsapp.service';
+import { movieBuilderMessage } from '@features/sudcinemas-vm/shared/presenter/see-movies.presenter';
+import { movieFetcher } from '@features/sudcinemas-vm/shared/services/movie-fetcher.service';
 
 export async function seeMovieSender(
   message: Message,

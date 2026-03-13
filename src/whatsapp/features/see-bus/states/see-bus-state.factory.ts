@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { State } from '../../../shared/interfaces/state.interface';
-import { SeeBusInitState } from './see-bus-init.state';
-import { SeeBusOriginState } from './see-bus-origin.state';
-import { SeeBusDestinationState } from './see-bus-destination.state';
-import { SeeBusMapState } from './see-bus-map.state';
 
+import { SeeBusDestinationState } from './see-bus-destination.state';
+import { SeeBusInitState } from './see-bus-init.state';
+import { SeeBusMapState } from './see-bus-map.state';
+import { SeeBusOriginState } from './see-bus-origin.state';
+import { State } from '@shared/interfaces/state.interface';
 @Injectable()
 export class SeeBusStateFactory {
   private states: Map<number, State> = new Map();

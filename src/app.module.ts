@@ -2,9 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { configuration } from 'config/configuration';
 import { ScheduleModule } from '@nestjs/schedule';
-import { WhatsappModule } from './whatsapp/application/whatsapp.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { SessionModule } from './whatsapp/session/session.module';
+
+import { SessionModule } from '@session/session.module';
+import { WhatsappModule } from '@application/whatsapp.module';
 
 @Module({
   imports: [

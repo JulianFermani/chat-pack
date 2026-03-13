@@ -1,9 +1,11 @@
 import { Message } from 'whatsapp-web.js';
-import { UserSession } from 'src/whatsapp/session/user-session.interface';
-import { StickerDirectMessageHandler } from './sticker-direct-message.handler';
+
 import { Injectable } from '@nestjs/common';
-import { AbstractCommand } from 'src/whatsapp/shared/interfaces/abstract-command.interface';
-import { CommandRegistry } from 'src/whatsapp/application/command-registry';
+
+import { StickerDirectMessageHandler } from './sticker-direct-message.handler';
+import { CommandRegistry } from '@application/command-registry';
+import { UserSession } from '@session/user-session.interface';
+import { AbstractCommand } from '@shared/interfaces/abstract-command.interface';
 
 @Injectable()
 export class StickerDirectMessageCommand extends AbstractCommand {
