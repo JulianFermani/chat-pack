@@ -1,6 +1,6 @@
 import { Message } from 'whatsapp-web.js';
 
-import { WhatsappService } from '@application/whatsapp.service';
+import { WhatsappService } from '@client/whatsapp.service';
 
 export async function holaSender(
   message: Message,

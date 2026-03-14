@@ -1,6 +1,6 @@
 import { Message } from 'whatsapp-web.js';
 
-import { WhatsappService } from '@application/whatsapp.service';
+import { WhatsappService } from '@client/whatsapp.service';
 import { stickerMediaSender } from '@features/stickers/shared/services/sticker-media-sender.service';
 
 export async function stickerGroupMessageSender(

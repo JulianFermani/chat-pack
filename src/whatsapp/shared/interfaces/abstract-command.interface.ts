@@ -3,7 +3,7 @@ import { Message } from 'whatsapp-web.js';
 import { OnModuleInit } from '@nestjs/common';
 
 import { Command } from './command.interface';
-import { CommandRegistry } from '@application/command-registry';
+import { CommandRegistry } from '@command-registry/command-registry';
 import { UserSession } from '@session/user-session.interface';
 
 export abstract class AbstractCommand<T = any>

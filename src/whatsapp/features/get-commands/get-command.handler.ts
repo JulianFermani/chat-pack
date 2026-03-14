@@ -3,8 +3,8 @@ import { Message } from 'whatsapp-web.js';
 import { Injectable } from '@nestjs/common';
 
 import { getCommandSender } from './services/get-command-sender.service';
-import { CommandRegistry } from '@application/command-registry';
-import { WhatsappService } from '@application/whatsapp.service';
+import { WhatsappService } from '@client/whatsapp.service';
+import { CommandRegistry } from '@command-registry/command-registry';
 
 @Injectable()
 export class GetCommandHandler {

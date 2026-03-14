@@ -20,6 +20,9 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@application/*": ["./src/whatsapp/application/*"],
+      "@client/*": ["./src/whatsapp/client/*"],
+      "@command-handler/*": ["./src/whatsapp/command-handler/*"],
+      "@command-registry/*": ["./src/whatsapp/command-registry/*"],
       "@features/*": ["./src/whatsapp/features/*"],
       "@session/*": ["./src/whatsapp/session/*"],
       "@shared/*": ["./src/whatsapp/shared/*"]

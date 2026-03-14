@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 
 import { SeeBusHandler } from './see-bus.handler';
 import { SeeBusesData } from './see-bus.session';
-import { CommandRegistry } from '@application/command-registry';
+import { CommandRegistry } from '@command-registry/command-registry';
 import { UserSession } from '@session/user-session.interface';
 import { AbstractCommand } from '@shared/interfaces/abstract-command.interface';
 @Injectable()

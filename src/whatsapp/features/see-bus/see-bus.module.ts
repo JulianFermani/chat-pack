@@ -1,5 +1,5 @@
 import { ConfigModule } from '@nestjs/config';
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 
 import { SeeBusCommand } from './see-bus.command';
 import { SeeBusHandler } from './see-bus.handler';
@@ -8,10 +8,11 @@ import { SeeBusInitState } from './states/see-bus-init.state';
 import { SeeBusMapState } from './states/see-bus-map.state';
 import { SeeBusOriginState } from './states/see-bus-origin.state';
 import { SeeBusStateFactory } from './states/see-bus-state.factory';
-import { WhatsappModule } from '@application/whatsapp.module';
+import { WhatsappModule } from '@client/whatsapp.module';
+import { CommandRegistryModule } from '@command-registry/command-registry.module';
 
 @Module({
-  imports: [forwardRef(() => WhatsappModule), ConfigModule.forRoot()],
+  imports: [WhatsappModule, ConfigModule.forRoot(), CommandRegistryModule],
   providers: [
     SeeBusCommand,
     SeeBusHandler,

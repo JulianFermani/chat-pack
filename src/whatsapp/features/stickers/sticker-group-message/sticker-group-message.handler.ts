@@ -3,7 +3,7 @@ import { Message } from 'whatsapp-web.js';
 import { Injectable } from '@nestjs/common';
 
 import { stickerGroupMessageSender } from './services/sticker-gm-sender.service';
-import { WhatsappService } from '@application/whatsapp.service';
+import { WhatsappService } from '@client/whatsapp.service';
 
 @Injectable()
 export class StickerGroupMessageHandler {

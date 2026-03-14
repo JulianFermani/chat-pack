@@ -3,7 +3,7 @@ import { Message } from 'whatsapp-web.js';
 import { Injectable } from '@nestjs/common';
 
 import { SeeTicketsData } from '../see-tickets.session';
-import { WhatsappService } from '@application/whatsapp.service';
+import { WhatsappService } from '@client/whatsapp.service';
 import { UserSession } from '@session/user-session.interface';
 import { movieFetcher } from '@features/sudcinemas-vm/shared/services/movie-fetcher.service';
 import { movieBuilderMessage } from '@features/sudcinemas-vm/shared/presenter/see-movies.presenter';

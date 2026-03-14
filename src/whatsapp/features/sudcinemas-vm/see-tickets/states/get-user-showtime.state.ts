@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 
 import { fetchShowtimes } from '../infra/fetch-showtimes';
 import { SeeTicketsData } from '../see-tickets.session';
-import { WhatsappService } from '@application/whatsapp.service';
+import { WhatsappService } from '@client/whatsapp.service';
 import { UserMovie } from '@features/sudcinemas-vm/see-movies/model/see-movie-movie.interface';
 import { UserSession } from '@session/user-session.interface';
 import { State } from '@shared/interfaces/state.interface';

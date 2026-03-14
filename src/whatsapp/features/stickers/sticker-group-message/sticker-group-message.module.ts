@@ -1,11 +1,12 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 
-import { WhatsappModule } from '@application/whatsapp.module';
+import { WhatsappModule } from '@client/whatsapp.module';
 import { StickerGroupMessageCommand } from './sticker-group-message.command';
 import { StickerGroupMessageHandler } from './sticker-group-message.handler';
+import { CommandRegistryModule } from '@command-registry/command-registry.module';
 
 @Module({
-  imports: [forwardRef(() => WhatsappModule)],
+  imports: [WhatsappModule, CommandRegistryModule],
   providers: [StickerGroupMessageCommand, StickerGroupMessageHandler],
   exports: [StickerGroupMessageCommand],
 })

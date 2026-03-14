@@ -1,8 +1,8 @@
 import { Message } from 'whatsapp-web.js';
 
-import { CommandRegistry } from '@application/command-registry';
-import { WhatsappService } from '@application/whatsapp.service';
 import { getCommandBuilderMessage } from '../presenter/get-commands.presenter';
+import { WhatsappService } from '@client/whatsapp.service';
+import { CommandRegistry } from '@command-registry/command-registry';
 
 export async function getCommandSender(
   message: Message,

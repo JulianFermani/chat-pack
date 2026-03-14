@@ -1,6 +1,6 @@
 import { Message } from 'whatsapp-web.js';
 
-import { WhatsappService } from '@application/whatsapp.service';
+import { WhatsappService } from '@client/whatsapp.service';
 import { SessionManager } from '@session/session-manager';
 import { UserSession } from '@session/user-session.interface';
 

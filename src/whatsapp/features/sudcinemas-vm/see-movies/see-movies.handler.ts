@@ -3,7 +3,7 @@ import { Message } from 'whatsapp-web.js';
 import { Injectable } from '@nestjs/common';
 
 import { seeMovieSender } from './services/see-movies-sender.service';
-import { WhatsappService } from '@application/whatsapp.service';
+import { WhatsappService } from '@client/whatsapp.service';
 
 @Injectable()
 export class SeeMoviesHandler {

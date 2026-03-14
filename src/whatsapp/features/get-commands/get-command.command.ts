@@ -1,11 +1,11 @@
 import { Message } from 'whatsapp-web.js';
 
-import { CommandRegistry } from '@application/command-registry';
 import { Injectable } from '@nestjs/common';
 
 import { GetCommandHandler } from './get-command.handler';
 import { UserSession } from '@session/user-session.interface';
 import { AbstractCommand } from '@shared/interfaces/abstract-command.interface';
+import { CommandRegistry } from '@command-registry/command-registry';
 
 @Injectable()
 export class GetCommandsCommand extends AbstractCommand {

@@ -3,8 +3,8 @@ import { Message, MessageTypes } from 'whatsapp-web.js';
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
-import { CommandRegistry } from './command-registry';
-import { WhatsappService } from './whatsapp.service';
+import { CommandRegistry } from '@command-registry/command-registry';
+import { WhatsappService } from '@client/whatsapp.service';
 import { SessionManager } from '@session/session-manager';
 import { UserSession } from '@session/user-session.interface';
 import { Command } from '@shared/interfaces/command.interface';

@@ -3,7 +3,7 @@ import { Message } from 'whatsapp-web.js';
 import { Injectable } from '@nestjs/common';
 
 import { SumarDosNumerosData } from '../sumar-dos-numeros.session';
-import { WhatsappService } from '@application/whatsapp.service';
+import { WhatsappService } from '@client/whatsapp.service';
 import { UserSession } from '@session/user-session.interface';
 import { State } from '@shared/interfaces/state.interface';
 

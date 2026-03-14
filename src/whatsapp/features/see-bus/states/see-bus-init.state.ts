@@ -7,7 +7,7 @@ import { busSetter } from '../infra/bus-setter.service';
 import { SeeBusesData } from '../see-bus.session';
 import { seeBusCookieFetcher } from '../infra/cookie-fetcher.service';
 import { originPlacesFetcher } from '../infra/origin-places-fetcher.service';
-import { WhatsappService } from '@application/whatsapp.service';
+import { WhatsappService } from '@client/whatsapp.service';
 import { UserSession } from '@session/user-session.interface';
 import { State } from '@shared/interfaces/state.interface';
 import { backOrDelete } from '@shared/utils/back-or-delete-message.util';

@@ -2,7 +2,7 @@ import { Message } from 'whatsapp-web.js';
 
 import { Injectable } from '@nestjs/common';
 
-import { WhatsappService } from '@application/whatsapp.service';
+import { WhatsappService } from '@client/whatsapp.service';
 import { stickerDirectMessageSender } from './services/sticker-dm-sender.service';
 
 @Injectable()

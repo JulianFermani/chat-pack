@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 
 import { SeeTicketsCommand } from './see-tickets.command';
 import { SeeTicketsHandler } from './see-tickets.handler';
@@ -6,10 +6,11 @@ import { GetUserMovieState } from './states/get-user-movie.state';
 import { GetUserShowtimeState } from './states/get-user-showtime.state';
 import { SeeTicketsStateFactory } from './states/see-tickets-state.factory';
 import { SendUserShowtimesState } from './states/send-user-showtime.state';
-import { WhatsappModule } from '@application/whatsapp.module';
+import { WhatsappModule } from '@client/whatsapp.module';
+import { CommandRegistryModule } from '@command-registry/command-registry.module';
 
 @Module({
-  imports: [forwardRef(() => WhatsappModule)],
+  imports: [WhatsappModule, CommandRegistryModule],
   providers: [
     SeeTicketsCommand,
     SeeTicketsHandler,

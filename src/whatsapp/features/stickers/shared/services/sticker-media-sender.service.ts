@@ -1,7 +1,7 @@
 import { Message, MessageSendOptions } from 'whatsapp-web.js';
 
 import * as config from '../config/config.json';
-import { WhatsappService } from '@application/whatsapp.service';
+import { WhatsappService } from '@client/whatsapp.service';
 
 export async function stickerMediaSender(
   message: Message,

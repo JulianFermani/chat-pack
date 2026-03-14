@@ -1,6 +1,6 @@
 import { Message } from 'whatsapp-web.js';
 
-import { WhatsappService } from '@application/whatsapp.service';
+import { WhatsappService } from '@client/whatsapp.service';
 import { movieBuilderMessage } from '@features/sudcinemas-vm/shared/presenter/see-movies.presenter';
 import { movieFetcher } from '@features/sudcinemas-vm/shared/services/movie-fetcher.service';
 

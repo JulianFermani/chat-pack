@@ -5,6 +5,7 @@ import { Injectable, OnModuleInit, Logger, Inject } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import { WHATSAPP_CLIENT } from './whatsapp.provider';
+
 @Injectable()
 export class WhatsappService implements OnModuleInit {
   private readonly logger = new Logger(WhatsappService.name, {

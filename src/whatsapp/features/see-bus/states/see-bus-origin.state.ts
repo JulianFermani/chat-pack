@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 
 import { destinationPlacesFetcher } from '../infra/destination-fetcher.service';
 import { SeeBusesData } from '../see-bus.session';
-import { WhatsappService } from '@application/whatsapp.service';
+import { WhatsappService } from '@client/whatsapp.service';
 import { UserSession } from '@session/user-session.interface';
 import { State } from '@shared/interfaces/state.interface';
 import { backOrDelete } from '@shared/utils/back-or-delete-message.util';
