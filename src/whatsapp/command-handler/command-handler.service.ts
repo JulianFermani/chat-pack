@@ -1,133 +1,74 @@
-import { Message, MessageTypes } from 'whatsapp-web.js';
-
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
-import { CommandRegistry } from '@command-registry/command-registry';
+import { Message, MessageTypes } from 'whatsapp-web.js';
+
+import { MessageContext } from './interfaces/message-context.interface';
+import {
+  SessionFlowService,
+  CommandResolverService,
+  CommandExecuterService,
+} from './services';
 import { WhatsappService } from '@client/whatsapp.service';
 import { SessionManager } from '@session/session-manager';
-import { UserSession } from '@session/user-session.interface';
-import { Command } from '@shared/interfaces/command.interface';
-import { backOneSession } from '@shared/utils/back-one-session.util';
+
 @Injectable()
 export class CommandHandlerService {
   private readonly logger = new Logger(CommandHandlerService.name);
   constructor(
-    private readonly commandRegistry: CommandRegistry,
     private readonly sessionManager: SessionManager,
     private readonly whatsappClient: WhatsappService,
+    private readonly sessionFlowService: SessionFlowService,
+    private readonly commandResolver: CommandResolverService,
+    private readonly commandExecuterService: CommandExecuterService,
   ) {}
+
+  private buildContext(message: Message): MessageContext {
+    const body = message.body.trim();
+    const text = body.toLowerCase();
+
+    const isCommand = body.startsWith('/');
+
+    const commandName = isCommand ? body.slice(1).split(' ')[0] : undefined;
+
+    const isGroup = message.from.endsWith('@g.us');
+
+    const isMedia =
+      message.type === MessageTypes.IMAGE ||
+      message.type === MessageTypes.VIDEO ||
+      message.type === MessageTypes.STICKER;
+
+    return {
+      userId: message.from,
+      body,
+      normalizedText: text,
+      isCommand,
+      commandName,
+      isGroup,
+      isMedia,
+      message,
+    };
+  }
 
   @OnEvent('whatsapp.message')
   async handle(message: Message) {
-    let command: Command | undefined;
-    const body = message.body.trim();
-    const text = message.body.toLocaleLowerCase();
-    const words = ['sticker', 'imagen'];
-    const hasSome = words.some((word) => text.includes(word));
-    const userId = message.from;
+    const ctx = this.buildContext(message);
 
-    let session = this.sessionManager.get(userId);
+    const session = this.sessionManager.get(ctx.userId);
 
     // Si la sesión existe
     if (session) {
-      // Antes chequeo si el mensaje es:
-      // 0: Retrocedo un paso la sesión del usuario
-      // 99: Mato la sesión del usuario
-      session = await backOneSession(
-        message,
-        this.whatsappClient,
-        session,
-        this.sessionManager,
-      );
-      // Si elimina la sesión que retorne vacio
-      if (!session) return;
-
-      // Busca el comando
-      const commandName = session.commandName;
-      if (!commandName) {
-        this.logger.log('Vaya vaya..');
-        return;
-      }
-      command = this.commandRegistry.get(commandName);
-      // Si no existe el comando
-      // Elimina el usuario de la sesión y envia un mensaje
-      if (!command) {
-        this.sessionManager.delete(userId);
-        await this.whatsappClient.sendMessage(
-          userId,
-          'Error: comando no encontrado, para ver la lista de comandos envie */comandos*',
-        );
-        await this.whatsappClient.sendSeen(userId);
-        return;
-      }
-
-      // Ejecuta el comando y recibe la sesión updateada del usuario
-      const updatedSession = await command.execute(message, session);
-      if (updatedSession) {
-        this.sessionManager.set(userId, updatedSession);
-      } else {
-        this.sessionManager.delete(userId);
-      }
+      await this.sessionFlowService.handleExistingSession(ctx, session);
       return;
     }
 
-    // No existe una sesión activa, arranca una nueva
-    if (body.startsWith('/')) {
-      const [commandName] = body.slice(1).split(' ');
-      command = this.commandRegistry.get(commandName);
-
-      if (!command) {
-        await this.whatsappClient.sendMessage(
-          userId,
-          `Comando desconocido: ${commandName}, para ver la lista de comandos envie */comandos*`,
-        );
-        await this.whatsappClient.sendSeen(userId);
-        return;
-      }
-    } else if (
-      message.type === MessageTypes.IMAGE ||
-      message.type === MessageTypes.VIDEO ||
-      message.type === MessageTypes.STICKER ||
-      (hasSome && message.hasQuotedMsg)
-    ) {
-      const isGroup = message.from.endsWith('@g.us');
-      command = this.commandRegistry.get(
-        isGroup ? 'stickergroupmessage' : 'stickerdirectmessage',
-      );
-    } else {
-      await this.whatsappClient.sendSeen(userId);
+    const command = await this.commandResolver.resolve(ctx);
+    if (!command) {
+      await this.whatsappClient.sendSeen(ctx.userId);
       return;
     }
 
-    try {
-      if (!command) return;
-      if (command.usesSession) {
-        const newSession: UserSession<any> = {
-          commandName: command.name,
-          step: 1,
-          data: {},
-        };
-        this.sessionManager.set(userId, newSession);
-
-        const updatedSession = await command.execute(message, newSession);
-        if (updatedSession) {
-          this.sessionManager.set(userId, updatedSession);
-        } else {
-          this.sessionManager.delete(userId);
-        }
-      } else {
-        await command.execute(message);
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        this.logger.error(`Error ejecutando comando: ${error.message}`);
-      }
-      await this.whatsappClient.sendMessage(
-        userId,
-        'Error ejecutando el comando.',
-      );
-      await this.whatsappClient.sendSeen(userId);
-    }
+    // 3) Ejecutar comando (sesión o no)
+    await this.commandExecuterService.executeCommandFlow(ctx, command);
   }
 }
