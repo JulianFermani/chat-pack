@@ -7,7 +7,7 @@ import { State } from '@shared/interfaces/state.interface';
 
 @Injectable()
 export class SumarDosNumerosStateFactory {
-  private states: Map<number, State> = new Map();
+  private states: Map<string, State> = new Map();
   constructor(
     private first: FirstNumberState,
     private second: SecondNumberState,
@@ -18,7 +18,7 @@ export class SumarDosNumerosStateFactory {
     this.states.set(this.addTwo.stepId, this.addTwo);
   }
 
-  get(step: number): State | undefined {
+  get(step: string): State | undefined {
     return this.states.get(step);
   }
 }

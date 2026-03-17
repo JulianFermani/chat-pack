@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 
 import { destinationPlacesFetcher } from '../infra/destination-fetcher.service';
 import { SeeBusesData } from '../see-bus.session';
+import { SeeBusEnumCommands } from '../enum/commands.enum';
 import { WhatsappService } from '@client/whatsapp.service';
 import { UserSession } from '@session/user-session.interface';
 import { State } from '@shared/interfaces/state.interface';
@@ -12,7 +13,7 @@ import { backOrDelete } from '@shared/utils/back-or-delete-message.util';
 
 @Injectable()
 export class SeeBusOriginState implements State<SeeBusesData> {
-  readonly stepId = 2;
+  readonly stepId = SeeBusEnumCommands.SEE_BUS_ORIGIN_STATE;
   constructor(
     private readonly whatsapp: WhatsappService,
     private readonly config: ConfigService,
@@ -68,7 +69,7 @@ export class SeeBusOriginState implements State<SeeBusesData> {
     session.data.destinationPlaces = destinationPlacesResponse.places;
     session.data.idOrigin = valueOriginPlace.toString();
     session.data.numUserOrigin = placeNum;
-    session.step = 3;
+    session.steps.push(SeeBusEnumCommands.SEE_BUS_DESTINATION_STATE);
     session.back = false;
     return session;
   }

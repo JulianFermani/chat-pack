@@ -7,12 +7,14 @@ import { SeeBusesData } from './see-bus.session';
 import { CommandRegistry } from '@command-registry/command-registry';
 import { UserSession } from '@session/user-session.interface';
 import { AbstractCommand } from '@shared/interfaces/abstract-command.interface';
+import { SeeBusEnumCommands } from './enum/commands.enum';
 @Injectable()
 export class SeeBusCommand extends AbstractCommand {
   name = 'verColectivos';
   description =
     'Muestra los horarios disponibles del servicio de colectivos Villa del Rosario (todas sus líneas) y, si se detecta ubicación GPS, permite visualizarla.';
   usesSession = true;
+  firstStep = SeeBusEnumCommands.SEE_BUS_INIT_STATE;
 
   constructor(
     registry: CommandRegistry,

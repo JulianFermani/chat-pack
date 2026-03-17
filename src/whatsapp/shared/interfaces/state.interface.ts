@@ -7,5 +7,5 @@ export interface State<T = any> {
     message: Message,
     session: UserSession<T>,
   ): Promise<UserSession<T> | void>;
-  stepId: number;
+  stepId: string;
 }

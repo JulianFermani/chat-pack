@@ -11,10 +11,11 @@ import { WhatsappService } from '@client/whatsapp.service';
 import { UserSession } from '@session/user-session.interface';
 import { State } from '@shared/interfaces/state.interface';
 import { backOrDelete } from '@shared/utils/back-or-delete-message.util';
+import { SeeTicketsEnumCommand } from '../enum/commands.enum';
 
 @Injectable()
 export class SendUserShowtimesState implements State<SeeTicketsData> {
-  readonly stepId = 3;
+  readonly stepId = SeeTicketsEnumCommand.SEND_USER_SHOWTIMES_STATE;
   constructor(private readonly whatsapp: WhatsappService) {}
   async handle(
     message: Message,
@@ -44,7 +45,7 @@ export class SendUserShowtimesState implements State<SeeTicketsData> {
     let mensajeFinal = buildShowtimesMessage(userShowtimes);
     mensajeFinal = backOrDelete(mensajeFinal);
     await this.whatsapp.sendMessage(message.from, mensajeFinal);
-    session.step = 4;
+    session.steps.push(SeeTicketsEnumCommand.LAST_STEP);
     return session;
   }
 }

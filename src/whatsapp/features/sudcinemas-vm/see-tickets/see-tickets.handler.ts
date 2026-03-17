@@ -13,7 +13,9 @@ export class SeeTicketsHandler {
     message: Message,
     session: UserSession<SeeTicketsData>,
   ): Promise<UserSession<SeeTicketsData> | void> {
-    const state = this.stateFactory.get(session.step);
+    const lastState = session.steps.at(-1);
+    if (!lastState) return;
+    const state = this.stateFactory.get(lastState);
     if (!state) {
       return;
     }

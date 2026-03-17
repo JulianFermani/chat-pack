@@ -13,11 +13,12 @@ export class SeeBusHandler {
     message: Message,
     session: UserSession<SeeBusesData>,
   ): Promise<UserSession<SeeBusesData> | void> {
-    const state = this.stateFactory.get(session.step);
+    const lastState = session.steps.at(-1);
+    if (!lastState) return;
+    const state = this.stateFactory.get(lastState);
     if (!state) {
       return;
     }
-
     return state.handle(message, session);
   }
 }

@@ -11,7 +11,9 @@ export async function backOneSession<T>(
   sessionManager: SessionManager,
 ): Promise<UserSession<T> | undefined> {
   if (message.body.trim() === '0') {
-    session.step -= 2;
+    for (let i = 0; i <= 2; i++) {
+      session.steps.pop();
+    }
     session.back = true;
   } else if (message.body.trim() === '99') {
     sessionManager.delete(message.from);

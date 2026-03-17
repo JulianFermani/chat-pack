@@ -7,7 +7,7 @@ import { State } from '@shared/interfaces/state.interface';
 
 @Injectable()
 export class SeeTicketsStateFactory {
-  private states: Map<number, State> = new Map();
+  private states: Map<string, State> = new Map();
 
   constructor(
     private getUserMovie: GetUserMovieState,
@@ -19,7 +19,7 @@ export class SeeTicketsStateFactory {
     this.states.set(this.sendUserShowtime.stepId, this.sendUserShowtime);
   }
 
-  get(step: number): State | undefined {
+  get(step: string): State | undefined {
     return this.states.get(step);
   }
 }

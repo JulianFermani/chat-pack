@@ -7,7 +7,7 @@ import { SeeBusOriginState } from './see-bus-origin.state';
 import { State } from '@shared/interfaces/state.interface';
 @Injectable()
 export class SeeBusStateFactory {
-  private states: Map<number, State> = new Map();
+  private states: Map<string, State> = new Map();
 
   constructor(
     private init: SeeBusInitState,
@@ -21,7 +21,7 @@ export class SeeBusStateFactory {
     this.states.set(this.map.stepId, this.map);
   }
 
-  get(step: number): State | undefined {
+  get(step: string): State | undefined {
     return this.states.get(step);
   }
 }

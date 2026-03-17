@@ -1,0 +1,6 @@
+export enum SumarDosNumerosEnumCommands {
+  FIRST_NUMBER = 'FIRST_NUMBER',
+  SECOND_NUMBER = 'SECOND_NUMBER',
+  ADD_TWO_NUMBERS = 'ADD_TWO_NUMBERS',
+  LAST_STEP = 'LAST_STEP',
+}

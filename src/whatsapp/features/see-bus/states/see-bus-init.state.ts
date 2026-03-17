@@ -7,6 +7,7 @@ import { busSetter } from '../infra/bus-setter.service';
 import { SeeBusesData } from '../see-bus.session';
 import { seeBusCookieFetcher } from '../infra/cookie-fetcher.service';
 import { originPlacesFetcher } from '../infra/origin-places-fetcher.service';
+import { SeeBusEnumCommands } from '../enum/commands.enum';
 import { WhatsappService } from '@client/whatsapp.service';
 import { UserSession } from '@session/user-session.interface';
 import { State } from '@shared/interfaces/state.interface';
@@ -20,7 +21,7 @@ type Data = {
 
 @Injectable()
 export class SeeBusInitState implements State<SeeBusesData> {
-  readonly stepId = 1;
+  readonly stepId = SeeBusEnumCommands.SEE_BUS_INIT_STATE;
   constructor(
     private readonly whatsapp: WhatsappService,
     private readonly config: ConfigService,
@@ -56,7 +57,7 @@ export class SeeBusInitState implements State<SeeBusesData> {
     await this.whatsapp.sendMessage(message.from, messageText);
 
     session.data.originPlaces = originPlacesResponse.places;
-    session.step = 2;
+    session.steps.push(SeeBusEnumCommands.SEE_BUS_ORIGIN_STATE);
     session.data.cookie = cookie;
     session.back = false;
     return session;

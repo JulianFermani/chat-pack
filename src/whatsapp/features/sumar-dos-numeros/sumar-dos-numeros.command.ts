@@ -7,12 +7,14 @@ import { SumarDosNumerosData } from './sumar-dos-numeros.session';
 import { CommandRegistry } from '@command-registry/command-registry';
 import { UserSession } from '@session/user-session.interface';
 import { AbstractCommand } from '@shared/interfaces/abstract-command.interface';
+import { SumarDosNumerosEnumCommands } from './enum/commands.enum';
 
 @Injectable()
 export class SumarDosNumerosCommand extends AbstractCommand<SumarDosNumerosData> {
   name = 'sumarDosNumeros';
   description = 'Realiza la suma de dos números en dos pasos interactivos.';
   usesSession = true;
+  firstStep = SumarDosNumerosEnumCommands.FIRST_NUMBER;
 
   constructor(
     registry: CommandRegistry,

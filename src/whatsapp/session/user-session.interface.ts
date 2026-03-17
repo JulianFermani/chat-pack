@@ -1,6 +1,6 @@
 export interface UserSession<T = unknown> {
   commandName: string;
-  step: number;
+  steps: string[];
   data: T;
   back?: boolean;
   lastActivity?: number;

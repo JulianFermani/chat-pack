@@ -9,10 +9,11 @@ import { movieFetcher } from '@features/sudcinemas-vm/shared/services/movie-fetc
 import { movieBuilderMessage } from '@features/sudcinemas-vm/shared/presenter/see-movies.presenter';
 import { State } from '@shared/interfaces/state.interface';
 import { backOrDelete } from '@shared/utils/back-or-delete-message.util';
+import { SeeTicketsEnumCommand } from '../enum/commands.enum';
 
 @Injectable()
 export class GetUserMovieState implements State<SeeTicketsData> {
-  readonly stepId = 1;
+  readonly stepId = SeeTicketsEnumCommand.GET_USER_MOVIE_STATE;
   constructor(private readonly whatsapp: WhatsappService) {}
 
   async handle(
@@ -33,7 +34,7 @@ export class GetUserMovieState implements State<SeeTicketsData> {
     await this.whatsapp.sendMessage(message.from, messageText);
 
     session.data.movies = movies;
-    session.step = 2;
+    session.steps.push(SeeTicketsEnumCommand.GET_USER_SHOWTIME_STATE);
     session.back = false;
     return session;
   }

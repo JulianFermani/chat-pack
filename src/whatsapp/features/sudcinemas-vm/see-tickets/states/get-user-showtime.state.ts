@@ -14,10 +14,11 @@ import {
   formatDate,
 } from '@shared/utils/date-format.util';
 import { getEmojiNumber } from '@shared/utils/number-format.util';
+import { SeeTicketsEnumCommand } from '../enum/commands.enum';
 
 @Injectable()
 export class GetUserShowtimeState implements State<SeeTicketsData> {
-  readonly stepId = 2;
+  readonly stepId = SeeTicketsEnumCommand.GET_USER_SHOWTIME_STATE;
   constructor(private readonly whatsapp: WhatsappService) {}
   async handle(
     message: Message,
@@ -52,7 +53,7 @@ export class GetUserShowtimeState implements State<SeeTicketsData> {
       showtimes: showtimes,
       dates: [d1, d2, d3],
     };
-    session.step = 3;
+    session.steps.push(SeeTicketsEnumCommand.SEND_USER_SHOWTIMES_STATE);
 
     let messageText = `📅 ¿Qué día querés ver la función? Elegí un número:\n${getEmojiNumber(1)}. ${formatDate(d1)}\n${getEmojiNumber(2)}. ${formatDate(d2)}\n${getEmojiNumber(3)}. ${formatDate(d1)} al ${formatDate(d3)}`;
     messageText = backOrDelete(messageText);

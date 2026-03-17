@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 
 import { getResponseBus } from '../infra/bus-response.service';
 import { SeeBusesData } from '../see-bus.session';
+import { SeeBusEnumCommands } from '../enum/commands.enum';
 import { WhatsappService } from '@client/whatsapp.service';
 import { UserSession } from '@session/user-session.interface';
 import { State } from '@shared/interfaces/state.interface';
@@ -12,7 +13,7 @@ import { backOrDelete } from '@shared/utils/back-or-delete-message.util';
 
 @Injectable()
 export class SeeBusDestinationState implements State<SeeBusesData> {
-  readonly stepId = 3;
+  readonly stepId = SeeBusEnumCommands.SEE_BUS_DESTINATION_STATE;
   constructor(private readonly whatsapp: WhatsappService) {}
   async handle(message: Message, session: UserSession<SeeBusesData>) {
     const cookie = session.data.cookie;
@@ -59,7 +60,7 @@ export class SeeBusDestinationState implements State<SeeBusesData> {
       session.data.lat = responseBus.lat;
       session.data.lng = responseBus.lng;
     }
-    session.step = 4;
+    session.steps.push(SeeBusEnumCommands.LAST_STEP);
     session.back = false;
     return session;
   }

@@ -12,6 +12,7 @@ export abstract class AbstractCommand<T = any>
   abstract name: string;
   abstract description: string;
   abstract usesSession: boolean;
+  firstStep: string;
 
   constructor(private readonly registry: CommandRegistry) {}
 
