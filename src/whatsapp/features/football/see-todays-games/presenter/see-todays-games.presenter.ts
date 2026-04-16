@@ -25,9 +25,8 @@ function getDisplayTvNetworks(game: PromiedosGame): string | null {
 }
 
 function buildGameMessage(game: PromiedosGame): string {
-  const homeTeam = game.teams[0]?.short_name ?? game.teams[0]?.name ?? 'Local';
-  const awayTeam =
-    game.teams[1]?.short_name ?? game.teams[1]?.name ?? 'Visitante';
+  const homeTeam = game.teams[0]?.name ?? game.teams[0]?.name ?? 'Local';
+  const awayTeam = game.teams[1]?.name ?? game.teams[1]?.name ?? 'Visitante';
 
   const lines = [
     game.stage_round_name ? `🏟️ ${game.stage_round_name}` : null,
