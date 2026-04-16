@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { Injectable } from '@nestjs/common';
+
 const PROMIEDOS_TODAY_GAMES_URL = 'https://api.promiedos.com.ar/games/today';
 
 const PROMIEDOS_HEADERS = {
@@ -42,17 +44,16 @@ interface PromiedosTodayGamesResponse {
   leagues: PromiedosLeague[];
 }
 
-export async function libertadoresGamesFetcher(): Promise<PromiedosLeague | null> {
-  const { data } = await axios.get<PromiedosTodayGamesResponse>(
-    PROMIEDOS_TODAY_GAMES_URL,
-    {
-      headers: PROMIEDOS_HEADERS,
-    },
-  );
+@Injectable()
+export class TodaysGamesFetcherService {
+  async fetch(): Promise<PromiedosLeague[]> {
+    const { data } = await axios.get<PromiedosTodayGamesResponse>(
+      PROMIEDOS_TODAY_GAMES_URL,
+      {
+        headers: PROMIEDOS_HEADERS,
+      },
+    );
 
-  return (
-    data.leagues.find((league) =>
-      league.name.toLowerCase().includes('libertadores'),
-    ) ?? null
-  );
+    return data.leagues.filter((league) => league.games.length > 0);
+  }
 }

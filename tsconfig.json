@@ -19,6 +19,7 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
+      "@database/*": ["./src/database/*"],
       "@application/*": ["./src/whatsapp/application/*"],
       "@client/*": ["./src/whatsapp/client/*"],
       "@command-handler/*": ["./src/whatsapp/command-handler/*"],

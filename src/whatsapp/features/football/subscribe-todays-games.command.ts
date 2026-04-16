@@ -2,20 +2,21 @@ import { Message } from 'whatsapp-web.js';
 
 import { Injectable } from '@nestjs/common';
 
-import { SeeTodaysGamesHandler } from './see-todays-games.handler';
 import { CommandRegistry } from '@command-registry/command-registry';
 import { UserSession } from '@session/user-session.interface';
 import { AbstractCommand } from '@shared/interfaces/abstract-command.interface';
+import { SubscribeTodaysGamesHandler } from './subscribe-todays-games.handler';
 
 @Injectable()
-export class SeeTodaysGamesCommand extends AbstractCommand {
-  name = 'verPartidosHoy';
-  description = 'Muestra todos los partidos que se juegan hoy.';
+export class SubscribeTodaysGamesCommand extends AbstractCommand {
+  name = 'suscribirmePartidosHoy';
+  description =
+    'Suscribe este chat a la notificacion diaria de partidos de hoy.';
   usesSession = false;
 
   constructor(
     registry: CommandRegistry,
-    private readonly handler: SeeTodaysGamesHandler,
+    private readonly handler: SubscribeTodaysGamesHandler,
   ) {
     super(registry);
   }

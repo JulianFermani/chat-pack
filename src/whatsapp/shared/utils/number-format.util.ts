@@ -27,7 +27,10 @@ export function getEmojiForCommand(commandName: string): string {
     sumarDosNumeros: '➕',
     verPeliculas: '🎬',
     verColectivos: '🚌',
+    futbol: '⚽',
     verPartidosHoy: '⚽',
+    suscribirmePartidosHoy: '🔔',
+    desuscribirmePartidosHoy: '🔕',
     comandos: '📜',
   };
 
