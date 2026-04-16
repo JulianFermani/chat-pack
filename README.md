@@ -34,6 +34,37 @@ Esto crea una imagen Docker llamada `chat-pack` a partir del `Dockerfile` del pr
 
 ---
 
+## 🔐 Configuración de autenticación de WhatsApp
+
+El cliente soporta dos modos de autenticación configurables por entorno:
+
+- `WHATSAPP_AUTH_MODE=local`: guarda la sesión en `.wwebjs_auth/`.
+- `WHATSAPP_AUTH_MODE=remote`: guarda la sesión en MongoDB usando `wwebjs-mongo`.
+
+Variables comunes:
+
+```env
+CHROMIUM_DIR=/ruta/al/ejecutable/de/chromium
+WHATSAPP_AUTH_MODE=local
+WHATSAPP_CLIENT_ID=cliente
+```
+
+Variables adicionales para `RemoteAuth`:
+
+```env
+MONGODB_URI=mongodb://usuario:password@host:27017/
+WHATSAPP_REMOTE_BACKUP_SYNC_INTERVAL_MS=60000
+```
+
+Notas:
+
+- `CHROMIUM_DIR` es obligatoria en ambos modos.
+- `MONGODB_URI` solo es obligatoria cuando `WHATSAPP_AUTH_MODE=remote`.
+- `WHATSAPP_CLIENT_ID` es opcional. Si no se define, se usa `cliente`.
+- `WHATSAPP_REMOTE_BACKUP_SYNC_INTERVAL_MS` es opcional. Si no se define, se usa `60000`.
+
+---
+
 ## ▶️ Correr el proyecto en producción
 
 ```bash
