@@ -37,10 +37,26 @@ Esto crea una imagen Docker llamada `chat-pack` a partir del `Dockerfile` del pr
 ## ▶️ Correr el proyecto en producción
 
 ```bash
-docker run --network=chat-pack-net chat-pack:latest
+docker run --network=chat-pack-net -d chat-pack:latest
 ```
 
 - `--network=chat-pack-net`: conecta tu app a la misma red que MongoDB.
+- `-d`: corre el contenedor en segundo plano.
+
+---
+
+## ✨ Features disponibles
+
+| Feature             | Uso                | Descripción                                                                                          |
+| ------------------- | ------------------ | ---------------------------------------------------------------------------------------------------- |
+| Saludo              | `/hola`            | Responde con un saludo.                                                                              |
+| Ayuda               | `/comandos`        | Lista los comandos disponibles del bot.                                                              |
+| Colectivos          | `/verColectivos`   | Muestra horarios de colectivos Villa del Rosario y, si hay GPS, permite ver ubicación.               |
+| Películas           | `/verPeliculas`    | Muestra la cartelera de SudCinemas Villa María.                                                      |
+| Entradas            | `/verEntradas`     | Consulta entradas vendidas para una función según la fecha elegida.                                  |
+| Suma interactiva    | `/sumarDosNumeros` | Pide dos números en pasos y devuelve el resultado.                                                   |
+| Stickers en privado | Automático         | Convierte imágenes o videos a sticker, y stickers a imagen, en chats privados.                       |
+| Stickers en grupos  | Automático         | En grupos, convierte multimedia usando la palabra `sticker` o devuelve imagen respondiendo `imagen`. |
 
 ---
 
