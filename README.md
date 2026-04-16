@@ -78,16 +78,20 @@ docker run --network=chat-pack-net -d chat-pack:latest
 
 ## ✨ Features disponibles
 
-| Feature             | Uso                | Descripción                                                                                          |
-| ------------------- | ------------------ | ---------------------------------------------------------------------------------------------------- |
-| Saludo              | `/hola`            | Responde con un saludo.                                                                              |
-| Ayuda               | `/comandos`        | Lista los comandos disponibles del bot.                                                              |
-| Colectivos          | `/verColectivos`   | Muestra horarios de colectivos Villa del Rosario y, si hay GPS, permite ver ubicación.               |
-| Películas           | `/verPeliculas`    | Muestra la cartelera de SudCinemas Villa María.                                                      |
-| Entradas            | `/verEntradas`     | Consulta entradas vendidas para una función según la fecha elegida.                                  |
-| Suma interactiva    | `/sumarDosNumeros` | Pide dos números en pasos y devuelve el resultado.                                                   |
-| Stickers en privado | Automático         | Convierte imágenes o videos a sticker, y stickers a imagen, en chats privados.                       |
-| Stickers en grupos  | Automático         | En grupos, convierte multimedia usando la palabra `sticker` o devuelve imagen respondiendo `imagen`. |
+| Feature             | Uso                         | Descripción                                                                                          |
+| ------------------- | --------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Saludo              | `/hola`                     | Responde con un saludo.                                                                              |
+| Ayuda               | `/comandos`                 | Lista los comandos disponibles del bot.                                                              |
+| Colectivos          | `/verColectivos`            | Muestra horarios de colectivos Villa del Rosario y, si hay GPS, permite ver ubicación.               |
+| Futbol              | `/futbol`                   | Abre el submenu de futbol para ver los partidos de hoy y gestionar suscripciones diarias.            |
+| Partidos de hoy     | `/verPartidosHoy`           | Muestra los partidos de futbol disponibles para el dia actual.                                       |
+| Suscribirse         | `/suscribirmePartidosHoy`   | Activa la notificacion diaria del resumen de partidos para el chat actual.                           |
+| Desuscribirse       | `/desuscribirmePartidosHoy` | Desactiva la notificacion diaria del resumen de partidos para el chat actual.                        |
+| Películas           | `/verPeliculas`             | Muestra la cartelera de SudCinemas Villa María.                                                      |
+| Entradas            | `/verEntradas`              | Consulta entradas vendidas para una función según la fecha elegida.                                  |
+| Suma interactiva    | `/sumarDosNumeros`          | Pide dos números en pasos y devuelve el resultado.                                                   |
+| Stickers en privado | Automático                  | Convierte imágenes o videos a sticker, y stickers a imagen, en chats privados.                       |
+| Stickers en grupos  | Automático                  | En grupos, convierte multimedia usando la palabra `sticker` o devuelve imagen respondiendo `imagen`. |
 
 ---
 
