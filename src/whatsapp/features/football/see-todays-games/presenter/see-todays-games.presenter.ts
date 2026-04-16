@@ -1,7 +1,7 @@
 import {
   PromiedosGame,
   PromiedosLeague,
-} from '../services/libertadores-games-fetcher.service';
+} from '../services/todays-games-fetcher.service';
 
 function getDisplayTime(startTime: string): string {
   return startTime.split(' ')[1] ?? startTime;
@@ -38,6 +38,13 @@ function buildGameMessage(game: PromiedosGame): string {
   return lines.join('\n');
 }
 
-export function seeTodaysGamesBuilderMessage(league: PromiedosLeague): string {
-  return league.games.map((game) => buildGameMessage(game)).join('\n\n');
+function buildLeagueMessage(league: PromiedosLeague): string {
+  return [
+    `🏆 *${league.name}*`,
+    league.games.map((game) => buildGameMessage(game)).join('\n\n'),
+  ].join('\n\n');
+}
+
+export function buildTodaysGamesMessage(leagues: PromiedosLeague[]): string {
+  return leagues.map((league) => buildLeagueMessage(league)).join('\n\n');
 }
