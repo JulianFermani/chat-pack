@@ -2,10 +2,6 @@ import { Client, LocalAuth, RemoteAuth, type Store } from 'whatsapp-web.js';
 
 import { ConfigService } from '@nestjs/config';
 
-import mongoose from 'mongoose';
-
-import { MongoStore } from 'wwebjs-mongo';
-
 export const WHATSAPP_CLIENT = 'WHATSAPP_CLIENT';
 
 type WhatsappAuthMode = 'local' | 'remote';
@@ -13,11 +9,11 @@ type WhatsappAuthMode = 'local' | 'remote';
 const DEFAULT_CLIENT_ID = 'cliente';
 const DEFAULT_REMOTE_BACKUP_SYNC_INTERVAL_MS = 60000;
 
-type MongoStoreConstructor = new (options: {
-  mongoose: typeof mongoose;
-}) => Store;
+type MongooseModule = typeof import('mongoose');
 
-const MongoStoreWithTypes = MongoStore as unknown as MongoStoreConstructor;
+type MongoStoreConstructor = new (options: {
+  mongoose: MongooseModule;
+}) => Store;
 
 const getRequiredConfig = (
   configService: ConfigService,
@@ -69,10 +65,31 @@ const getRemoteBackupSyncIntervalMs = (
   return backupSyncIntervalMs;
 };
 
-const ensureMongoConnection = async (mongoUri: string) => {
+const ensureMongoConnection = async (
+  mongoUri: string,
+  mongoose: MongooseModule,
+) => {
   if (mongoose.connection.readyState === mongoose.STATES.disconnected) {
     await mongoose.connect(mongoUri);
   }
+};
+
+const buildRemoteAuthStrategy = async (configService: ConfigService) => {
+  const mongoUri = getRequiredConfig(configService, 'MONGODB_URI');
+  const clientId = getWhatsappClientId(configService);
+  const [{ default: mongoose }, { MongoStore }] = await Promise.all([
+    import('mongoose'),
+    import('wwebjs-mongo'),
+  ]);
+  const MongoStoreWithTypes = MongoStore as unknown as MongoStoreConstructor;
+
+  await ensureMongoConnection(mongoUri, mongoose);
+
+  return new RemoteAuth({
+    store: new MongoStoreWithTypes({ mongoose }),
+    clientId,
+    backupSyncIntervalMs: getRemoteBackupSyncIntervalMs(configService),
+  });
 };
 
 const buildAuthStrategy = async (configService: ConfigService) => {
@@ -85,14 +102,7 @@ const buildAuthStrategy = async (configService: ConfigService) => {
     });
   }
 
-  const mongoUri = getRequiredConfig(configService, 'MONGODB_URI');
-  await ensureMongoConnection(mongoUri);
-
-  return new RemoteAuth({
-    store: new MongoStoreWithTypes({ mongoose }),
-    clientId,
-    backupSyncIntervalMs: getRemoteBackupSyncIntervalMs(configService),
-  });
+  return buildRemoteAuthStrategy(configService);
 };
 
 export const whatsappClientProvider = {
