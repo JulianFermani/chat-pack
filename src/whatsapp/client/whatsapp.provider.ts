@@ -1,7 +1,11 @@
-import { Client, RemoteAuth } from 'whatsapp-web.js';
-import { MongoStore } from 'wwebjs-mongo';
-import mongoose from 'mongoose';
+import { Client, LocalAuth, RemoteAuth } from 'whatsapp-web.js';
+
 import { ConfigService } from '@nestjs/config';
+
+import mongoose from 'mongoose';
+
+import { MongoStore } from 'wwebjs-mongo';
+
 export const WHATSAPP_CLIENT = 'WHATSAPP_CLIENT';
 export const whatsappClientProvider = {
   provide: WHATSAPP_CLIENT,
@@ -11,10 +15,10 @@ export const whatsappClientProvider = {
     await mongoose.connect(mongoUri);
     const store = new MongoStore({ mongoose });
     const client = new Client({
-      authStrategy: new RemoteAuth({
-        store,
+      authStrategy: new LocalAuth({
+        // store,
         clientId: 'cliente',
-        backupSyncIntervalMs: 60000,
+        // backupSyncIntervalMs: 60000,
       }),
       puppeteer: {
         executablePath: configService.get<string>('CHROMIUM_DIR'),

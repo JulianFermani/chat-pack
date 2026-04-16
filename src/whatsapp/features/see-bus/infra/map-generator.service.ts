@@ -21,6 +21,7 @@ export async function seeBusMapGenerator(
     responseType: 'arraybuffer',
   });
 
+  // TODO: TIPAR FUERTEMENTE ESTÁTICO ESTO
   const { data } = await axios.get(
     `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${mapsApi}`,
   );

@@ -1,16 +1,19 @@
-import { State } from 'src/whatsapp/shared/interfaces/state.interface';
-import { SeeTicketsData } from '../see-tickets.session';
-import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
-import { Injectable } from '@nestjs/common';
-import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { Message } from 'whatsapp-web.js';
-import { movieFetcher } from '../../shared/services/movie-fetcher.service';
-import { movieBuilderMessage } from '../../shared/presenter/see-movies.presenter';
-import { backOrDelete } from 'src/whatsapp/shared/utils/back-or-delete-message.util';
+
+import { Injectable } from '@nestjs/common';
+
+import { SeeTicketsData } from '../see-tickets.session';
+import { WhatsappService } from '@client/whatsapp.service';
+import { UserSession } from '@session/user-session.interface';
+import { movieFetcher } from '@features/sudcinemas-vm/shared/services/movie-fetcher.service';
+import { movieBuilderMessage } from '@features/sudcinemas-vm/shared/presenter/see-movies.presenter';
+import { State } from '@shared/interfaces/state.interface';
+import { backOrDelete } from '@shared/utils/back-or-delete-message.util';
+import { SeeTicketsEnumCommand } from '../enum/commands.enum';
 
 @Injectable()
 export class GetUserMovieState implements State<SeeTicketsData> {
-  readonly stepId = 1;
+  readonly stepId = SeeTicketsEnumCommand.GET_USER_MOVIE_STATE;
   constructor(private readonly whatsapp: WhatsappService) {}
 
   async handle(
@@ -31,7 +34,7 @@ export class GetUserMovieState implements State<SeeTicketsData> {
     await this.whatsapp.sendMessage(message.from, messageText);
 
     session.data.movies = movies;
-    session.step = 2;
+    session.steps.push(SeeTicketsEnumCommand.GET_USER_SHOWTIME_STATE);
     session.back = false;
     return session;
   }

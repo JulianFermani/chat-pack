@@ -1,7 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { SessionManager } from '../session/session-manager';
-import { WhatsappService } from '../application/whatsapp.service';
+
+import { SessionManager } from './session-manager';
+import { WhatsappService } from '@client/whatsapp.service';
 
 @Injectable()
 export class SessionCleaner {

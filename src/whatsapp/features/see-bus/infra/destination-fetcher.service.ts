@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { getEmojiNumber } from 'src/whatsapp/shared/utils/number-format.util';
+
+import { getEmojiNumber } from '@shared/utils/number-format.util';
 
 interface PlacesResponse {
   places: { [key: string]: string };

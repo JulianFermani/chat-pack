@@ -1,5 +1,5 @@
-import { Command } from 'src/whatsapp/shared/interfaces/command.interface';
-import { getEmojiForCommand } from 'src/whatsapp/shared/utils/number-format.util';
+import { Command } from '@shared/interfaces/command.interface';
+import { getEmojiForCommand } from '@shared/utils/number-format.util';
 
 export function getCommandBuilderMessage(commands: Command[]): string {
   return commands

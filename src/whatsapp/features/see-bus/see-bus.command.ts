@@ -1,17 +1,20 @@
-import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { Message } from 'whatsapp-web.js';
-import { SeeBusesData } from './see-bus.session';
-import { SeeBusHandler } from './see-bus.handler';
-import { AbstractCommand } from 'src/whatsapp/shared/interfaces/abstract-command.interface';
-import { CommandRegistry } from 'src/whatsapp/application/command-registry';
+
 import { Injectable } from '@nestjs/common';
 
+import { SeeBusHandler } from './see-bus.handler';
+import { SeeBusesData } from './see-bus.session';
+import { CommandRegistry } from '@command-registry/command-registry';
+import { UserSession } from '@session/user-session.interface';
+import { AbstractCommand } from '@shared/interfaces/abstract-command.interface';
+import { SeeBusEnumCommands } from './enum/commands.enum';
 @Injectable()
 export class SeeBusCommand extends AbstractCommand {
   name = 'verColectivos';
   description =
     'Muestra los horarios disponibles del servicio de colectivos Villa del Rosario (todas sus líneas) y, si se detecta ubicación GPS, permite visualizarla.';
   usesSession = true;
+  firstStep = SeeBusEnumCommands.SEE_BUS_INIT_STATE;
 
   constructor(
     registry: CommandRegistry,

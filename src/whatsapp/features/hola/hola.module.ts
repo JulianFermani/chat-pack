@@ -1,10 +1,12 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+
 import { HolaCommand } from './hola.command';
 import { HolaHandler } from './hola.handler';
-import { WhatsappModule } from 'src/whatsapp/application/whatsapp.module';
+import { WhatsappModule } from '@client/whatsapp.module';
+import { CommandRegistryModule } from '@command-registry/command-registry.module';
 
 @Module({
-  imports: [forwardRef(() => WhatsappModule)],
+  imports: [WhatsappModule, CommandRegistryModule],
   providers: [HolaCommand, HolaHandler],
   exports: [HolaCommand],
 })

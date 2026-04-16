@@ -1,5 +1,6 @@
-import { Command } from '../shared/interfaces/command.interface';
 import { Injectable, Logger } from '@nestjs/common';
+
+import { Command } from '@shared/interfaces/command.interface';
 
 @Injectable()
 export class CommandRegistry {
