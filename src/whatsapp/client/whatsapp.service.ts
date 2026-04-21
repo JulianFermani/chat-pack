@@ -4,6 +4,7 @@ import { Client, MessageMedia, MessageSendOptions } from 'whatsapp-web.js';
 import {
   Injectable,
   OnModuleInit,
+  OnApplicationBootstrap,
   Logger,
   Inject,
   OnApplicationShutdown,
@@ -22,7 +23,9 @@ import {
 } from './whatsapp-lifecycle.events';
 
 @Injectable()
-export class WhatsappService implements OnModuleInit, OnApplicationShutdown {
+export class WhatsappService
+  implements OnModuleInit, OnApplicationBootstrap, OnApplicationShutdown
+{
   private readonly logger = new Logger(WhatsappService.name, {
     timestamp: true,
   });
@@ -106,7 +109,9 @@ export class WhatsappService implements OnModuleInit, OnApplicationShutdown {
     this.client.on('message', (message) => {
       this.eventEmitter.emit('whatsapp.message', message);
     });
+  }
 
+  onApplicationBootstrap() {
     void this.initializeClient();
   }
 

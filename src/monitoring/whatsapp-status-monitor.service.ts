@@ -33,6 +33,7 @@ export class WhatsappStatusMonitorService {
   private lastProblemKey?: string;
   private lastProblemDescription?: string;
   private isDegraded = false;
+  private hasSentStartupNotification = false;
 
   constructor(
     private readonly configService: ConfigService,
@@ -47,6 +48,7 @@ export class WhatsappStatusMonitorService {
     this.currentState = event.state;
 
     if (HEALTHY_STATES.has(event.state)) {
+      await this.notifyStartup(event.clientId, event.state, 'change_state');
       await this.notifyRecovery(event.clientId, event.state, 'change_state');
       return;
     }
@@ -93,7 +95,30 @@ export class WhatsappStatusMonitorService {
   @OnEvent(WHATSAPP_LIFECYCLE_EVENTS.ready)
   async handleReady(event: WhatsappReadyEvent): Promise<void> {
     this.currentState = 'CONNECTED';
+    await this.notifyStartup(event.clientId, 'CONNECTED', 'ready');
     await this.notifyRecovery(event.clientId, 'CONNECTED', 'ready');
+  }
+
+  private async notifyStartup(
+    clientId: string,
+    state: string,
+    eventName: string,
+  ): Promise<void> {
+    if (this.hasSentStartupNotification) {
+      return;
+    }
+
+    this.hasSentStartupNotification = true;
+
+    const message = [
+      `${this.appName} | WhatsApp iniciado`,
+      `Estado: ${state}`,
+      `Evento: ${eventName}`,
+      `Cliente: ${clientId}`,
+      `Hora: ${this.formatTimestamp()}`,
+    ].join('\n');
+
+    await this.sendNotification(message);
   }
 
   private async notifyProblem(params: {
