@@ -4,6 +4,7 @@ import { Client, MessageMedia, MessageSendOptions } from 'whatsapp-web.js';
 import {
   Injectable,
   OnModuleInit,
+  OnApplicationBootstrap,
   Logger,
   Inject,
   OnApplicationShutdown,
@@ -12,9 +13,19 @@ import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import { WHATSAPP_CLIENT } from './whatsapp.provider';
+import {
+  WHATSAPP_LIFECYCLE_EVENTS,
+  type WhatsappAuthenticatedEvent,
+  type WhatsappAuthFailureEvent,
+  type WhatsappChangeStateEvent,
+  type WhatsappDisconnectedEvent,
+  type WhatsappReadyEvent,
+} from './whatsapp-lifecycle.events';
 
 @Injectable()
-export class WhatsappService implements OnModuleInit, OnApplicationShutdown {
+export class WhatsappService
+  implements OnModuleInit, OnApplicationBootstrap, OnApplicationShutdown
+{
   private readonly logger = new Logger(WhatsappService.name, {
     timestamp: true,
   });
@@ -31,9 +42,8 @@ export class WhatsappService implements OnModuleInit, OnApplicationShutdown {
     const authMode = this.configService
       .get<string>('WHATSAPP_AUTH_MODE')
       ?.trim();
-    const clientId = this.configService
-      .get<string>('WHATSAPP_CLIENT_ID')
-      ?.trim();
+    const clientId =
+      this.configService.get<string>('WHATSAPP_CLIENT_ID')?.trim() || 'cliente';
 
     this.logger.log(
       `Inicializando cliente de WhatsApp con auth=${authMode || 'sin-definir'} y clientId=${clientId || 'cliente'}.`,
@@ -46,10 +56,19 @@ export class WhatsappService implements OnModuleInit, OnApplicationShutdown {
 
     this.client.on('authenticated', () => {
       this.logger.log('Sesion autenticada correctamente.');
+      const payload: WhatsappAuthenticatedEvent = { clientId };
+
+      this.eventEmitter.emit(WHATSAPP_LIFECYCLE_EVENTS.authenticated, payload);
     });
 
     this.client.on('auth_failure', (message: string) => {
       this.logger.error(`Fallo la autenticacion de WhatsApp: ${message}`);
+      const payload: WhatsappAuthFailureEvent = {
+        clientId,
+        message,
+      };
+
+      this.eventEmitter.emit(WHATSAPP_LIFECYCLE_EVENTS.authFailure, payload);
     });
 
     this.client.on('loading_screen', (percent: number, message: string) => {
@@ -58,14 +77,29 @@ export class WhatsappService implements OnModuleInit, OnApplicationShutdown {
 
     this.client.on('change_state', (state: string) => {
       this.logger.log(`Cambio de estado del cliente: ${state}`);
+      const payload: WhatsappChangeStateEvent = {
+        clientId,
+        state,
+      };
+
+      this.eventEmitter.emit(WHATSAPP_LIFECYCLE_EVENTS.changeState, payload);
     });
 
     this.client.on('ready', () => {
       this.logger.log('El cliente está listo para recibir mensajes!!');
+      const payload: WhatsappReadyEvent = { clientId };
+
+      this.eventEmitter.emit(WHATSAPP_LIFECYCLE_EVENTS.ready, payload);
     });
 
     this.client.on('disconnected', (reason: string) => {
       this.logger.warn(`Cliente desconectado de WhatsApp: ${reason}`);
+      const payload: WhatsappDisconnectedEvent = {
+        clientId,
+        reason,
+      };
+
+      this.eventEmitter.emit(WHATSAPP_LIFECYCLE_EVENTS.disconnected, payload);
     });
 
     this.client.on('remote_session_saved', () => {
@@ -75,7 +109,9 @@ export class WhatsappService implements OnModuleInit, OnApplicationShutdown {
     this.client.on('message', (message) => {
       this.eventEmitter.emit('whatsapp.message', message);
     });
+  }
 
+  onApplicationBootstrap() {
     void this.initializeClient();
   }
 
