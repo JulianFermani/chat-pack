@@ -1,5 +1,5 @@
-import { UserMovie } from '../../see-movies/model/see-movie-movie.interface';
-import { getEmojiNumber } from 'src/whatsapp/shared/utils/number-format.util';
+import { UserMovie } from '@features/sudcinemas-vm/see-movies/model/see-movie-movie.interface';
+import { getEmojiNumber } from '@shared/utils/number-format.util';
 
 export function movieBuilderMessage(movies: UserMovie[]): string {
   return movies

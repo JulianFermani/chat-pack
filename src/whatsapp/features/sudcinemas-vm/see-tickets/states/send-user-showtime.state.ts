@@ -1,18 +1,21 @@
-import { State } from 'src/whatsapp/shared/interfaces/state.interface';
-import { SeeTicketsData } from '../see-tickets.session';
-import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
-import { Injectable } from '@nestjs/common';
-import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { Message } from 'whatsapp-web.js';
+
+import { Injectable } from '@nestjs/common';
+
+import { SeeTicketsData } from '../see-tickets.session';
 import {
-  buildShowtimesMessage,
   showtimesFilter,
+  buildShowtimesMessage,
 } from '../presenter/see-tickets.presenter';
-import { backOrDelete } from 'src/whatsapp/shared/utils/back-or-delete-message.util';
+import { WhatsappService } from '@client/whatsapp.service';
+import { UserSession } from '@session/user-session.interface';
+import { State } from '@shared/interfaces/state.interface';
+import { backOrDelete } from '@shared/utils/back-or-delete-message.util';
+import { SeeTicketsEnumCommand } from '../enum/commands.enum';
 
 @Injectable()
 export class SendUserShowtimesState implements State<SeeTicketsData> {
-  readonly stepId = 3;
+  readonly stepId = SeeTicketsEnumCommand.SEND_USER_SHOWTIMES_STATE;
   constructor(private readonly whatsapp: WhatsappService) {}
   async handle(
     message: Message,
@@ -42,7 +45,7 @@ export class SendUserShowtimesState implements State<SeeTicketsData> {
     let mensajeFinal = buildShowtimesMessage(userShowtimes);
     mensajeFinal = backOrDelete(mensajeFinal);
     await this.whatsapp.sendMessage(message.from, mensajeFinal);
-    session.step = 4;
+    session.steps.push(SeeTicketsEnumCommand.LAST_STEP);
     return session;
   }
 }

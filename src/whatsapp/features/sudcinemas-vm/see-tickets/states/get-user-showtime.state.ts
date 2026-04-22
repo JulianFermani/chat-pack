@@ -1,21 +1,24 @@
-import { State } from 'src/whatsapp/shared/interfaces/state.interface';
-import { SeeTicketsData } from '../see-tickets.session';
-import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
-import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { Message } from 'whatsapp-web.js';
+
 import { Injectable } from '@nestjs/common';
-import { UserMovie } from '../../see-movies/model/see-movie-movie.interface';
+
 import { fetchShowtimes } from '../infra/fetch-showtimes';
+import { SeeTicketsData } from '../see-tickets.session';
+import { WhatsappService } from '@client/whatsapp.service';
+import { UserMovie } from '@features/sudcinemas-vm/see-movies/model/see-movie-movie.interface';
+import { UserSession } from '@session/user-session.interface';
+import { State } from '@shared/interfaces/state.interface';
+import { backOrDelete } from '@shared/utils/back-or-delete-message.util';
 import {
-  formatDate,
   generateDateOptions,
-} from 'src/whatsapp/shared/utils/date-format.util';
-import { backOrDelete } from 'src/whatsapp/shared/utils/back-or-delete-message.util';
-import { getEmojiNumber } from 'src/whatsapp/shared/utils/number-format.util';
+  formatDate,
+} from '@shared/utils/date-format.util';
+import { getEmojiNumber } from '@shared/utils/number-format.util';
+import { SeeTicketsEnumCommand } from '../enum/commands.enum';
 
 @Injectable()
 export class GetUserShowtimeState implements State<SeeTicketsData> {
-  readonly stepId = 2;
+  readonly stepId = SeeTicketsEnumCommand.GET_USER_SHOWTIME_STATE;
   constructor(private readonly whatsapp: WhatsappService) {}
   async handle(
     message: Message,
@@ -50,7 +53,7 @@ export class GetUserShowtimeState implements State<SeeTicketsData> {
       showtimes: showtimes,
       dates: [d1, d2, d3],
     };
-    session.step = 3;
+    session.steps.push(SeeTicketsEnumCommand.SEND_USER_SHOWTIMES_STATE);
 
     let messageText = `📅 ¿Qué día querés ver la función? Elegí un número:\n${getEmojiNumber(1)}. ${formatDate(d1)}\n${getEmojiNumber(2)}. ${formatDate(d2)}\n${getEmojiNumber(3)}. ${formatDate(d1)} al ${formatDate(d3)}`;
     messageText = backOrDelete(messageText);

@@ -1,8 +1,10 @@
-import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { Message } from 'whatsapp-web.js';
-import { SeeTicketsData } from './see-tickets.session';
+
 import { Injectable } from '@nestjs/common';
+
+import { SeeTicketsData } from './see-tickets.session';
 import { SeeTicketsStateFactory } from './states/see-tickets-state.factory';
+import { UserSession } from '@session/user-session.interface';
 
 @Injectable()
 export class SeeTicketsHandler {
@@ -11,7 +13,9 @@ export class SeeTicketsHandler {
     message: Message,
     session: UserSession<SeeTicketsData>,
   ): Promise<UserSession<SeeTicketsData> | void> {
-    const state = this.stateFactory.get(session.step);
+    const lastState = session.steps.at(-1);
+    if (!lastState) return;
+    const state = this.stateFactory.get(lastState);
     if (!state) {
       return;
     }

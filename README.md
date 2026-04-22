@@ -34,13 +34,64 @@ Esto crea una imagen Docker llamada `chat-pack` a partir del `Dockerfile` del pr
 
 ---
 
+## 🔐 Configuración de autenticación de WhatsApp
+
+El cliente soporta dos modos de autenticación configurables por entorno:
+
+- `WHATSAPP_AUTH_MODE=local`: guarda la sesión en `.wwebjs_auth/`.
+- `WHATSAPP_AUTH_MODE=remote`: guarda la sesión en MongoDB usando `wwebjs-mongo`.
+
+Variables comunes:
+
+```env
+CHROMIUM_DIR=/ruta/al/ejecutable/de/chromium
+WHATSAPP_AUTH_MODE=local
+WHATSAPP_CLIENT_ID=cliente
+```
+
+Variables adicionales para `RemoteAuth`:
+
+```env
+MONGODB_URI=mongodb://usuario:password@host:27017/
+WHATSAPP_REMOTE_BACKUP_SYNC_INTERVAL_MS=60000
+```
+
+Notas:
+
+- `CHROMIUM_DIR` es obligatoria en ambos modos.
+- `MONGODB_URI` solo es obligatoria cuando `WHATSAPP_AUTH_MODE=remote`.
+- `WHATSAPP_CLIENT_ID` es opcional. Si no se define, se usa `cliente`.
+- `WHATSAPP_REMOTE_BACKUP_SYNC_INTERVAL_MS` es opcional. Si no se define, se usa `60000`.
+
+---
+
 ## ▶️ Correr el proyecto en producción
 
 ```bash
-docker run --network=chat-pack-net chat-pack:latest
+docker run --network=chat-pack-net -d chat-pack:latest
 ```
 
 - `--network=chat-pack-net`: conecta tu app a la misma red que MongoDB.
+- `-d`: corre el contenedor en segundo plano.
+
+---
+
+## ✨ Features disponibles
+
+| Feature             | Uso                         | Descripción                                                                                          |
+| ------------------- | --------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Saludo              | `/hola`                     | Responde con un saludo.                                                                              |
+| Ayuda               | `/comandos`                 | Lista los comandos disponibles del bot.                                                              |
+| Colectivos          | `/verColectivos`            | Muestra horarios de colectivos Villa del Rosario y, si hay GPS, permite ver ubicación.               |
+| Futbol              | `/futbol`                   | Abre el submenu de futbol para ver los partidos de hoy y gestionar suscripciones diarias.            |
+| Partidos de hoy     | `/verPartidosHoy`           | Muestra los partidos de futbol disponibles para el dia actual.                                       |
+| Suscribirse         | `/suscribirmePartidosHoy`   | Activa la notificacion diaria del resumen de partidos para el chat actual.                           |
+| Desuscribirse       | `/desuscribirmePartidosHoy` | Desactiva la notificacion diaria del resumen de partidos para el chat actual.                        |
+| Películas           | `/verPeliculas`             | Muestra la cartelera de SudCinemas Villa María.                                                      |
+| Entradas            | `/verEntradas`              | Consulta entradas vendidas para una función según la fecha elegida.                                  |
+| Suma interactiva    | `/sumarDosNumeros`          | Pide dos números en pasos y devuelve el resultado.                                                   |
+| Stickers en privado | Automático                  | Convierte imágenes o videos a sticker, y stickers a imagen, en chats privados.                       |
+| Stickers en grupos  | Automático                  | En grupos, convierte multimedia usando la palabra `sticker` o devuelve imagen respondiendo `imagen`. |
 
 ---
 

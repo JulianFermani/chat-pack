@@ -1,16 +1,20 @@
 import { Message } from 'whatsapp-web.js';
-import { UserSession } from 'src/whatsapp/session/user-session.interface';
-import { SumarDosNumerosData } from './sumar-dos-numeros.session';
-import { SumarDosNumerosHandler } from './sumar-dos-numeros.handler';
-import { AbstractCommand } from 'src/whatsapp/shared/interfaces/abstract-command.interface';
-import { CommandRegistry } from 'src/whatsapp/application/command-registry';
+
 import { Injectable } from '@nestjs/common';
+
+import { SumarDosNumerosHandler } from './sumar-dos-numeros.handler';
+import { SumarDosNumerosData } from './sumar-dos-numeros.session';
+import { CommandRegistry } from '@command-registry/command-registry';
+import { UserSession } from '@session/user-session.interface';
+import { AbstractCommand } from '@shared/interfaces/abstract-command.interface';
+import { SumarDosNumerosEnumCommands } from './enum/commands.enum';
 
 @Injectable()
 export class SumarDosNumerosCommand extends AbstractCommand<SumarDosNumerosData> {
   name = 'sumarDosNumeros';
   description = 'Realiza la suma de dos números en dos pasos interactivos.';
   usesSession = true;
+  firstStep = SumarDosNumerosEnumCommands.FIRST_NUMBER;
 
   constructor(
     registry: CommandRegistry,

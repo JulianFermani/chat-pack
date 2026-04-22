@@ -1,13 +1,16 @@
-import { State } from 'src/whatsapp/shared/interfaces/state.interface';
-import { SumarDosNumerosData } from '../sumar-dos-numeros.session';
-import { WhatsappService } from 'src/whatsapp/application/whatsapp.service';
-import { UserSession } from 'src/whatsapp/session/user-session.interface';
 import { Message } from 'whatsapp-web.js';
+
 import { Injectable } from '@nestjs/common';
+
+import { SumarDosNumerosData } from '../sumar-dos-numeros.session';
+import { WhatsappService } from '@client/whatsapp.service';
+import { UserSession } from '@session/user-session.interface';
+import { State } from '@shared/interfaces/state.interface';
+import { SumarDosNumerosEnumCommands } from '../enum/commands.enum';
 
 @Injectable()
 export class AddTwoNumbersState implements State<SumarDosNumerosData> {
-  readonly stepId = 3;
+  readonly stepId = SumarDosNumerosEnumCommands.ADD_TWO_NUMBERS;
   constructor(private readonly whatsapp: WhatsappService) {}
   async handle(
     message: Message,
@@ -30,7 +33,7 @@ export class AddTwoNumbersState implements State<SumarDosNumerosData> {
       message.from,
       `El resultado de la suma es: ${suma}\n\n━━━━━━━━━━━━\n0️⃣ Volver atrás\n9️⃣9️⃣ Terminar sesión\n━━━━━━━━━━━━`,
     );
-    session.step = 4;
+    session.steps.push(SumarDosNumerosEnumCommands.LAST_STEP);
     return session;
   }
 }
