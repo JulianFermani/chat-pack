@@ -79,6 +79,16 @@
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
+    "moduleNameMapper": {
+      "^@database/(.*)$": "<rootDir>/database/$1",
+      "^@application/(.*)$": "<rootDir>/whatsapp/application/$1",
+      "^@client/(.*)$": "<rootDir>/whatsapp/client/$1",
+      "^@command-handler/(.*)$": "<rootDir>/whatsapp/command-handler/$1",
+      "^@command-registry/(.*)$": "<rootDir>/whatsapp/command-registry/$1",
+      "^@features/(.*)$": "<rootDir>/whatsapp/features/$1",
+      "^@session/(.*)$": "<rootDir>/whatsapp/session/$1",
+      "^@shared/(.*)$": "<rootDir>/whatsapp/shared/$1"
+    },
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
