@@ -47,7 +47,6 @@ export class SessionFlowService {
         ctx.userId,
         'Error: comando no encontrado, para ver la lista de comandos envie */comandos*',
       );
-      await this.whatsappClient.sendSeen(ctx.userId);
       return;
     }
 

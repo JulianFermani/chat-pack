@@ -19,7 +19,6 @@ export class CommandResolverService {
           ctx.userId,
           `Comando desconocido: ${ctx.commandName}, para ver la lista de comandos envie */comandos*`,
         );
-        await this.whatsappClient.sendSeen(ctx.userId);
         return undefined;
       }
       return cmd;
