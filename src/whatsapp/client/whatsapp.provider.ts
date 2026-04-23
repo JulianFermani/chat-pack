@@ -77,11 +77,12 @@ const ensureMongoConnection = async (
 const buildRemoteAuthStrategy = async (configService: ConfigService) => {
   const mongoUri = getRequiredConfig(configService, 'MONGODB_URI');
   const clientId = getWhatsappClientId(configService);
-  const [{ default: mongoose }, { MongoStore }] = await Promise.all([
-    import('mongoose'),
-    import('wwebjs-mongo'),
-  ]);
-  const MongoStoreWithTypes = MongoStore as unknown as MongoStoreConstructor;
+  const mongooseModule = await import('mongoose');
+  const mongoose = mongooseModule.default;
+  const wwebjsMongoModule = (await import('wwebjs-mongo')) as unknown as {
+    MongoStore: MongoStoreConstructor;
+  };
+  const MongoStoreWithTypes = wwebjsMongoModule.MongoStore;
 
   await ensureMongoConnection(mongoUri, mongoose);
 
