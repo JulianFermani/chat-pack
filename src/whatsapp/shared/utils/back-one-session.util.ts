@@ -21,7 +21,6 @@ export async function backOneSession<T>(
       message.from,
       '🚮 Su sesión ha sido eliminada correctamente',
     );
-    await whatsappClient.sendSeen(message.from);
     return;
   }
   return session;
