@@ -18,7 +18,7 @@ import { SeeMoviesModule } from '@features/sudcinemas-vm/see-movies/see-movies.m
 import { SeeTicketsModule } from '@features/sudcinemas-vm/see-tickets/see-tickets.module';
 import { SumarDosNumerosModule } from '@features/sumar-dos-numeros/sumar-dos-numeros.module';
 import { CommandHandlerModule } from '@command-handler/command-handler.module';
-import { TelegramMonitorModule } from './monitoring/telegram-monitor.module';
+import { NtfyMonitorModule } from './monitoring/ntfy-monitor.module';
 
 @Module({
   imports: [
@@ -30,7 +30,7 @@ import { TelegramMonitorModule } from './monitoring/telegram-monitor.module';
     CommandHandlerModule,
     CommandRegistryModule,
     WhatsappModule,
-    TelegramMonitorModule,
+    NtfyMonitorModule,
     SessionModule,
     HolaModule,
     CommandModule,
