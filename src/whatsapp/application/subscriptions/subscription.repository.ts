@@ -55,4 +55,38 @@ export class SubscriptionRepository {
   async findActiveByTopic(topic: string) {
     return this.subscriptionModel.find({ topic, active: true }).lean();
   }
+
+  async findActiveByTopicPrefix(topicPrefix: string) {
+    return this.subscriptionModel
+      .find({
+        topic: {
+          $regex: `^${escapeRegex(topicPrefix)}`,
+        },
+        active: true,
+      })
+      .lean();
+  }
+
+  async deactivateByChatAndTopicPrefix(chatId: string, topicPrefix: string) {
+    const result = await this.subscriptionModel.updateMany(
+      {
+        chatId,
+        topic: {
+          $regex: `^${escapeRegex(topicPrefix)}`,
+        },
+        active: true,
+      },
+      {
+        $set: {
+          active: false,
+        },
+      },
+    );
+
+    return result.modifiedCount;
+  }
+}
+
+function escapeRegex(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
