@@ -32,6 +32,10 @@ export function getEmojiForCommand(commandName: string): string {
     suscribirmePartidosHoy: '🔔',
     desuscribirmePartidosHoy: '🔕',
     comandos: '📜',
+    registrarTin: '🪪',
+    consultarSaldo: '💳',
+    verTin: '🧾',
+    eliminarTin: '🗑️',
   };
 
   return emojis[commandName] || '🔧'; // emoji por defecto

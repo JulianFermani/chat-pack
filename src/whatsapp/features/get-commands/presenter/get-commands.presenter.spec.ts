@@ -4,8 +4,8 @@ describe('getCommandBuilderMessage', () => {
   it('builds a readable message for each command', () => {
     const message = getCommandBuilderMessage([
       {
-        name: 'hola',
-        description: 'Saluda al usuario',
+        name: 'registrarTin',
+        description: 'Registra tu TIN',
         usesSession: false,
         firstStep: '',
         execute: jest.fn(),
@@ -17,13 +17,25 @@ describe('getCommandBuilderMessage', () => {
         firstStep: '',
         execute: jest.fn(),
       },
+      {
+        name: 'hola',
+        description: 'Saluda al usuario',
+        usesSession: false,
+        firstStep: '',
+        execute: jest.fn(),
+      },
     ]);
 
-    expect(message).toContain('🗣️ Comando: */hola*');
-    expect(message).toContain('📝 Descripción: Saluda al usuario');
-    expect(message).toContain('📜 Comando: */comandos*');
-    expect(message).toContain('📝 Descripción: Lista todos los comandos');
+    expect(message).toContain('📜 */comandos*\nLista todos los comandos');
+    expect(message).toContain('🗣️ */hola*\nSaluda al usuario');
+    expect(message).toContain('🪪 */registrarTin*\nRegistra tu TIN');
     expect(message).toContain('\n\n');
+    expect(message.indexOf('*/comandos*')).toBeLessThan(
+      message.indexOf('*/hola*'),
+    );
+    expect(message.indexOf('*/hola*')).toBeLessThan(
+      message.indexOf('*/registrarTin*'),
+    );
   });
 
   it('uses default emoji for unknown commands', () => {
@@ -37,6 +49,6 @@ describe('getCommandBuilderMessage', () => {
       },
     ]);
 
-    expect(message).toContain('🔧 Comando: */algo-nuevo*');
+    expect(message).toContain('🔧 */algo-nuevo*');
   });
 });
