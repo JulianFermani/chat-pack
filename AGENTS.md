@@ -45,6 +45,13 @@
 - ESLint uses the flat config in `eslint.config.mjs` with type-aware linting (`projectService: true`) and `--fix` is enabled in the `lint` script.
 - Prettier uses `singleQuote: true` and `trailingComma: all`.
 
+## Workflow
+
+- Any code change must follow classic git flow: work from the appropriate branch type (`feature/*`, `release/*`, `hotfix/*`) and keep `main` as the stable integration branch.
+- When creating commits, follow the commit style already used in this repository by the user.
+- Commit messages must be written in Spanish.
+- Commits should be split into small, coherent blocks of change so the history is easier to understand and review.
+
 ## Docker / Deploy
 
 - Local Mongo expects an external Docker network named `chat-pack-net`; create it first with `docker network create chat-pack-net`.
