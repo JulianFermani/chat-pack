@@ -9,7 +9,7 @@ import {
   type WhatsappDisconnectedEvent,
   type WhatsappReadyEvent,
 } from '../whatsapp/client/whatsapp-lifecycle.events';
-import { TelegramNotifierService } from './telegram-notifier.service';
+import { NtfyNotifierService } from './ntfy-notifier.service';
 
 const HEALTHY_STATES = new Set(['CONNECTED']);
 const TRANSITION_STATES = new Set(['OPENING', 'PAIRING', 'TIMEOUT']);
@@ -37,7 +37,7 @@ export class WhatsappStatusMonitorService {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly telegramNotifier: TelegramNotifierService,
+    private readonly ntfyNotifier: NtfyNotifierService,
   ) {
     this.appName =
       this.configService.get<string>('APP_NAME')?.trim() || 'Chat Pack';
@@ -176,19 +176,19 @@ export class WhatsappStatusMonitorService {
   }
 
   private async sendNotification(message: string): Promise<void> {
-    if (!this.telegramNotifier.isConfigured()) {
+    if (!this.ntfyNotifier.isConfigured()) {
       this.logger.warn(
-        `Alerta omitida por Telegram no configurado:\n${message}`,
+        `Alerta omitida por ntfy no configurado:\n${message}`,
       );
       return;
     }
 
     try {
-      await this.telegramNotifier.sendMessage(message);
+      await this.ntfyNotifier.sendMessage(message);
     } catch (error) {
       const detail = error instanceof Error ? error.message : String(error);
 
-      this.logger.error(`No se pudo enviar la alerta a Telegram: ${detail}`);
+      this.logger.error(`No se pudo enviar la alerta a ntfy: ${detail}`);
     }
   }
 
