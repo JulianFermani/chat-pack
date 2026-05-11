@@ -43,4 +43,12 @@ export class SubscriptionService {
   async findActiveByTopic(topic: string) {
     return this.repository.findActiveByTopic(topic);
   }
+
+  async findActiveByTopicPrefix(topicPrefix: string) {
+    return this.repository.findActiveByTopicPrefix(topicPrefix);
+  }
+
+  async unsubscribeAllByTopicPrefix(chatId: string, topicPrefix: string) {
+    return this.repository.deactivateByChatAndTopicPrefix(chatId, topicPrefix);
+  }
 }

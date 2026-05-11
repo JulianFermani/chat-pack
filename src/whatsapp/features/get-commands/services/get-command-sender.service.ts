@@ -15,7 +15,12 @@ export async function getCommandSender(
 
   await whatsappClient.sendMessage(
     message.from,
-    `⚙️ *Comandos disponibles:*\n\n${messageText}`,
+    [
+      '⚙️ *Comandos disponibles*',
+      'Envia cualquiera de estos comandos con */nombreDelComando*.',
+      '',
+      messageText,
+    ].join('\n'),
   );
   return;
 }

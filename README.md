@@ -45,6 +45,7 @@ Variables comunes:
 
 ```env
 CHROMIUM_DIR=/ruta/al/ejecutable/de/chromium
+APP_NAME=Chat Pack Bot
 WHATSAPP_AUTH_MODE=local
 WHATSAPP_CLIENT_ID=cliente
 ```
@@ -62,6 +63,26 @@ Notas:
 - `MONGODB_URI` solo es obligatoria cuando `WHATSAPP_AUTH_MODE=remote`.
 - `WHATSAPP_CLIENT_ID` es opcional. Si no se define, se usa `cliente`.
 - `WHATSAPP_REMOTE_BACKUP_SYNC_INTERVAL_MS` es opcional. Si no se define, se usa `60000`.
+
+---
+
+## 🔔 Alertas con ntfy
+
+El bot incluye monitoreo del estado del cliente de WhatsApp. Cuando ntfy está configurado, envía alertas al iniciar, al detectar estados degradados o desconexiones, y cuando WhatsApp se recupera.
+
+Variables esperadas:
+
+```env
+NTFY_BASE_URL=https://ntfy.sh
+NTFY_TOPIC=tu_topic_de_alertas
+APP_NAME=Chat Pack Bot
+```
+
+Notas:
+
+- `NTFY_TOPIC` habilita las notificaciones. Si queda vacío, las alertas se omiten y se registran warnings en logs.
+- `NTFY_BASE_URL` es opcional. Si no se define, el código usa `https://ntfy.sh`.
+- `APP_NAME` se usa como prefijo en los mensajes. Si no se define, se usa `Chat Pack`.
 
 ---
 

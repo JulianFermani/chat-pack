@@ -17,11 +17,44 @@ interface BusData {
   se_anuncia: string;
   horario_leyenda: string;
   coche: string;
-  lat: string;
-  lon: string;
+  lat: string | number;
+  lon: string | number;
   empresa: string;
   empresa_id: string;
   [key: string]: any;
+}
+
+interface NewApiResponse {
+  ok?: boolean;
+  data?: {
+    coches?: BusData[];
+  };
+}
+
+function parseBuses(dataResponse: unknown): BusData[] {
+  if (!dataResponse || typeof dataResponse !== 'object') {
+    return [];
+  }
+
+  const newResponse = dataResponse as NewApiResponse;
+  if (Array.isArray(newResponse.data?.coches)) {
+    return newResponse.data.coches;
+  }
+
+  const legacyResponse = dataResponse as Record<string, unknown>;
+  const buses: BusData[] = [];
+
+  Object.values(legacyResponse).forEach((value) => {
+    if (!Array.isArray(value)) {
+      return;
+    }
+
+    value.forEach((bus) => {
+      buses.push(bus as BusData);
+    });
+  });
+
+  return buses;
 }
 
 export async function getResponseBus(
@@ -52,54 +85,53 @@ export async function getResponseBus(
       'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
   };
 
-  const res = await axios.post<{ [key: string]: BusData[] }>(
-    url,
-    postData.toString(),
-    { headers },
-  );
+  const res = await axios.post(url, postData.toString(), { headers });
 
-  const dataResponse = res.data;
+  const buses = parseBuses(res.data);
 
   let message = '';
 
-  Object.values(dataResponse).forEach((busArray) => {
-    busArray.forEach((bus) => {
-      if (!message) {
-        message += `🟢 *Origen:* ${bus.origen}\n🔴 *Destino:* ${bus.destino}\n\n`;
-      }
+  buses.forEach((bus) => {
+    if (!message) {
+      message += `🟢 *Origen:* ${bus.origen}\n🔴 *Destino:* ${bus.destino}\n\n`;
+    }
 
-      message += `🕕 *Sale:* ${bus.hora_salida}\n`;
-      message += `🕧 *Llega:* ${bus.llega}\n`;
+    message += `🕕 *Sale:* ${bus.hora_salida}\n`;
+    message += `🕧 *Llega:* ${bus.llega}\n`;
 
-      if (bus.demora) {
-        message += `⏱️ *Demora:* ${bus.demora}\n`;
-      }
+    if (bus.demora) {
+      message += `⏱️ *Demora:* ${bus.demora}\n`;
+    }
 
-      if (bus.empresa) {
-        message += `🏢 *Empresa:* ${bus.empresa.substring(0, bus.empresa.length - 2)}\n`;
-      }
+    if (bus.empresa) {
+      message += `🏢 *Empresa:* ${bus.empresa.substring(0, bus.empresa.length - 2)}\n`;
+    }
 
-      if (bus.se_anuncia) {
-        message += `📢 *Se anuncia:* ${bus.se_anuncia}\n`;
-      }
+    if (bus.se_anuncia) {
+      message += `📢 *Se anuncia:* ${bus.se_anuncia}\n`;
+    }
 
-      if (bus.horario_leyenda) {
-        message += `👀 *Observación:* ${bus.horario_leyenda}\n`;
-      }
+    if (bus.horario_leyenda) {
+      message += `👀 *Observación:* ${bus.horario_leyenda}\n`;
+    }
 
-      if (bus.coche) {
-        message += `🚍 *Coche:* ${bus.coche}\n`;
-      }
+    if (bus.coche) {
+      message += `🚍 *Coche:* ${bus.coche}\n`;
+    }
 
-      message += `━━━━━━━━━━━━━━\n\n`;
+    message += `━━━━━━━━━━━━━━\n\n`;
 
-      if (bus.lat && bus.lon) {
-        responseBus.hasUbication = true;
-        responseBus.lat = bus.lat;
-        responseBus.lng = bus.lon;
-      }
-    });
+    if (bus.lat && bus.lon) {
+      responseBus.hasUbication = true;
+      responseBus.lat = String(bus.lat);
+      responseBus.lng = String(bus.lon);
+    }
   });
+
+  if (!message) {
+    responseBus.message = '📍 *No se encontraron colectivos para ese tramo.*';
+    return responseBus;
+  }
 
   if (responseBus.hasUbication) {
     message += `🗺️ *Se encontró ubicación en el mapa:*\n ¿Desea verlo?\n1️⃣ Si\n2️⃣ No  `;

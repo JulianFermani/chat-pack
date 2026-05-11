@@ -62,6 +62,5 @@ export class CommandExecuterService {
       userId,
       'Error ejecutando el comando.',
     );
-    await this.whatsappClient.sendSeen(userId);
   }
 }

@@ -59,8 +59,11 @@ export class SeeBusDestinationState implements State<SeeBusesData> {
     if (responseBus.hasUbication) {
       session.data.lat = responseBus.lat;
       session.data.lng = responseBus.lng;
+      session.steps.push(SeeBusEnumCommands.SEE_BUS_MAP_STATE);
+    } else {
+      session.steps.push(SeeBusEnumCommands.LAST_STEP);
     }
-    session.steps.push(SeeBusEnumCommands.LAST_STEP);
+
     session.back = false;
     return session;
   }
