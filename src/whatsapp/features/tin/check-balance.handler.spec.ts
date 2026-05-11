@@ -25,7 +25,10 @@ describe('CheckBalanceHandler', () => {
   });
 
   it('rejects group chats', async () => {
-    await handler.handle({ from: 'group@g.us', body: '/consultarSaldo' } as any);
+    await handler.handle({
+      from: 'group@g.us',
+      body: '/consultarSaldo',
+    } as any);
 
     expect(tinCardService.findTinByChatId).not.toHaveBeenCalled();
     expect(whatsapp.sendMessage).toHaveBeenCalledWith(
