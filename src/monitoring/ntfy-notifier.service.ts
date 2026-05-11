@@ -29,13 +29,16 @@ export class NtfyNotifierService {
       return;
     }
 
-    const response = await fetch(`${this.baseUrl}/${encodeURIComponent(this.topic)}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
+    const response = await fetch(
+      `${this.baseUrl}/${encodeURIComponent(this.topic)}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain; charset=utf-8',
+        },
+        body: message,
       },
-      body: message,
-    });
+    );
 
     if (!response.ok) {
       const body = await response.text();

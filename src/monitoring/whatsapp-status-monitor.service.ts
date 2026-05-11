@@ -177,9 +177,7 @@ export class WhatsappStatusMonitorService {
 
   private async sendNotification(message: string): Promise<void> {
     if (!this.ntfyNotifier.isConfigured()) {
-      this.logger.warn(
-        `Alerta omitida por ntfy no configurado:\n${message}`,
-      );
+      this.logger.warn(`Alerta omitida por ntfy no configurado:\n${message}`);
       return;
     }
 
