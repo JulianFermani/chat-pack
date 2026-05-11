@@ -17,7 +17,10 @@ describe('RegisterTinHandler', () => {
   });
 
   it('rejects group chats', async () => {
-    await handler.handle({ from: 'group@g.us', body: '/registrarTin EA2F1101' } as any);
+    await handler.handle({
+      from: 'group@g.us',
+      body: '/registrarTin EA2F1101',
+    } as any);
 
     expect(tinCardService.registerTin).not.toHaveBeenCalled();
     expect(whatsapp.sendMessage).toHaveBeenCalledWith(
@@ -39,7 +42,10 @@ describe('RegisterTinHandler', () => {
   it('registers a new tin', async () => {
     tinCardService.registerTin.mockResolvedValue('created');
 
-    await handler.handle({ from: 'user@c.us', body: '/registrarTin ea2f1101' } as any);
+    await handler.handle({
+      from: 'user@c.us',
+      body: '/registrarTin ea2f1101',
+    } as any);
 
     expect(tinCardService.registerTin).toHaveBeenCalledWith(
       'user@c.us',
@@ -54,7 +60,10 @@ describe('RegisterTinHandler', () => {
   it('updates an existing tin', async () => {
     tinCardService.registerTin.mockResolvedValue('updated');
 
-    await handler.handle({ from: 'user@c.us', body: '/registrarTin EA2F1101' } as any);
+    await handler.handle({
+      from: 'user@c.us',
+      body: '/registrarTin EA2F1101',
+    } as any);
 
     expect(whatsapp.sendMessage).toHaveBeenCalledWith(
       'user@c.us',
