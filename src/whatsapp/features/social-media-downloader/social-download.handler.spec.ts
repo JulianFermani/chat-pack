@@ -16,6 +16,7 @@ describe('SocialDownloadHandler', () => {
     getMaxFileMb: jest.fn(),
     getTimeoutMs: jest.fn(),
     getTempDir: jest.fn(),
+    getYtDlpPath: jest.fn(),
   };
   const downloader = {
     download: jest.fn(),
@@ -29,6 +30,7 @@ describe('SocialDownloadHandler', () => {
     policy.getMaxFileMb.mockReturnValue(100);
     policy.getTimeoutMs.mockReturnValue(120_000);
     policy.getTempDir.mockReturnValue('/tmp/social');
+    policy.getYtDlpPath.mockReturnValue('/usr/local/bin/yt-dlp');
     handler = new SocialDownloadHandler(
       whatsapp as any,
       detector as any,
@@ -59,6 +61,7 @@ describe('SocialDownloadHandler', () => {
     );
     expect(downloader.download).toHaveBeenCalledWith({
       url: 'https://x.com/u/status/1',
+      ytDlpPath: '/usr/local/bin/yt-dlp',
       baseTempDir: '/tmp/social',
       maxFileMb: 100,
       timeoutMs: 120_000,

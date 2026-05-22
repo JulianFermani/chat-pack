@@ -98,6 +98,7 @@ SOCIAL_DOWNLOAD_GROUPS_ENABLED=false
 SOCIAL_DOWNLOAD_MAX_FILE_MB=100
 SOCIAL_DOWNLOAD_TIMEOUT_MS=120000
 SOCIAL_DOWNLOAD_TMP_DIR=/tmp/chat-pack-social-downloads
+SOCIAL_DOWNLOAD_YTDLP_PATH=yt-dlp
 ```
 
 Notas:
@@ -107,9 +108,24 @@ Notas:
 - `SOCIAL_DOWNLOAD_MAX_FILE_MB` limita el archivo descargado. El default es `100`.
 - `SOCIAL_DOWNLOAD_TIMEOUT_MS` corta descargas lentas. El default es `120000`.
 - `SOCIAL_DOWNLOAD_TMP_DIR` define dónde se descargan archivos temporales.
+- `SOCIAL_DOWNLOAD_YTDLP_PATH` permite indicar el binario de `yt-dlp`. En Docker puede quedar como `yt-dlp`; en desarrollo local debe existir en tu `PATH` o apuntar a una ruta absoluta.
 - La descarga usa `yt-dlp`, instalado en la imagen Docker junto con `ffmpeg`.
 - No usa cookies ni login. Si Instagram o X piden sesión, el bot responde con error y emoji.
 - Los archivos temporales se borran siempre al finalizar el intento de descarga.
+
+Para desarrollo local, instalá `yt-dlp` antes de probar la feature:
+
+```bash
+python3 -m pip install -U yt-dlp
+```
+
+Luego verificá la ruta con:
+
+```bash
+command -v yt-dlp
+```
+
+Si no queda disponible como `yt-dlp`, configurá `SOCIAL_DOWNLOAD_YTDLP_PATH` con la ruta devuelta por tu instalación.
 
 ---
 

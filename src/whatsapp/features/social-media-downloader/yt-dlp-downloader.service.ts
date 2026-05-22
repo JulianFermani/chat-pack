@@ -9,6 +9,7 @@ import { SocialDownloadError } from './social-download-errors';
 
 export interface SocialDownloadRequest {
   url: string;
+  ytDlpPath: string;
   baseTempDir: string;
   maxFileMb: number;
   timeoutMs: number;
@@ -54,7 +55,7 @@ export class YtDlpDownloaderService {
     request: SocialDownloadRequest,
   ): Promise<YtDlpMetadata> {
     const { stdout } = await this.execYtDlp(
-      'yt-dlp',
+      request.ytDlpPath,
       ['--dump-single-json', '--no-playlist', request.url],
       { timeout: request.timeoutMs, maxBuffer: 10 * 1024 * 1024 },
     );
@@ -67,7 +68,7 @@ export class YtDlpDownloaderService {
     tempDir: string,
   ): Promise<void> {
     await this.execYtDlp(
-      'yt-dlp',
+      request.ytDlpPath,
       [
         '--no-playlist',
         '--max-filesize',

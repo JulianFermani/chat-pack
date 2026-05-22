@@ -40,6 +40,7 @@ export class SocialDownloadHandler {
     try {
       const result = await this.downloader.download({
         url,
+        ytDlpPath: this.policy.getYtDlpPath(),
         baseTempDir: this.policy.getTempDir(),
         maxFileMb,
         timeoutMs: this.policy.getTimeoutMs(),

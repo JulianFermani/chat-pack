@@ -58,6 +58,7 @@ describe('YtDlpDownloaderService', () => {
 
     const result = await service.download({
       url: 'https://x.com/user/status/123',
+      ytDlpPath: '/usr/local/bin/yt-dlp',
       baseTempDir: '/tmp/social',
       maxFileMb: 100,
       timeoutMs: 120_000,
@@ -68,13 +69,13 @@ describe('YtDlpDownloaderService', () => {
     });
     expect(mockedMkdtemp).toHaveBeenCalledWith('/tmp/social/download-');
     expect(mockedExecFile).toHaveBeenCalledWith(
-      'yt-dlp',
+      '/usr/local/bin/yt-dlp',
       expect.arrayContaining(['--dump-single-json']),
       expect.objectContaining({ timeout: 120_000 }),
       expect.any(Function),
     );
     expect(mockedExecFile).toHaveBeenCalledWith(
-      'yt-dlp',
+      '/usr/local/bin/yt-dlp',
       expect.arrayContaining(['--max-filesize', '100M']),
       expect.objectContaining({ timeout: 120_000 }),
       expect.any(Function),
@@ -92,6 +93,7 @@ describe('YtDlpDownloaderService', () => {
     await expect(
       service.download({
         url: 'https://www.instagram.com/p/abc/',
+        ytDlpPath: 'yt-dlp',
         baseTempDir: '/tmp/social',
         maxFileMb: 100,
         timeoutMs: 120_000,
@@ -105,6 +107,7 @@ describe('YtDlpDownloaderService', () => {
     await expect(
       service.download({
         url: 'https://x.com/user/status/123',
+        ytDlpPath: 'yt-dlp',
         baseTempDir: '/tmp/social',
         maxFileMb: 100,
         timeoutMs: 120_000,
@@ -118,6 +121,7 @@ describe('YtDlpDownloaderService', () => {
     await expect(
       service.download({
         url: 'https://www.instagram.com/reel/abc/',
+        ytDlpPath: 'yt-dlp',
         baseTempDir: '/tmp/social',
         maxFileMb: 100,
         timeoutMs: 120_000,
@@ -131,6 +135,7 @@ describe('YtDlpDownloaderService', () => {
     await expect(
       service.download({
         url: 'https://www.tiktok.com/@u/video/1',
+        ytDlpPath: 'yt-dlp',
         baseTempDir: '/tmp/social',
         maxFileMb: 100,
         timeoutMs: 120_000,
@@ -144,6 +149,7 @@ describe('YtDlpDownloaderService', () => {
     await expect(
       service.download({
         url: 'https://x.com/user/status/123',
+        ytDlpPath: 'yt-dlp',
         baseTempDir: '/tmp/social',
         maxFileMb: 100,
         timeoutMs: 1,
@@ -165,6 +171,7 @@ describe('YtDlpDownloaderService', () => {
 
     await service.download({
       url: 'https://x.com/user/status/123',
+      ytDlpPath: 'yt-dlp',
       baseTempDir: '/tmp/social',
       maxFileMb: 100,
       timeoutMs: 120_000,

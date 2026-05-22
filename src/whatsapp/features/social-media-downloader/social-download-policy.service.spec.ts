@@ -37,6 +37,7 @@ describe('SocialDownloadPolicyService', () => {
     expect(service.getMaxFileMb()).toBe(100);
     expect(service.getTimeoutMs()).toBe(120_000);
     expect(service.getTempDir()).toBe('/tmp/chat-pack-social-downloads');
+    expect(service.getYtDlpPath()).toBe('yt-dlp');
   });
 
   it('uses configured download limits when env values are valid', () => {
@@ -44,11 +45,13 @@ describe('SocialDownloadPolicyService', () => {
       SOCIAL_DOWNLOAD_MAX_FILE_MB: '75',
       SOCIAL_DOWNLOAD_TIMEOUT_MS: '30000',
       SOCIAL_DOWNLOAD_TMP_DIR: '/tmp/custom-social',
+      SOCIAL_DOWNLOAD_YTDLP_PATH: '/usr/local/bin/yt-dlp',
     });
 
     expect(service.getMaxFileMb()).toBe(75);
     expect(service.getTimeoutMs()).toBe(30_000);
     expect(service.getTempDir()).toBe('/tmp/custom-social');
+    expect(service.getYtDlpPath()).toBe('/usr/local/bin/yt-dlp');
   });
 
   it('falls back to defaults when numeric env values are invalid', () => {

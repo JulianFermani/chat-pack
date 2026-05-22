@@ -6,6 +6,7 @@ export class SocialDownloadPolicyService {
   private static readonly defaultMaxFileMb = 100;
   private static readonly defaultTimeoutMs = 120_000;
   private static readonly defaultTempDir = '/tmp/chat-pack-social-downloads';
+  private static readonly defaultYtDlpPath = 'yt-dlp';
 
   constructor(private readonly configService: ConfigService) {}
 
@@ -39,6 +40,13 @@ export class SocialDownloadPolicyService {
     return (
       this.configService.get<string>('SOCIAL_DOWNLOAD_TMP_DIR')?.trim() ||
       SocialDownloadPolicyService.defaultTempDir
+    );
+  }
+
+  getYtDlpPath(): string {
+    return (
+      this.configService.get<string>('SOCIAL_DOWNLOAD_YTDLP_PATH')?.trim() ||
+      SocialDownloadPolicyService.defaultYtDlpPath
     );
   }
 
