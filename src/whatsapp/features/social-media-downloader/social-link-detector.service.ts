@@ -8,6 +8,7 @@ export class SocialLinkDetectorService {
     'tiktok.com',
     'www.tiktok.com',
     'vm.tiktok.com',
+    'vt.tiktok.com',
     'twitter.com',
     'www.twitter.com',
     'mobile.twitter.com',

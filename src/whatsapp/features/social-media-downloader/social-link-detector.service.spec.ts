@@ -10,6 +10,7 @@ describe('SocialLinkDetectorService', () => {
   it.each([
     ['https://www.instagram.com/reel/abc123/'],
     ['https://vm.tiktok.com/ZMabc123/'],
+    ['https://vt.tiktok.com/ZShabc123/'],
     ['https://www.tiktok.com/@user/video/123'],
     ['https://twitter.com/user/status/123'],
     ['https://x.com/user/status/123'],
