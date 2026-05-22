@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
 import { WhatsappModule } from '@client/whatsapp.module';
 import { CommandRegistryModule } from '@command-registry/command-registry.module';
@@ -9,7 +10,7 @@ import { SocialLinkDetectorService } from './social-link-detector.service';
 import { YtDlpDownloaderService } from './yt-dlp-downloader.service';
 
 @Module({
-  imports: [WhatsappModule, CommandRegistryModule],
+  imports: [ConfigModule, WhatsappModule, CommandRegistryModule],
   providers: [
     SocialDownloadCommand,
     SocialDownloadHandler,
