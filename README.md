@@ -86,6 +86,33 @@ Notas:
 
 ---
 
+## 📥 Descarga automática de redes sociales
+
+El bot puede detectar links públicos de Instagram, TikTok y Twitter/X en mensajes comunes y reenviar el contenido descargado con el caption del post.
+
+Variables esperadas:
+
+```env
+SOCIAL_DOWNLOAD_ENABLED=true
+SOCIAL_DOWNLOAD_GROUPS_ENABLED=false
+SOCIAL_DOWNLOAD_MAX_FILE_MB=100
+SOCIAL_DOWNLOAD_TIMEOUT_MS=120000
+SOCIAL_DOWNLOAD_TMP_DIR=/tmp/chat-pack-social-downloads
+```
+
+Notas:
+
+- `SOCIAL_DOWNLOAD_ENABLED` activa o desactiva la feature completa. Por defecto queda activa.
+- `SOCIAL_DOWNLOAD_GROUPS_ENABLED` controla si responde en grupos. Por defecto queda desactivado para no meter ruido.
+- `SOCIAL_DOWNLOAD_MAX_FILE_MB` limita el archivo descargado. El default es `100`.
+- `SOCIAL_DOWNLOAD_TIMEOUT_MS` corta descargas lentas. El default es `120000`.
+- `SOCIAL_DOWNLOAD_TMP_DIR` define dónde se descargan archivos temporales.
+- La descarga usa `yt-dlp`, instalado en la imagen Docker junto con `ffmpeg`.
+- No usa cookies ni login. Si Instagram o X piden sesión, el bot responde con error y emoji.
+- Los archivos temporales se borran siempre al finalizar el intento de descarga.
+
+---
+
 ## ▶️ Correr el proyecto en producción
 
 ```bash
@@ -111,6 +138,7 @@ docker run --network=chat-pack-net -d chat-pack:latest
 | Películas           | `/verPeliculas`             | Muestra la cartelera de SudCinemas Villa María.                                                      |
 | Entradas            | `/verEntradas`              | Consulta entradas vendidas para una función según la fecha elegida.                                  |
 | Suma interactiva    | `/sumarDosNumeros`          | Pide dos números en pasos y devuelve el resultado.                                                   |
+| Descargas sociales  | Automático                  | Descarga links públicos de Instagram, TikTok y Twitter/X, y los reenvía con caption.                 |
 | Stickers en privado | Automático                  | Convierte imágenes o videos a sticker, y stickers a imagen, en chats privados.                       |
 | Stickers en grupos  | Automático                  | En grupos, convierte multimedia usando la palabra `sticker` o devuelve imagen respondiendo `imagen`. |
 
