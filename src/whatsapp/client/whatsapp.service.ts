@@ -178,6 +178,16 @@ export class WhatsappService
     });
   }
 
+  async sendMediaWithCaption(
+    to: string,
+    media: MessageMedia,
+    caption?: string,
+  ) {
+    await this.enqueueOutboundMessage(to, caption?.length ?? 0, async () => {
+      await this.client.sendMessage(to, media, { caption });
+    });
+  }
+
   async sendMediaToSticker(
     to: string,
     media: MessageMedia,
