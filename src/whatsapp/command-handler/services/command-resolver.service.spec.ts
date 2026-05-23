@@ -10,6 +10,10 @@ describe('CommandResolverService', () => {
     sendMessage: jest.fn(),
   };
 
+  const socialLinkDetector = {
+    extractFirstSupportedUrl: jest.fn(),
+  };
+
   let service: CommandResolverService;
 
   beforeEach(() => {
@@ -17,6 +21,7 @@ describe('CommandResolverService', () => {
     service = new CommandResolverService(
       commandRegistry as any,
       whatsappClient as any,
+      socialLinkDetector as any,
     );
   });
 
@@ -37,11 +42,15 @@ describe('CommandResolverService', () => {
   it('returns command when slash command exists', async () => {
     const command = { name: 'hola' };
     commandRegistry.get.mockReturnValue(command);
+    socialLinkDetector.extractFirstSupportedUrl.mockReturnValue(
+      'https://x.com/user/status/1',
+    );
 
     const result = await service.resolve(buildContext());
 
     expect(commandRegistry.get).toHaveBeenCalledWith('hola');
     expect(result).toBe(command);
+    expect(socialLinkDetector.extractFirstSupportedUrl).not.toHaveBeenCalled();
     expect(whatsappClient.sendMessage).not.toHaveBeenCalled();
   });
 
@@ -83,7 +92,51 @@ describe('CommandResolverService', () => {
     expect(result).toBe(mediaCommand);
   });
 
+  it('resolves social download command after command and media resolution', async () => {
+    const socialCommand = { name: 'socialDownload' };
+    socialLinkDetector.extractFirstSupportedUrl.mockReturnValue(
+      'https://www.instagram.com/reel/abc/',
+    );
+    commandRegistry.get.mockReturnValue(socialCommand);
+
+    const result = await service.resolve(
+      buildContext({
+        isCommand: false,
+        isMedia: false,
+        commandName: undefined,
+        body: 'mira https://www.instagram.com/reel/abc/',
+        normalizedText: 'mira https://www.instagram.com/reel/abc/',
+      }),
+    );
+
+    expect(socialLinkDetector.extractFirstSupportedUrl).toHaveBeenCalledWith(
+      'mira https://www.instagram.com/reel/abc/',
+    );
+    expect(commandRegistry.get).toHaveBeenCalledWith('socialdownload');
+    expect(result).toBe(socialCommand);
+  });
+
+  it('keeps media command priority over social links', async () => {
+    const mediaCommand = { name: 'sticker-direct' };
+    commandRegistry.get.mockReturnValue(mediaCommand);
+
+    const result = await service.resolve(
+      buildContext({
+        isCommand: false,
+        isMedia: true,
+        body: 'https://x.com/user/status/1',
+        normalizedText: 'https://x.com/user/status/1',
+      }),
+    );
+
+    expect(commandRegistry.get).toHaveBeenCalledWith('stickerdirectmessage');
+    expect(socialLinkDetector.extractFirstSupportedUrl).not.toHaveBeenCalled();
+    expect(result).toBe(mediaCommand);
+  });
+
   it('returns undefined when message is neither command nor media', async () => {
+    socialLinkDetector.extractFirstSupportedUrl.mockReturnValue(undefined);
+
     const result = await service.resolve(
       buildContext({
         isCommand: false,
