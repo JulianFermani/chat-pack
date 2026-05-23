@@ -154,9 +154,19 @@ docker run --network=chat-pack-net -d chat-pack:latest
 | Películas           | `/verPeliculas`             | Muestra la cartelera de SudCinemas Villa María.                                                      |
 | Entradas            | `/verEntradas`              | Consulta entradas vendidas para una función según la fecha elegida.                                  |
 | Suma interactiva    | `/sumarDosNumeros`          | Pide dos números en pasos y devuelve el resultado.                                                   |
+| Registrar TIN       | `/registrarTin 1596322`     | Guarda el numero impreso de tu tarjeta TIN para consultar el saldo despues.                          |
+| Ver TIN             | `/verTin`                   | Muestra el numero de tarjeta TIN registrado en el chat privado.                                      |
+| Saldo TIN           | `/consultarSaldo`           | Consulta el saldo actual de la tarjeta TIN registrada usando el servicio de recarga online.          |
+| Eliminar TIN        | `/eliminarTin`              | Borra la tarjeta TIN registrada para el chat privado.                                                |
 | Descargas sociales  | Automático                  | Descarga links públicos de Instagram, TikTok y Twitter/X, y los reenvía con caption.                 |
 | Stickers en privado | Automático                  | Convierte imágenes o videos a sticker, y stickers a imagen, en chats privados.                       |
 | Stickers en grupos  | Automático                  | En grupos, convierte multimedia usando la palabra `sticker` o devuelve imagen respondiendo `imagen`. |
+
+Notas sobre TIN:
+
+- Los comandos TIN solo funcionan en chats privados.
+- `/registrarTin` espera el numero impreso de la tarjeta, por ejemplo `1596322`, no la serie alfanumerica interna.
+- `/consultarSaldo` usa la tarjeta registrada previamente y muestra el saldo actual con formato de moneda.
 
 ---
 
