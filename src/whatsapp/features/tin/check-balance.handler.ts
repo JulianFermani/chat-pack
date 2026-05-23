@@ -20,7 +20,7 @@ export class CheckBalanceHandler {
     if (message.from.endsWith('@g.us')) {
       await this.whatsapp.sendMessage(
         message.from,
-        'Este comando solo se puede usar en chats privados.',
+        '🔒 Este comando solo se puede usar en chats privados.',
       );
       return;
     }
@@ -29,7 +29,7 @@ export class CheckBalanceHandler {
     if (!tin) {
       await this.whatsapp.sendMessage(
         message.from,
-        'No tenes una tarjeta registrada. Usa */registrarTin EA2F1101*.',
+        '💳 No tenes una tarjeta registrada. Usa */registrarTin 1596322*.',
       );
       return;
     }
@@ -40,21 +40,21 @@ export class CheckBalanceHandler {
       if (!balance) {
         await this.whatsapp.sendMessage(
           message.from,
-          `No pude obtener el saldo actual de la tarjeta TIN ${tin}.`,
+          `⚠️ No pude obtener el saldo actual de la tarjeta TIN ${tin}.`,
         );
         return;
       }
 
       await this.whatsapp.sendMessage(
         message.from,
-        `Saldo actual de tu tarjeta TIN ${tin}: ${formatTinBalance(balance)}`,
+        `💰 Saldo actual de tu tarjeta TIN ${tin}: ${formatTinBalance(balance)}`,
       );
     } catch (error) {
       const detail = error instanceof Error ? error.message : String(error);
       this.logger.error(`No pude consultar el saldo de ${tin}: ${detail}`);
       await this.whatsapp.sendMessage(
         message.from,
-        'No pude consultar el saldo en este momento. Intenta de nuevo mas tarde.',
+        '❎ No pude consultar el saldo en este momento. Intenta de nuevo mas tarde.',
       );
     }
   }
