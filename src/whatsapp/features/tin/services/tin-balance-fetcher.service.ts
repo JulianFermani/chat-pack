@@ -3,22 +3,24 @@ import axios from 'axios';
 import { Injectable } from '@nestjs/common';
 
 interface TinTripRecord {
-  mov_tarjeta_saldo?: string;
+  saldo_uso?: string;
 }
 
-const TIN_BALANCE_URL = 'https://wext6.dnsalias.net/tarjeta/index.php';
+const TIN_BALANCE_URL =
+  'https://micronauta.dnsalias.net/usuario/recarga_online/cmd.php';
 
-export function extractBalanceFromTrips(payload: unknown): string | undefined {
-  if (!Array.isArray(payload)) {
+export function extractBalanceFromTinInfo(payload: unknown): string {
+  if (!payload || typeof payload !== 'object') {
     throw new Error('Respuesta invalida del servicio de TIN.');
   }
 
-  if (payload.length === 0) {
-    return undefined;
+  const response = payload as { success?: unknown; message?: unknown };
+  if (response.success !== true || !Array.isArray(response.message)) {
+    throw new Error('Respuesta invalida del servicio de TIN.');
   }
 
-  const [latestTrip] = payload as TinTripRecord[];
-  const balance = latestTrip?.mov_tarjeta_saldo;
+  const [tinInfo] = response.message as TinTripRecord[];
+  const balance = tinInfo?.saldo_uso;
 
   if (typeof balance !== 'string' || balance.trim() === '') {
     throw new Error('Respuesta invalida del servicio de TIN.');
@@ -30,20 +32,25 @@ export function extractBalanceFromTrips(payload: unknown): string | undefined {
 @Injectable()
 export class TinBalanceFetcherService {
   async fetchCurrentBalance(tin: string): Promise<string | undefined> {
-    const postData = new URLSearchParams();
-    postData.append('cmd', 'consultar_tin_viajes');
-    postData.append('uid', tin);
-
     const response = await axios.post<unknown>(
       TIN_BALANCE_URL,
-      postData.toString(),
+      {
+        action: 'info',
+        documento: '',
+        numeroTarjeta: tin,
+        recursive: 0,
+      },
       {
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          Accept: '*/*',
+          'Content-Type': 'application/json',
+          Origin: 'https://micronauta.dnsalias.net',
+          Referer:
+            'https://micronauta.dnsalias.net/usuario/recarga_online/info.php?a=245&t=0',
         },
       },
     );
 
-    return extractBalanceFromTrips(response.data);
+    return extractBalanceFromTinInfo(response.data);
   }
 }
