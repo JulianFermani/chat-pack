@@ -13,8 +13,8 @@ import { TodaysGamesFetcherService } from './see-todays-games/services/todays-ga
 import { SubscribeTodaysGamesCommand } from './subscribe-todays-games/subscribe-todays-games.command';
 import { SubscribeTodaysGamesHandler } from './subscribe-todays-games/subscribe-todays-games.handler';
 import { TodaysGamesSubscriptionService } from './todays-games-subscription.service';
-import { UnsubscribeTodaysGamesCommand } from './unsubscribe-todays-games.command';
-import { UnsubscribeTodaysGamesHandler } from './unsubscribe-todays-games.handler';
+import { UnsubscribeTodaysGamesCommand } from './unsubscribe-todays-games/unsubscribe-todays-games.command';
+import { UnsubscribeTodaysGamesHandler } from './unsubscribe-todays-games/unsubscribe-todays-games.handler';
 import { DailyTodaysGamesNotifierService } from './daily-todays-games-notifier.service';
 
 @Module({
