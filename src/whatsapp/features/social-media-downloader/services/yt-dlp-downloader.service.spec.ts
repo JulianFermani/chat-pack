@@ -2,7 +2,7 @@ import { execFile } from 'node:child_process';
 import { constants } from 'node:fs';
 import { access, mkdir, mkdtemp, readdir, rm } from 'node:fs/promises';
 
-import { SocialDownloadError } from './social-download-errors';
+import { SocialDownloadError } from '../social-download/social-download-errors';
 import { YtDlpDownloaderService } from './yt-dlp-downloader.service';
 
 jest.mock('node:child_process', () => ({

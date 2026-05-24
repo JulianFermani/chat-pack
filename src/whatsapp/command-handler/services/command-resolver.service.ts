@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { WhatsappService } from '@client/whatsapp.service';
 import { MessageContext } from '@command-handler/interfaces/message-context.interface';
 import { CommandRegistry } from '@command-registry/command-registry';
-import { SocialLinkDetectorService } from '@features/social-media-downloader/social-link-detector.service';
+import { SocialLinkDetectorService } from '@features/social-media-downloader/services/social-link-detector.service';
 
 @Injectable()
 export class CommandResolverService {

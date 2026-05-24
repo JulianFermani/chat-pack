@@ -5,7 +5,7 @@ import { join } from 'node:path';
 
 import { Injectable } from '@nestjs/common';
 
-import { SocialDownloadError } from './social-download/social-download-errors';
+import { SocialDownloadError } from '../social-download/social-download-errors';
 
 export interface SocialDownloadRequest {
   url: string;

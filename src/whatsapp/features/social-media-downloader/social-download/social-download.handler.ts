@@ -2,9 +2,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Message, MessageMedia } from 'whatsapp-web.js';
 
 import { WhatsappService } from '@client/whatsapp.service';
-import { SocialLinkDetectorService } from '../social-link-detector.service';
-import { SocialDownloadPolicyService } from '../social-download-policy.service';
-import { YtDlpDownloaderService } from '../yt-dlp-downloader.service';
+import { SocialLinkDetectorService } from '../services/social-link-detector.service';
+import { SocialDownloadPolicyService } from '../services/social-download-policy.service';
+import { YtDlpDownloaderService } from '../services/yt-dlp-downloader.service';
 import { buildSocialDownloadErrorMessage } from './social-download-errors';
 
 @Injectable()
