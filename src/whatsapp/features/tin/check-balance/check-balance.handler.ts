@@ -3,8 +3,8 @@ import { Message } from 'whatsapp-web.js';
 import { Injectable, Logger } from '@nestjs/common';
 
 import { WhatsappService } from '@client/whatsapp.service';
-import { TinCardService } from './tin-card.service';
-import { TinBalanceFetcherService } from './services/tin-balance-fetcher.service';
+import { TinCardService } from '../tin-card.service';
+import { TinBalanceFetcherService } from './tin-balance-fetcher.service';
 
 @Injectable()
 export class CheckBalanceHandler {
