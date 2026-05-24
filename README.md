@@ -109,14 +109,15 @@ Notas:
 - `SOCIAL_DOWNLOAD_TIMEOUT_MS` corta descargas lentas. El default es `120000`.
 - `SOCIAL_DOWNLOAD_TMP_DIR` define dónde se descargan archivos temporales.
 - `SOCIAL_DOWNLOAD_YTDLP_PATH` permite indicar el binario de `yt-dlp`. En Docker puede quedar como `yt-dlp`; en desarrollo local debe existir en tu `PATH` o apuntar a una ruta absoluta.
-- La descarga usa `yt-dlp`, instalado en la imagen Docker junto con `ffmpeg`.
+- La descarga usa `yt-dlp`, instalado en la imagen Docker con extras `default` y `curl-cffi` junto con `ffmpeg`.
+- Para TikTok conviene mantener `yt-dlp` actualizado: el sitio cambia seguido sus challenges anti-bot.
 - No usa cookies ni login. Si Instagram o X piden sesión, el bot responde con error y emoji.
 - Los archivos temporales se borran siempre al finalizar el intento de descarga.
 
 Para desarrollo local, instalá `yt-dlp` antes de probar la feature:
 
 ```bash
-python3 -m pip install -U yt-dlp
+python3 -m pip install -U "yt-dlp[default,curl-cffi]"
 ```
 
 Luego verificá la ruta con:

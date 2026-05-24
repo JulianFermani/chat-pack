@@ -21,6 +21,10 @@ describe('buildSocialDownloadErrorMessage', () => {
       new SocialDownloadError('timeout', 'too slow'),
       '*[⏱️]* La descarga tardo demasiado.',
     ],
+    [
+      new SocialDownloadError('rate-limited', 'HTTP Error 429'),
+      '*[🚦]* TikTok limito las descargas por ahora. Proba de nuevo en unos minutos.',
+    ],
   ])('maps typed error to emoji message', (error, expectedMessage) => {
     expect(buildSocialDownloadErrorMessage(error, 100)).toBe(expectedMessage);
   });

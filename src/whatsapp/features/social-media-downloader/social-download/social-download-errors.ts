@@ -2,6 +2,7 @@ export type SocialDownloadErrorCode =
   | 'missing-binary'
   | 'private-content'
   | 'max-size'
+  | 'rate-limited'
   | 'timeout'
   | 'download-failed';
 
@@ -29,6 +30,8 @@ export function buildSocialDownloadErrorMessage(
         return `*[📦]* El archivo supera el limite de ${maxFileMb} MB.`;
       case 'timeout':
         return '*[⏱️]* La descarga tardo demasiado.';
+      case 'rate-limited':
+        return '*[🚦]* TikTok limito las descargas por ahora. Proba de nuevo en unos minutos.';
       case 'download-failed':
         return '*[❎]* No pude descargar ese contenido ahora.';
     }
