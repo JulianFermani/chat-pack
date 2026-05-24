@@ -1,6 +1,13 @@
 import { execFile } from 'node:child_process';
 import { constants } from 'node:fs';
-import { access, mkdir, mkdtemp, readdir, rm } from 'node:fs/promises';
+import {
+  access,
+  mkdir,
+  mkdtemp,
+  readFile,
+  readdir,
+  rm,
+} from 'node:fs/promises';
 import { join } from 'node:path';
 
 import { Injectable } from '@nestjs/common';
@@ -28,14 +35,16 @@ interface YtDlpMetadata {
 
 @Injectable()
 export class YtDlpDownloaderService {
-  async download(request: SocialDownloadRequest): Promise<SocialDownloadResult> {
+  async download(
+    request: SocialDownloadRequest,
+  ): Promise<SocialDownloadResult> {
     await mkdir(request.baseTempDir, { recursive: true });
     const tempDir = await mkdtemp(join(request.baseTempDir, 'download-'));
 
     try {
-      const metadata = await this.fetchMetadata(request);
       await this.downloadMedia(request, tempDir);
       const filePath = await this.resolveDownloadedFile(tempDir);
+      const metadata = await this.resolveDownloadedMetadata(tempDir);
 
       return {
         filePath,
@@ -51,18 +60,6 @@ export class YtDlpDownloaderService {
     await rm(tempDir, { force: true, recursive: true });
   }
 
-  private async fetchMetadata(
-    request: SocialDownloadRequest,
-  ): Promise<YtDlpMetadata> {
-    const { stdout } = await this.execYtDlp(
-      request.ytDlpPath,
-      ['--dump-single-json', '--no-playlist', request.url],
-      { timeout: request.timeoutMs, maxBuffer: 10 * 1024 * 1024 },
-    );
-
-    return JSON.parse(stdout) as YtDlpMetadata;
-  }
-
   private async downloadMedia(
     request: SocialDownloadRequest,
     tempDir: string,
@@ -70,7 +67,9 @@ export class YtDlpDownloaderService {
     await this.execYtDlp(
       request.ytDlpPath,
       [
+        '--no-cache-dir',
         '--no-playlist',
+        '--write-info-json',
         '--max-filesize',
         `${request.maxFileMb}M`,
         '--paths',
@@ -93,7 +92,9 @@ export class YtDlpDownloaderService {
     return new Promise((resolve, reject) => {
       execFile(file, args, options, (error, stdout, stderr) => {
         if (error) {
-          reject(Object.assign(error, { stderr }));
+          const errorWithStderr: Error & { stderr: string | Buffer } =
+            Object.assign(error, { stderr });
+          reject(errorWithStderr);
           return;
         }
 
@@ -107,13 +108,34 @@ export class YtDlpDownloaderService {
     const mediaFile = entries.find((entry) => !entry.endsWith('.json'));
 
     if (!mediaFile) {
-      throw new SocialDownloadError('download-failed', 'No downloaded file found');
+      throw new SocialDownloadError(
+        'download-failed',
+        'No downloaded file found',
+      );
     }
 
     const filePath = join(tempDir, mediaFile);
     await access(filePath, constants.R_OK);
 
     return filePath;
+  }
+
+  private async resolveDownloadedMetadata(
+    tempDir: string,
+  ): Promise<YtDlpMetadata> {
+    const entries = await readdir(tempDir);
+    const metadataFile = entries.find((entry) => entry.endsWith('.info.json'));
+
+    if (!metadataFile) {
+      return {};
+    }
+
+    try {
+      const content = await readFile(join(tempDir, metadataFile), 'utf8');
+      return JSON.parse(content) as YtDlpMetadata;
+    } catch {
+      return {};
+    }
   }
 
   private resolveCaption(metadata: YtDlpMetadata): string {
@@ -138,6 +160,13 @@ export class YtDlpDownloaderService {
 
     if (nodeError.killed || normalizedMessage.includes('timeout')) {
       return new SocialDownloadError('timeout', message);
+    }
+
+    if (
+      normalizedMessage.includes('http error 429') ||
+      normalizedMessage.includes('too many requests')
+    ) {
+      return new SocialDownloadError('rate-limited', message);
     }
 
     if (

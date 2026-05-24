@@ -1,8 +1,14 @@
 import { execFile } from 'node:child_process';
 import { constants } from 'node:fs';
-import { access, mkdir, mkdtemp, readdir, rm } from 'node:fs/promises';
+import {
+  access,
+  mkdir,
+  mkdtemp,
+  readFile,
+  readdir,
+  rm,
+} from 'node:fs/promises';
 
-import { SocialDownloadError } from '../social-download/social-download-errors';
 import { YtDlpDownloaderService } from './yt-dlp-downloader.service';
 
 jest.mock('node:child_process', () => ({
@@ -13,15 +19,30 @@ jest.mock('node:fs/promises', () => ({
   access: jest.fn(),
   mkdir: jest.fn(),
   mkdtemp: jest.fn(),
+  readFile: jest.fn(),
   readdir: jest.fn(),
   rm: jest.fn(),
 }));
 
 describe('YtDlpDownloaderService', () => {
+  type ExecFileCallback = (
+    error: NodeJS.ErrnoException | null,
+    stdout: string,
+    stderr: string,
+  ) => void;
+
+  type ExecFileMock = (
+    file: string,
+    args: readonly string[] | null | undefined,
+    options: object | null | undefined,
+    callback?: ExecFileCallback,
+  ) => ReturnType<typeof execFile>;
+
   const mockedExecFile = jest.mocked(execFile);
   const mockedAccess = jest.mocked(access);
   const mockedMkdir = jest.mocked(mkdir);
   const mockedMkdtemp = jest.mocked(mkdtemp);
+  const mockedReadFile = jest.mocked(readFile);
   const mockedReaddir = jest.mocked(readdir);
   const mockedRm = jest.mocked(rm);
   let service: YtDlpDownloaderService;
@@ -29,32 +50,42 @@ describe('YtDlpDownloaderService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockedAccess.mockResolvedValue(undefined);
-    mockedMkdir.mockResolvedValue(undefined as any);
+    mockedMkdir.mockResolvedValue(undefined);
     mockedMkdtemp.mockResolvedValue('/tmp/social/download-abc');
-    mockedReaddir.mockResolvedValue(['video.mp4', 'video.info.json'] as any);
+    mockedReadFile.mockResolvedValue(
+      JSON.stringify({ description: 'caption del post', title: 'titulo' }),
+    );
+    mockReaddir(['video.mp4', 'video.info.json']);
     service = new YtDlpDownloaderService();
   });
 
   function mockExecSuccess(stdoutByCall: string[]) {
-    mockedExecFile.mockImplementation(((_file, _args, _options, callback) => {
+    const implementation: ExecFileMock = (_file, _args, _options, callback) => {
       const stdout = stdoutByCall.shift() ?? '';
       callback?.(null, stdout, '');
-      return {} as any;
-    }) as any);
+      return undefined as unknown as ReturnType<typeof execFile>;
+    };
+
+    mockedExecFile.mockImplementation(implementation);
   }
 
   function mockExecFailure(error: NodeJS.ErrnoException, stderr: string) {
-    mockedExecFile.mockImplementation(((_file, _args, _options, callback) => {
+    const implementation: ExecFileMock = (_file, _args, _options, callback) => {
       callback?.(error, '', stderr);
-      return {} as any;
-    }) as any);
+      return undefined as unknown as ReturnType<typeof execFile>;
+    };
+
+    mockedExecFile.mockImplementation(implementation);
+  }
+
+  function mockReaddir(entries: string[]) {
+    mockedReaddir.mockResolvedValue(
+      entries as unknown as Awaited<ReturnType<typeof readdir>>,
+    );
   }
 
   it('downloads a url and returns downloaded file, caption and temp directory', async () => {
-    mockExecSuccess([
-      JSON.stringify({ description: 'caption del post', title: 'titulo' }),
-      '',
-    ]);
+    mockExecSuccess(['']);
 
     const result = await service.download({
       url: 'https://x.com/user/status/123',
@@ -68,15 +99,16 @@ describe('YtDlpDownloaderService', () => {
       recursive: true,
     });
     expect(mockedMkdtemp).toHaveBeenCalledWith('/tmp/social/download-');
+    expect(mockedExecFile).toHaveBeenCalledTimes(1);
     expect(mockedExecFile).toHaveBeenCalledWith(
       '/usr/local/bin/yt-dlp',
-      expect.arrayContaining(['--dump-single-json']),
-      expect.objectContaining({ timeout: 120_000 }),
-      expect.any(Function),
-    );
-    expect(mockedExecFile).toHaveBeenCalledWith(
-      '/usr/local/bin/yt-dlp',
-      expect.arrayContaining(['--max-filesize', '100M']),
+      expect.arrayContaining([
+        '--no-cache-dir',
+        '--write-info-json',
+        '--no-playlist',
+        '--max-filesize',
+        '100M',
+      ]),
       expect.objectContaining({ timeout: 120_000 }),
       expect.any(Function),
     );
@@ -88,7 +120,10 @@ describe('YtDlpDownloaderService', () => {
   });
 
   it('falls back to title when description is missing', async () => {
-    mockExecSuccess([JSON.stringify({ title: 'titulo del post' }), '']);
+    mockExecSuccess(['']);
+    mockedReadFile.mockResolvedValue(
+      JSON.stringify({ title: 'titulo del post' }),
+    );
 
     await expect(
       service.download({
@@ -101,8 +136,26 @@ describe('YtDlpDownloaderService', () => {
     ).resolves.toMatchObject({ caption: 'titulo del post' });
   });
 
+  it('falls back to an empty caption when metadata file is missing', async () => {
+    mockExecSuccess(['']);
+    mockReaddir(['video.mp4']);
+
+    await expect(
+      service.download({
+        url: 'https://www.tiktok.com/@u/video/1',
+        ytDlpPath: 'yt-dlp',
+        baseTempDir: '/tmp/social',
+        maxFileMb: 100,
+        timeoutMs: 120_000,
+      }),
+    ).resolves.toMatchObject({ caption: '*[ℹ️]* Sin descripcion.' });
+  });
+
   it('maps missing binary errors', async () => {
-    mockExecFailure(Object.assign(new Error('spawn ENOENT'), { code: 'ENOENT' }), '');
+    mockExecFailure(
+      Object.assign(new Error('spawn ENOENT'), { code: 'ENOENT' }),
+      '',
+    );
 
     await expect(
       service.download({
@@ -116,7 +169,10 @@ describe('YtDlpDownloaderService', () => {
   });
 
   it('maps private or login required stderr', async () => {
-    mockExecFailure(new Error('failed'), 'This video is private, login required');
+    mockExecFailure(
+      new Error('failed'),
+      'This video is private, login required',
+    );
 
     await expect(
       service.download({
@@ -157,6 +213,23 @@ describe('YtDlpDownloaderService', () => {
     ).rejects.toHaveProperty('code', 'timeout');
   });
 
+  it('maps rate limit errors', async () => {
+    mockExecFailure(
+      new Error('failed'),
+      'Unable to download webpage: HTTP Error 429: Too Many Requests',
+    );
+
+    await expect(
+      service.download({
+        url: 'https://www.tiktok.com/@u/video/1',
+        ytDlpPath: 'yt-dlp',
+        baseTempDir: '/tmp/social',
+        maxFileMb: 100,
+        timeoutMs: 120_000,
+      }),
+    ).rejects.toHaveProperty('code', 'rate-limited');
+  });
+
   it('removes a temp directory during cleanup', async () => {
     await service.cleanup('/tmp/social/download-abc');
 
@@ -167,7 +240,7 @@ describe('YtDlpDownloaderService', () => {
   });
 
   it('checks that the downloaded file exists before returning it', async () => {
-    mockExecSuccess([JSON.stringify({ description: 'caption' }), '']);
+    mockExecSuccess(['']);
 
     await service.download({
       url: 'https://x.com/user/status/123',
