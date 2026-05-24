@@ -3,7 +3,7 @@ import { Message } from 'whatsapp-web.js';
 import { Injectable } from '@nestjs/common';
 
 import { WhatsappService } from '@client/whatsapp.service';
-import { TinCardService } from './tin-card.service';
+import { TinCardService } from '../tin-card.service';
 
 @Injectable()
 export class RegisterTinHandler {
