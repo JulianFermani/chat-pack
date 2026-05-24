@@ -12,10 +12,10 @@ import { SeeTodaysGamesService } from './see-todays-games/services/see-todays-ga
 import { TodaysGamesFetcherService } from './see-todays-games/services/todays-games-fetcher.service';
 import { SubscribeTodaysGamesCommand } from './subscribe-todays-games/subscribe-todays-games.command';
 import { SubscribeTodaysGamesHandler } from './subscribe-todays-games/subscribe-todays-games.handler';
-import { TodaysGamesSubscriptionService } from './todays-games-subscription.service';
+import { TodaysGamesSubscriptionService } from './todays-games-subscriptions/todays-games-subscription.service';
 import { UnsubscribeTodaysGamesCommand } from './unsubscribe-todays-games/unsubscribe-todays-games.command';
 import { UnsubscribeTodaysGamesHandler } from './unsubscribe-todays-games/unsubscribe-todays-games.handler';
-import { DailyTodaysGamesNotifierService } from './daily-todays-games-notifier.service';
+import { DailyTodaysGamesNotifierService } from './todays-games-subscriptions/daily-todays-games-notifier.service';
 
 @Module({
   imports: [WhatsappModule, CommandRegistryModule, SubscriptionsModule],

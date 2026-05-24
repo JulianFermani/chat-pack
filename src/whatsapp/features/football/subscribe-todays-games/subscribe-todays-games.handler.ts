@@ -3,7 +3,7 @@ import { Message } from 'whatsapp-web.js';
 import { Injectable } from '@nestjs/common';
 
 import { WhatsappService } from '@client/whatsapp.service';
-import { TodaysGamesSubscriptionService } from '../todays-games-subscription.service';
+import { TodaysGamesSubscriptionService } from '../todays-games-subscriptions/todays-games-subscription.service';
 
 @Injectable()
 export class SubscribeTodaysGamesHandler {

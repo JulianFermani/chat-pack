@@ -7,7 +7,7 @@ import { UserSession } from '@session/user-session.interface';
 import { FootballMenuPresenter } from './presenter/football-menu.presenter';
 import { FootballMenuSessionData } from './football.session';
 import { SeeTodaysGamesService } from '../see-todays-games/services/see-todays-games.service';
-import { TodaysGamesSubscriptionService } from '../todays-games-subscription.service';
+import { TodaysGamesSubscriptionService } from '../todays-games-subscriptions/todays-games-subscription.service';
 
 @Injectable()
 export class FootballHandler {
