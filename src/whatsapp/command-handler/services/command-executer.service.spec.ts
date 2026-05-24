@@ -36,6 +36,7 @@ describe('CommandExecuterService', () => {
       name: 'sumarDosNumeros',
       usesSession: true,
       firstStep: 'first-number',
+      backSteps: { result: 'second-number' },
       execute: jest.fn().mockResolvedValue({
         commandName: 'sumarDosNumeros',
         steps: ['second-number'],
@@ -51,6 +52,7 @@ describe('CommandExecuterService', () => {
       expect.objectContaining({
         commandName: 'sumarDosNumeros',
         steps: ['first-number'],
+        backSteps: { result: 'second-number' },
       }),
     );
     expect(command.execute).toHaveBeenCalled();

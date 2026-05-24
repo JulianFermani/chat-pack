@@ -20,6 +20,7 @@ import { SumarDosNumerosModule } from '@features/sumar-dos-numeros/sumar-dos-num
 import { TinModule } from '@features/tin/tin.module';
 import { CommandHandlerModule } from '@command-handler/command-handler.module';
 import { NtfyMonitorModule } from './monitoring/ntfy-monitor.module';
+import { SocialMediaDownloaderModule } from '@features/social-media-downloader/social-media-downloader.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { NtfyMonitorModule } from './monitoring/ntfy-monitor.module';
     SeeBusModule,
     FootballModule,
     TinModule,
+    SocialMediaDownloaderModule,
     StickerDirectMessageModule,
     StickerGroupMessageModule,
     ScheduleModule.forRoot(),

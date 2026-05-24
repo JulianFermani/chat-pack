@@ -3,19 +3,19 @@ import { Module } from '@nestjs/common';
 import { SubscriptionsModule } from '@application/subscriptions/subscriptions.module';
 import { WhatsappModule } from '@client/whatsapp.module';
 import { CommandRegistryModule } from '@command-registry/command-registry.module';
-import { FootballCommand } from './football.command';
-import { FootballHandler } from './football.handler';
-import { FootballMenuPresenter } from './presenter/football-menu.presenter';
+import { FootballCommand } from './football-menu/football.command';
+import { FootballHandler } from './football-menu/football.handler';
+import { FootballMenuPresenter } from './football-menu/presenter/football-menu.presenter';
 import { SeeTodaysGamesCommand } from './see-todays-games/see-todays-games.command';
 import { SeeTodaysGamesHandler } from './see-todays-games/see-todays-games.handler';
 import { SeeTodaysGamesService } from './see-todays-games/services/see-todays-games.service';
 import { TodaysGamesFetcherService } from './see-todays-games/services/todays-games-fetcher.service';
-import { SubscribeTodaysGamesCommand } from './subscribe-todays-games.command';
-import { SubscribeTodaysGamesHandler } from './subscribe-todays-games.handler';
-import { TodaysGamesSubscriptionService } from './todays-games-subscription.service';
-import { UnsubscribeTodaysGamesCommand } from './unsubscribe-todays-games.command';
-import { UnsubscribeTodaysGamesHandler } from './unsubscribe-todays-games.handler';
-import { DailyTodaysGamesNotifierService } from './daily-todays-games-notifier.service';
+import { SubscribeTodaysGamesCommand } from './subscribe-todays-games/subscribe-todays-games.command';
+import { SubscribeTodaysGamesHandler } from './subscribe-todays-games/subscribe-todays-games.handler';
+import { TodaysGamesSubscriptionService } from './todays-games-subscriptions/todays-games-subscription.service';
+import { UnsubscribeTodaysGamesCommand } from './unsubscribe-todays-games/unsubscribe-todays-games.command';
+import { UnsubscribeTodaysGamesHandler } from './unsubscribe-todays-games/unsubscribe-todays-games.handler';
+import { DailyTodaysGamesNotifierService } from './todays-games-subscriptions/daily-todays-games-notifier.service';
 
 @Module({
   imports: [WhatsappModule, CommandRegistryModule, SubscriptionsModule],

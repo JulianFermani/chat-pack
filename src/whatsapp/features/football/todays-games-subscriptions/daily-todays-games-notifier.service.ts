@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 
-import { SeeTodaysGamesService } from './see-todays-games/services/see-todays-games.service';
+import { SeeTodaysGamesService } from '../see-todays-games/services/see-todays-games.service';
 import { TodaysGamesSubscriptionService } from './todays-games-subscription.service';
 
 @Injectable()

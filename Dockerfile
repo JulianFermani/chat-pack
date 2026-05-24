@@ -2,7 +2,10 @@ FROM node:24
 
 RUN apt-get update && apt-get install -y \
         ffmpeg \
+        python3 \
+        python3-pip \
         chromium \
+        && python3 -m pip install --break-system-packages --no-cache-dir -U "yt-dlp[default,curl-cffi]" \
         && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory inside the container

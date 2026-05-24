@@ -9,6 +9,15 @@ import { UserSession } from '@session/user-session.interface';
 import { AbstractCommand } from '@shared/interfaces/abstract-command.interface';
 import { SeeTicketsEnumCommand } from './enum/commands.enum';
 
+export const seeTicketsBackSteps: Record<string, string> = {
+  [SeeTicketsEnumCommand.GET_USER_SHOWTIME_STATE]:
+    SeeTicketsEnumCommand.GET_USER_MOVIE_STATE,
+  [SeeTicketsEnumCommand.SEND_USER_SHOWTIMES_STATE]:
+    SeeTicketsEnumCommand.GET_USER_MOVIE_STATE,
+  [SeeTicketsEnumCommand.LAST_STEP]:
+    SeeTicketsEnumCommand.GET_USER_SHOWTIME_STATE,
+};
+
 @Injectable()
 export class SeeTicketsCommand extends AbstractCommand {
   name = 'verEntradas';
@@ -16,6 +25,7 @@ export class SeeTicketsCommand extends AbstractCommand {
     'Muestra las entradas vendidas para una función del cine SudCinemas Villa María según la fecha elegida por el usuario.';
   usesSession = true;
   firstStep = SeeTicketsEnumCommand.GET_USER_MOVIE_STATE;
+  backSteps = seeTicketsBackSteps;
 
   constructor(
     registry: CommandRegistry,

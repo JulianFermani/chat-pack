@@ -9,6 +9,12 @@ import { SegmentAlertEnumCommands } from './enum/commands.enum';
 import { SegmentAlertHandler } from './segment-alert.handler';
 import { SegmentAlertSessionData } from './segment-alert.session';
 
+export const segmentAlertBackSteps: Record<string, string> = {
+  [SegmentAlertEnumCommands.ORIGIN]: SegmentAlertEnumCommands.INIT,
+  [SegmentAlertEnumCommands.DESTINATION]: SegmentAlertEnumCommands.INIT,
+  [SegmentAlertEnumCommands.LINE_AND_SENSE]: SegmentAlertEnumCommands.ORIGIN,
+};
+
 @Injectable()
 export class SubscribeSegmentAlertCommand extends AbstractCommand {
   name = 'suscribirmeTramo';
@@ -16,6 +22,7 @@ export class SubscribeSegmentAlertCommand extends AbstractCommand {
     'Suscribe este chat a alertas de un tramo especifico por linea y sentido. El aviso llega cuando el coche entra en la localidad previa al destino.';
   usesSession = true;
   firstStep = SegmentAlertEnumCommands.INIT;
+  backSteps = segmentAlertBackSteps;
 
   constructor(
     registry: CommandRegistry,

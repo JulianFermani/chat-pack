@@ -86,6 +86,50 @@ Notas:
 
 ---
 
+## 📥 Descarga automática de redes sociales
+
+El bot puede detectar links públicos de Instagram, TikTok y Twitter/X en mensajes comunes y reenviar el contenido descargado con el caption del post.
+
+Variables esperadas:
+
+```env
+SOCIAL_DOWNLOAD_ENABLED=true
+SOCIAL_DOWNLOAD_GROUPS_ENABLED=false
+SOCIAL_DOWNLOAD_MAX_FILE_MB=100
+SOCIAL_DOWNLOAD_TIMEOUT_MS=120000
+SOCIAL_DOWNLOAD_TMP_DIR=/tmp/chat-pack-social-downloads
+SOCIAL_DOWNLOAD_YTDLP_PATH=yt-dlp
+```
+
+Notas:
+
+- `SOCIAL_DOWNLOAD_ENABLED` activa o desactiva la feature completa. Por defecto queda activa.
+- `SOCIAL_DOWNLOAD_GROUPS_ENABLED` controla si responde en grupos. Por defecto queda desactivado para no meter ruido.
+- `SOCIAL_DOWNLOAD_MAX_FILE_MB` limita el archivo descargado. El default es `100`.
+- `SOCIAL_DOWNLOAD_TIMEOUT_MS` corta descargas lentas. El default es `120000`.
+- `SOCIAL_DOWNLOAD_TMP_DIR` define dónde se descargan archivos temporales.
+- `SOCIAL_DOWNLOAD_YTDLP_PATH` permite indicar el binario de `yt-dlp`. En Docker puede quedar como `yt-dlp`; en desarrollo local debe existir en tu `PATH` o apuntar a una ruta absoluta.
+- La descarga usa `yt-dlp`, instalado en la imagen Docker con extras `default` y `curl-cffi` junto con `ffmpeg`.
+- Para TikTok conviene mantener `yt-dlp` actualizado: el sitio cambia seguido sus challenges anti-bot.
+- No usa cookies ni login. Si Instagram o X piden sesión, el bot responde con error y emoji.
+- Los archivos temporales se borran siempre al finalizar el intento de descarga.
+
+Para desarrollo local, instalá `yt-dlp` antes de probar la feature:
+
+```bash
+python3 -m pip install -U "yt-dlp[default,curl-cffi]"
+```
+
+Luego verificá la ruta con:
+
+```bash
+command -v yt-dlp
+```
+
+Si no queda disponible como `yt-dlp`, configurá `SOCIAL_DOWNLOAD_YTDLP_PATH` con la ruta devuelta por tu instalación.
+
+---
+
 ## ▶️ Correr el proyecto en producción
 
 ```bash
@@ -111,8 +155,19 @@ docker run --network=chat-pack-net -d chat-pack:latest
 | Películas           | `/verPeliculas`             | Muestra la cartelera de SudCinemas Villa María.                                                      |
 | Entradas            | `/verEntradas`              | Consulta entradas vendidas para una función según la fecha elegida.                                  |
 | Suma interactiva    | `/sumarDosNumeros`          | Pide dos números en pasos y devuelve el resultado.                                                   |
+| Registrar TIN       | `/registrarTin 1596322`     | Guarda el numero impreso de tu tarjeta TIN para consultar el saldo despues.                          |
+| Ver TIN             | `/verTin`                   | Muestra el numero de tarjeta TIN registrado en el chat privado.                                      |
+| Saldo TIN           | `/consultarSaldo`           | Consulta el saldo actual de la tarjeta TIN registrada usando el servicio de recarga online.          |
+| Eliminar TIN        | `/eliminarTin`              | Borra la tarjeta TIN registrada para el chat privado.                                                |
+| Descargas sociales  | Automático                  | Descarga links públicos de Instagram, TikTok y Twitter/X, y los reenvía con caption.                 |
 | Stickers en privado | Automático                  | Convierte imágenes o videos a sticker, y stickers a imagen, en chats privados.                       |
 | Stickers en grupos  | Automático                  | En grupos, convierte multimedia usando la palabra `sticker` o devuelve imagen respondiendo `imagen`. |
+
+Notas sobre TIN:
+
+- Los comandos TIN solo funcionan en chats privados.
+- `/registrarTin` espera el numero impreso de la tarjeta, por ejemplo `1596322`, no la serie alfanumerica interna.
+- `/consultarSaldo` usa la tarjeta registrada previamente y muestra el saldo actual con formato de moneda.
 
 ---
 

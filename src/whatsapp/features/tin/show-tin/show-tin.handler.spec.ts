@@ -22,7 +22,7 @@ describe('ShowTinHandler', () => {
     expect(tinCardService.findTinByChatId).not.toHaveBeenCalled();
     expect(whatsapp.sendMessage).toHaveBeenCalledWith(
       'group@g.us',
-      'Este comando solo se puede usar en chats privados.',
+      '🔒 Este comando solo se puede usar en chats privados.',
     );
   });
 
@@ -33,18 +33,18 @@ describe('ShowTinHandler', () => {
 
     expect(whatsapp.sendMessage).toHaveBeenCalledWith(
       'user@c.us',
-      'No tenes una tarjeta registrada. Usa */registrarTin EA2F1101*.',
+      '💳 No tenes una tarjeta registrada. Usa */registrarTin 1596322*.',
     );
   });
 
   it('shows the registered tin', async () => {
-    tinCardService.findTinByChatId.mockResolvedValue('EA2F1101');
+    tinCardService.findTinByChatId.mockResolvedValue('1596322');
 
     await handler.handle({ from: 'user@c.us', body: '/verTin' } as any);
 
     expect(whatsapp.sendMessage).toHaveBeenCalledWith(
       'user@c.us',
-      'Tu tarjeta TIN registrada es: EA2F1101',
+      '💳 Tu numero de tarjeta TIN registrado es: 1596322',
     );
   });
 });

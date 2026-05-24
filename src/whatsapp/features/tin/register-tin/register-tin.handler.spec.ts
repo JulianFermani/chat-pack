@@ -19,13 +19,13 @@ describe('RegisterTinHandler', () => {
   it('rejects group chats', async () => {
     await handler.handle({
       from: 'group@g.us',
-      body: '/registrarTin EA2F1101',
+      body: '/registrarTin 1596322',
     } as any);
 
     expect(tinCardService.registerTin).not.toHaveBeenCalled();
     expect(whatsapp.sendMessage).toHaveBeenCalledWith(
       'group@g.us',
-      'Este comando solo se puede usar en chats privados.',
+      '🔒 Este comando solo se puede usar en chats privados.',
     );
   });
 
@@ -35,7 +35,20 @@ describe('RegisterTinHandler', () => {
     expect(tinCardService.registerTin).not.toHaveBeenCalled();
     expect(whatsapp.sendMessage).toHaveBeenCalledWith(
       'user@c.us',
-      'Formato invalido. Usa */registrarTin EA2F1101*.',
+      '⚠️ Formato invalido. Usa */registrarTin 1596322*.',
+    );
+  });
+
+  it('rejects the old alphanumeric card code', async () => {
+    await handler.handle({
+      from: 'user@c.us',
+      body: '/registrarTin EA2F1101',
+    } as any);
+
+    expect(tinCardService.registerTin).not.toHaveBeenCalled();
+    expect(whatsapp.sendMessage).toHaveBeenCalledWith(
+      'user@c.us',
+      '⚠️ Formato invalido. Usa */registrarTin 1596322*.',
     );
   });
 
@@ -44,16 +57,16 @@ describe('RegisterTinHandler', () => {
 
     await handler.handle({
       from: 'user@c.us',
-      body: '/registrarTin ea2f1101',
+      body: '/registrarTin 1596322',
     } as any);
 
     expect(tinCardService.registerTin).toHaveBeenCalledWith(
       'user@c.us',
-      'EA2F1101',
+      '1596322',
     );
     expect(whatsapp.sendMessage).toHaveBeenCalledWith(
       'user@c.us',
-      'Listo. Registre tu tarjeta TIN EA2F1101.',
+      '✅ Listo. Registre tu numero de tarjeta TIN 1596322.',
     );
   });
 
@@ -62,12 +75,12 @@ describe('RegisterTinHandler', () => {
 
     await handler.handle({
       from: 'user@c.us',
-      body: '/registrarTin EA2F1101',
+      body: '/registrarTin 1596322',
     } as any);
 
     expect(whatsapp.sendMessage).toHaveBeenCalledWith(
       'user@c.us',
-      'Listo. Actualice tu tarjeta TIN a EA2F1101.',
+      '✅ Listo. Actualice tu numero de tarjeta TIN a 1596322.',
     );
   });
 });

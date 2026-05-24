@@ -3,7 +3,7 @@ import { Message } from 'whatsapp-web.js';
 import { Injectable } from '@nestjs/common';
 
 import { WhatsappService } from '@client/whatsapp.service';
-import { TinCardService } from './tin-card.service';
+import { TinCardService } from '../tin-card.service';
 
 @Injectable()
 export class RegisterTinHandler {
@@ -16,7 +16,7 @@ export class RegisterTinHandler {
     if (message.from.endsWith('@g.us')) {
       await this.whatsapp.sendMessage(
         message.from,
-        'Este comando solo se puede usar en chats privados.',
+        '🔒 Este comando solo se puede usar en chats privados.',
       );
       return;
     }
@@ -25,7 +25,7 @@ export class RegisterTinHandler {
     if (!tin) {
       await this.whatsapp.sendMessage(
         message.from,
-        'Formato invalido. Usa */registrarTin EA2F1101*.',
+        '⚠️ Formato invalido. Usa */registrarTin 1596322*.',
       );
       return;
     }
@@ -33,8 +33,8 @@ export class RegisterTinHandler {
     const result = await this.tinCardService.registerTin(message.from, tin);
     const responseText =
       result === 'created'
-        ? `Listo. Registre tu tarjeta TIN ${tin}.`
-        : `Listo. Actualice tu tarjeta TIN a ${tin}.`;
+        ? `✅ Listo. Registre tu numero de tarjeta TIN ${tin}.`
+        : `✅ Listo. Actualice tu numero de tarjeta TIN a ${tin}.`;
 
     await this.whatsapp.sendMessage(message.from, responseText);
   }
@@ -46,7 +46,7 @@ export class RegisterTinHandler {
     }
 
     const tin = parts[1]?.trim().toUpperCase();
-    if (!tin || !/^[A-Z0-9]+$/.test(tin)) {
+    if (!tin || !/^\d+$/.test(tin)) {
       return;
     }
 

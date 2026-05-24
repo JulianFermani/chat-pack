@@ -11,7 +11,20 @@ export async function backOneSession<T>(
   sessionManager: SessionManager,
 ): Promise<UserSession<T> | undefined> {
   if (message.body.trim() === '0') {
-    for (let i = 0; i <= 2; i++) {
+    const currentStep = session.steps.at(-1);
+    const targetStep = currentStep
+      ? session.backSteps?.[currentStep]
+      : undefined;
+
+    if (targetStep) {
+      while (session.steps.at(-1) && session.steps.at(-1) !== targetStep) {
+        session.steps.pop();
+      }
+
+      if (session.steps.at(-1) !== targetStep) {
+        session.steps.push(targetStep);
+      }
+    } else {
       session.steps.pop();
     }
     session.back = true;
