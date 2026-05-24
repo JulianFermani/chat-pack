@@ -13,6 +13,7 @@ export abstract class AbstractCommand<T = any>
   abstract description: string;
   abstract usesSession: boolean;
   firstStep: string;
+  backSteps?: Record<string, string>;
 
   constructor(private readonly registry: CommandRegistry) {}
 

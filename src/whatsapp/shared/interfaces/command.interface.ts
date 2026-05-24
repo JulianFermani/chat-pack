@@ -6,6 +6,7 @@ export interface Command<T = any> {
   description: string;
   usesSession: boolean;
   firstStep: string;
+  backSteps?: Record<string, string>;
   execute(
     message: Message,
     session?: UserSession<T>,
