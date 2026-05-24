@@ -10,8 +10,8 @@ import { SeeTodaysGamesCommand } from './see-todays-games/see-todays-games.comma
 import { SeeTodaysGamesHandler } from './see-todays-games/see-todays-games.handler';
 import { SeeTodaysGamesService } from './see-todays-games/services/see-todays-games.service';
 import { TodaysGamesFetcherService } from './see-todays-games/services/todays-games-fetcher.service';
-import { SubscribeTodaysGamesCommand } from './subscribe-todays-games.command';
-import { SubscribeTodaysGamesHandler } from './subscribe-todays-games.handler';
+import { SubscribeTodaysGamesCommand } from './subscribe-todays-games/subscribe-todays-games.command';
+import { SubscribeTodaysGamesHandler } from './subscribe-todays-games/subscribe-todays-games.handler';
 import { TodaysGamesSubscriptionService } from './todays-games-subscription.service';
 import { UnsubscribeTodaysGamesCommand } from './unsubscribe-todays-games.command';
 import { UnsubscribeTodaysGamesHandler } from './unsubscribe-todays-games.handler';
