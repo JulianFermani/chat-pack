@@ -11,7 +11,8 @@ export async function backOneSession<T>(
   sessionManager: SessionManager,
 ): Promise<UserSession<T> | undefined> {
   if (message.body.trim() === '0') {
-    for (let i = 0; i <= 2; i++) {
+    const stepsToGoBack = session.commandName === 'sumarDosNumeros' ? 2 : 1;
+    for (let i = 0; i < stepsToGoBack; i++) {
       session.steps.pop();
     }
     session.back = true;
