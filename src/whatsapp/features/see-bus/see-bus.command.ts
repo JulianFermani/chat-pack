@@ -8,6 +8,17 @@ import { CommandRegistry } from '@command-registry/command-registry';
 import { UserSession } from '@session/user-session.interface';
 import { AbstractCommand } from '@shared/interfaces/abstract-command.interface';
 import { SeeBusEnumCommands } from './enum/commands.enum';
+
+export const seeBusBackSteps: Record<string, string> = {
+  [SeeBusEnumCommands.SEE_BUS_ORIGIN_STATE]:
+    SeeBusEnumCommands.SEE_BUS_INIT_STATE,
+  [SeeBusEnumCommands.SEE_BUS_DESTINATION_STATE]:
+    SeeBusEnumCommands.SEE_BUS_INIT_STATE,
+  [SeeBusEnumCommands.SEE_BUS_MAP_STATE]:
+    SeeBusEnumCommands.SEE_BUS_ORIGIN_STATE,
+  [SeeBusEnumCommands.LAST_STEP]: SeeBusEnumCommands.SEE_BUS_ORIGIN_STATE,
+};
+
 @Injectable()
 export class SeeBusCommand extends AbstractCommand {
   name = 'verColectivos';
@@ -15,6 +26,7 @@ export class SeeBusCommand extends AbstractCommand {
     'Muestra los horarios disponibles del servicio de colectivos Villa del Rosario (todas sus líneas) y, si se detecta ubicación GPS, permite visualizarla.';
   usesSession = true;
   firstStep = SeeBusEnumCommands.SEE_BUS_INIT_STATE;
+  backSteps = seeBusBackSteps;
 
   constructor(
     registry: CommandRegistry,
