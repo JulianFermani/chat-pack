@@ -22,6 +22,7 @@ export class CommandExecuterService {
         const newSession: UserSession<any> = {
           commandName: command.name,
           steps: [command.firstStep],
+          backSteps: command.backSteps,
           data: {},
         };
         this.sessionManager.set(ctx.userId, newSession);

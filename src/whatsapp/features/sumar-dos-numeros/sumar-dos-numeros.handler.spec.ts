@@ -1,6 +1,7 @@
 import { SessionManager } from '@session/session-manager';
 import { backOneSession } from '@shared/utils/back-one-session.util';
 import { SumarDosNumerosEnumCommands } from './enum/commands.enum';
+import { sumarDosNumerosBackSteps } from './sumar-dos-numeros.command';
 import { SumarDosNumerosHandler } from './sumar-dos-numeros.handler';
 import { AddTwoNumbersState } from './states/add-two-numbers.state';
 import { FirstNumberState } from './states/first-number.state';
@@ -32,6 +33,7 @@ describe('SumarDosNumerosHandler back navigation', () => {
         SumarDosNumerosEnumCommands.SECOND_NUMBER,
         SumarDosNumerosEnumCommands.ADD_TWO_NUMBERS,
       ],
+      backSteps: sumarDosNumerosBackSteps,
       data: { num1: 7 },
     } as any;
 
@@ -72,6 +74,7 @@ describe('SumarDosNumerosHandler back navigation', () => {
         SumarDosNumerosEnumCommands.ADD_TWO_NUMBERS,
         SumarDosNumerosEnumCommands.LAST_STEP,
       ],
+      backSteps: sumarDosNumerosBackSteps,
       data: { num1: 7, num2: 3 },
     } as any;
 
