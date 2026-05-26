@@ -13,7 +13,7 @@ export class DailyTodaysGamesNotifierService {
     private readonly todaysGamesSubscriptionService: TodaysGamesSubscriptionService,
   ) {}
 
-  @Cron('0 0 * * *', { timeZone: 'America/Argentina/Buenos_Aires' })
+  @Cron('0 9 * * *', { timeZone: 'America/Argentina/Buenos_Aires' })
   async notifySubscribers(): Promise<void> {
     const subscriptions =
       await this.todaysGamesSubscriptionService.findSubscribers();
