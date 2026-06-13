@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 import { SeeTodaysGamesService } from '../see-todays-games/services/see-todays-games.service';
 import { TodaysGamesSubscriptionService } from './todays-games-subscription.service';
@@ -13,7 +13,7 @@ export class DailyTodaysGamesNotifierService {
     private readonly todaysGamesSubscriptionService: TodaysGamesSubscriptionService,
   ) {}
 
-  @Cron('0 0 * * *', { timeZone: 'America/Argentina/Buenos_Aires' })
+  @Cron(CronExpression.EVERY_DAY_AT_10AM, {timeZone: 'America/Argentina/Buenos_Aires'})
   async notifySubscribers(): Promise<void> {
     const subscriptions =
       await this.todaysGamesSubscriptionService.findSubscribers();
