@@ -188,4 +188,4 @@ Variable esperada:
 MAPS_API=tu_api_key_aca
 ```
 
-> ⚠️ Asegurate de habilitar la API de **Google Maps Static** y/o **Geocoding API**.
+> ⚠️ Asegurate de habilitar la API de **Google Maps Static** y/o **Geocoding API**. .
