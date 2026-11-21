@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+topic=${NTFY_TOPIC:-}
+base_url=${NTFY_BASE_URL:-https://ntfy.sh}
+app_name=${APP_NAME:-Chat Pack}
+disk_path=${WATCHDOG_DISK_PATH:-/var/lib/docker}
+disk_threshold=${WATCHDOG_DISK_THRESHOLD:-90}
+bot_image=${WATCHDOG_BOT_IMAGE:-chat-pack:latest}
+state_dir=${RUNTIME_DIRECTORY:-/run/chat-pack-watchdog}
+
+if [[ ! $topic =~ ^[a-zA-Z0-9_-]{1,64}$ ]]; then
+  echo 'Configurá un NTFY_TOPIC válido para el watchdog.' >&2
+  exit 1
+fi
+if [[ ! $disk_threshold =~ ^([1-9][0-9]?|100)$ ]]; then
+  echo 'WATCHDOG_DISK_THRESHOLD debe ser un entero entre 1 y 100.' >&2
+  exit 1
+fi
+mkdir -p -- "$state_dir" || exit 1
+
+delivery_failed=0
+
+publish() {
+  local priority=$1 message=$2 status
+  local -a headers=('Content-Type: text/plain; charset=utf-8')
+  if [[ -n ${NTFY_TOKEN:-} ]]; then
+    headers+=("Authorization: Bearer ${NTFY_TOKEN}")
+  fi
+
+  if status=$(printf '%s\n' "${headers[@]}" |
+    curl --proto '=https' --silent --show-error --max-time 8 \
+      --output /dev/null --write-out '%{http_code}' --header @- \
+      --header "Priority: $priority" --data-binary "$app_name | $message" \
+      "${base_url%/}/$topic") && [[ $status == 2[0-9][0-9] ]]; then
+    printf '%s\n' "$message"
+  else
+    echo "No se pudo enviar la notificación a ntfy (HTTP ${status:-sin respuesta}); se reintentará en el próximo chequeo si el estado persiste." >&2
+    delivery_failed=1
+    return 1
+  fi
+}
+
+# Solo recuerda una transición si ntfy la aceptó. /run sobrevive entre
+# ejecuciones del timer y no depende del espacio libre en el disco de Docker.
+report() {
+  local key=$1 problem=$2 recovered=$3 required_failures=${4:-1}
+  local marker="$state_dir/$key.alerted" pending="$state_dir/$key.pending"
+  local count=0
+
+  if [[ -z $problem ]]; then
+    rm -f -- "$pending"
+    if [[ -f $marker ]] && publish default "$recovered"; then
+      rm -f -- "$marker"
+    fi
+  elif [[ ! -f $marker ]]; then
+    if [[ -f $pending ]]; then
+      read -r count < "$pending" || count=0
+    fi
+    if (( count < required_failures )); then
+      printf '%s\n' "$((++count))" > "$pending" || exit 1
+    fi
+    if (( count >= required_failures )) && publish high "$problem"; then
+      : > "$marker" || exit 1
+      rm -f -- "$pending"
+    fi
+  fi
+}
+
+disk_problem=''
+if disk_used=$(timeout 10 df -P -- "$disk_path" | awk 'NR == 2 {sub(/%$/, "", $5); print $5}') &&
+  [[ $disk_used =~ ^[0-9]+$ ]]; then
+  if (( disk_used >= disk_threshold )); then
+    disk_problem="Poco espacio en el VPS: $disk_path al $disk_used% (umbral: $disk_threshold%)."
+  fi
+else
+  disk_problem="No se pudo medir el espacio en $disk_path."
+fi
+report disk "$disk_problem" "Disco de Docker: uso otra vez por debajo del $disk_threshold%."
+
+if ! bot_ids=$(timeout 10 docker ps -a --filter "ancestor=$bot_image" --format '{{.ID}}'); then
+  report docker 'Docker no responde en el VPS.' 'Docker vuelve a responder.'
+  exit "$delivery_failed"
+fi
+report docker '' 'Docker vuelve a responder.'
+
+mongo_problem=''
+if ! mongo_ping=$(timeout 10 docker exec mongo mongosh --quiet \
+  --eval 'db.adminCommand({ping: 1}).ok') || [[ $mongo_ping != 1 ]]; then
+  mongo_problem='MongoDB no respondió al ping en el VPS.'
+fi
+report mongo "$mongo_problem" 'MongoDB vuelve a responder.'
+
+bot_id=${bot_ids%%$'\n'*}
+bot_problem='El contenedor del bot no está estable: no está corriendo o se está reiniciando.'
+if [[ -n $bot_id ]] &&
+  bot_status=$(timeout 10 docker inspect --format '{{.State.Status}} {{.State.StartedAt}}' "$bot_id") &&
+  [[ $bot_status == running\ * ]] &&
+  started_at=$(date -d "${bot_status#running }" +%s) &&
+  (( $(date +%s) - started_at >= 90 )); then
+  bot_problem=''
+fi
+
+# Dejá un margen para los despliegues y reinicios normales.
+report bot "$bot_problem" 'El contenedor del bot volvió a estabilizarse.' 3
+exit "$delivery_failed"
