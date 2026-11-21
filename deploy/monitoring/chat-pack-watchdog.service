@@ -1,0 +1,13 @@
+[Unit]
+Description=Chequeo de disco, Docker, MongoDB y Chat Pack con avisos por ntfy
+After=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/chat-pack/watchdog.env
+ExecStart=/usr/local/bin/chat-pack-watchdog
+RuntimeDirectory=chat-pack-watchdog
+RuntimeDirectoryMode=0700
+RuntimeDirectoryPreserve=yes
+UMask=0077
+TimeoutStartSec=90s

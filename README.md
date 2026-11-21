@@ -84,6 +84,32 @@ Notas:
 - `NTFY_BASE_URL` es opcional. Si no se define, el código usa `https://ntfy.sh`.
 - `APP_NAME` se usa como prefijo en los mensajes. Si no se define, se usa `Chat Pack`.
 
+### Alertas del VPS aunque el bot no arranque
+
+El watchdog de [`deploy/monitoring/`](deploy/monitoring/) corre con systemd, fuera de Docker. Chequea el disco de Docker (umbral por defecto: 90%), el daemon, el ping de MongoDB y si el contenedor del bot lleva al menos 90 segundos corriendo. El bot debe fallar tres chequeos seguidos para alertar, así un despliegue normal no dispara avisos. Cada incidente avisa una vez y luego notifica la recuperación. Un fallo al publicar se reintenta mientras siga pendiente.
+
+En el VPS, desde el repo, instalá el script y las unidades (requiere Docker, Bash, curl y systemd):
+
+```bash
+sudo install -m 0755 deploy/monitoring/chat-pack-watchdog /usr/local/bin/
+sudo install -m 0644 deploy/monitoring/chat-pack-watchdog.{service,timer} /etc/systemd/system/
+sudo install -d -m 0700 /etc/chat-pack
+sudo touch /etc/chat-pack/watchdog.env
+sudo chmod 0600 /etc/chat-pack/watchdog.env
+sudoedit /etc/chat-pack/watchdog.env
+```
+
+Configurá `NTFY_TOPIC` en ese archivo, idealmente un tópico privado. También podés definir `NTFY_TOKEN` para autenticar la publicación, `NTFY_BASE_URL` para usar otra instancia HTTPS, `APP_NAME` y `WATCHDOG_DISK_THRESHOLD` (por ejemplo, `85` o `90`). `WATCHDOG_DISK_PATH` solo hace falta si Docker usa otro disco. El archivo es independiente del `.env` del bot.
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now chat-pack-watchdog.timer
+sudo systemctl start chat-pack-watchdog.service
+sudo journalctl -u chat-pack-watchdog.service -n 30 --no-pager
+```
+
+Este chequeo no reinicia servicios ni modifica datos. Si se cae todo el VPS o pierde Internet, no puede avisar en el momento: para eso necesitás un monitor externo.
+
 ---
 
 ## 📥 Descarga automática de redes sociales
